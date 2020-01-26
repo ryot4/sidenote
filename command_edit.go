@@ -55,10 +55,6 @@ func runEditor(editor, path string) {
 	editorCmd.Stdin = os.Stdin
 	editorCmd.Stdout = os.Stdout
 	editorCmd.Stderr = os.Stderr
-	err = editorCmd.Run()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "%v", err)
-		os.Exit(1)
-	}
+	editorCmd.Run()
 	os.Exit(editorCmd.ProcessState.ExitCode())
 }
