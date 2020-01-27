@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	NotePath = ".sidenote"
+	NotePath = ".notes"
 )
 
 var (
