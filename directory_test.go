@@ -15,11 +15,10 @@ func TestFilePath(t *testing.T) {
 	}{
 		{"foo", "foo"},
 		{"/foo", "foo"},
+		{"foo.txt", "foo.txt"},
+		{"foo.", "foo."},
 		{"foo/bar", "foo/bar"},
-		{"../foo", "foo"},
-		{"/../foo", "foo"},
-		{"foo/../bar", "bar"},
-		{"foo/../../bar", "bar"},
+		{"/foo//bar", "foo/bar"},
 	}
 
 	for _, tt := range tests {
@@ -44,9 +43,12 @@ func TestFilePathDotFileError(t *testing.T) {
 
 	tests := []string{
 		".foo",
+		"/.foo",
+		"../foo",
 		"foo/.bar",
-		"/../.foo",
-		"foo/../.bar/fizz",
+		"foo/.bar/fizz",
+		"foo/./bar",
+		"foo/../bar",
 	}
 
 	for _, tt := range tests {

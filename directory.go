@@ -66,13 +66,11 @@ func OpenDirectory(path string) (*Directory, error) {
 }
 
 func (dir *Directory) FilePath(path string) (string, error) {
-	// prevent directory traversal
 	separator := string(filepath.Separator)
-	cleanPath := filepath.Clean(filepath.Join(separator, path))
-	for _, elem := range strings.Split(cleanPath, separator) {
+	for _, elem := range strings.Split(path, separator) {
 		if strings.HasPrefix(elem, ".") {
 			return "", ErrContainsDotFile
 		}
 	}
-	return filepath.Join(dir.path, cleanPath), nil
+	return filepath.Join(dir.path, path), nil
 }
