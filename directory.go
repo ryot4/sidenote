@@ -74,3 +74,37 @@ func (dir *Directory) FilePath(path string) (string, error) {
 	}
 	return filepath.Join(dir.path, path), nil
 }
+
+func (dir *Directory) Stat(path string) (os.FileInfo, error) {
+	realPath, err := dir.FilePath(path)
+	if err != nil {
+		return nil, err
+	}
+	return os.Stat(realPath)
+}
+
+func (dir *Directory) Readdir(path string) ([]os.FileInfo, error) {
+	realPath, err := dir.FilePath(path)
+	if err != nil {
+		return nil, err
+	}
+
+	f, err := os.Open(realPath)
+	if err != nil {
+		return nil, err
+	}
+	children, err := f.Readdir(0)
+	f.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	n := 0
+	for _, c := range children {
+		if !strings.HasPrefix(c.Name(), ".") {
+			children[n] = c
+			n++
+		}
+	}
+	return children[:n], nil
+}

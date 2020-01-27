@@ -15,6 +15,7 @@ type HandlerFunc func(args []string)
 var handlers = map[string]HandlerFunc{
 	"init": runInit,
 	"edit": runEdit,
+	"list": runList,
 }
 
 func main() {
