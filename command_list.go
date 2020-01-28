@@ -4,14 +4,16 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"sort"
 	"time"
 )
 
 func runList(args []string) {
-	var longFormat bool
+	var longFormat, sortByMtime bool
 
 	listFlag := flag.NewFlagSet("list", flag.ExitOnError)
 	listFlag.BoolVar(&longFormat, "l", false, "long format")
+	listFlag.BoolVar(&sortByMtime, "t", false, "sort by modification time")
 	listFlag.Parse(args)
 
 	dir, err := OpenDirectory(NotePath)
@@ -40,14 +42,36 @@ func runList(args []string) {
 		}
 	}
 
-	for _, fi := range files {
-		printFile(fi, longFormat)
-	}
+	listItems(files, longFormat, sortByMtime)
 	for i, fi := range dirs {
 		if len(listPaths) > 1 {
 			fmt.Printf("\n%s:\n", fi.Name())
 		}
-		listDir(dir, dirPaths[i], longFormat)
+		listDir(dir, dirPaths[i], longFormat, sortByMtime)
+	}
+}
+
+func listDir(dir *Directory, path string, longFormat, sortByMtime bool) {
+	children, err := dir.Readdir(path)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "cannot read %s: %s\n", path, err)
+	}
+	listItems(children, longFormat, sortByMtime)
+}
+
+func listItems(items []os.FileInfo, longFormat, sortByMtime bool) {
+	if sortByMtime {
+		sort.Slice(items, func(i, j int) bool {
+			return items[i].ModTime().After(items[j].ModTime())
+		})
+	} else {
+		sort.Slice(items, func(i, j int) bool {
+			return items[i].Name() < items[j].Name()
+		})
+	}
+
+	for _, fi := range items {
+		printFile(fi, longFormat)
 	}
 }
 
@@ -68,15 +92,5 @@ func formatTime(t time.Time) string {
 		return t.Format("Jan _2 15:04")
 	} else {
 		return t.Format("Jan _2  2006")
-	}
-}
-
-func listDir(dir *Directory, path string, longFormat bool) {
-	children, err := dir.Readdir(path)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "cannot read %s: %s\n", path, err)
-	}
-	for _, child := range children {
-		printFile(child, longFormat)
 	}
 }
