@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"time"
 )
 
 func runList(args []string) {
@@ -56,11 +57,17 @@ func printFile(fi os.FileInfo, longFormat bool) {
 		name += "/"
 	}
 	if longFormat {
-		fmt.Printf("%s %s\n",
-			fi.ModTime().Format("Jan _2 15:04"),
-			name)
+		fmt.Printf("%s %s\n", formatTime(fi.ModTime()), name)
 	} else {
 		fmt.Println(name)
+	}
+}
+
+func formatTime(t time.Time) string {
+	if t.Year() == time.Now().Year() {
+		return t.Format("Jan _2 15:04")
+	} else {
+		return t.Format("Jan _2  2006")
 	}
 }
 
