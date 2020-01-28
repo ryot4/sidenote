@@ -33,6 +33,7 @@ func runLs(args []string) {
 		fi, err := dir.Stat(path)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "cannot stat %s: %s\n", path, err)
+			continue
 		}
 		if fi.IsDir() {
 			dirs = append(dirs, fi)
