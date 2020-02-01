@@ -12,8 +12,8 @@ const (
 )
 
 var (
-	ErrContainsDotFile = errors.New("contains dotfile")
-	ErrNotDirectory    = errors.New("not a directory")
+	ErrDotFileInPath = errors.New("contains dotfile")
+	ErrNotDirectory  = errors.New("not a directory")
 )
 
 type Directory struct {
@@ -69,7 +69,7 @@ func (dir *Directory) FilePath(path string) (string, error) {
 	separator := string(filepath.Separator)
 	for _, elem := range strings.Split(path, separator) {
 		if strings.HasPrefix(elem, ".") {
-			return "", ErrContainsDotFile
+			return "", ErrDotFileInPath
 		}
 	}
 	return filepath.Join(dir.path, path), nil

@@ -54,7 +54,7 @@ func TestFilePathDotFileError(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt, func(t *testing.T) {
 			_, err := dir.FilePath(tt)
-			if err != ErrContainsDotFile {
+			if err != ErrDotFileInPath {
 				t.Errorf("expect ErrContainsDotFile, got %v", err)
 			}
 		})
