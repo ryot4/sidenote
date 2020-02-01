@@ -7,10 +7,6 @@ import (
 	"strings"
 )
 
-const (
-	NotePath = ".notes"
-)
-
 var (
 	ErrDotFileInPath = errors.New("contains dotfile")
 	ErrNotDirectory  = errors.New("not a directory")

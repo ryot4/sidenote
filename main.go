@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	NoteDir = ".sidenote"
+	NotePath = ".notes"
 )
 
 type HandlerFunc func(args []string)
