@@ -10,7 +10,7 @@ const (
 	NotePath = ".notes"
 )
 
-type HandlerFunc func(args []string)
+type HandlerFunc func(notePath string, args []string)
 
 var handlers = map[string]HandlerFunc{
 	"init": runInit,
@@ -19,15 +19,16 @@ var handlers = map[string]HandlerFunc{
 }
 
 func main() {
+	notePath := flag.String("d", NotePath, "path to the directory for notes")
 	flag.Parse()
-	run(flag.Args())
+	run(*notePath, flag.Args())
 }
 
-func run(args []string) {
+func run(notePath string, args []string) {
 	if len(args) > 0 {
 		command := args[0]
 		if fn, ok := handlers[command]; ok {
-			fn(args[1:])
+			fn(notePath, args[1:])
 		} else {
 			fmt.Fprintf(os.Stderr, "unknown command %q\n", command)
 			flag.Usage()

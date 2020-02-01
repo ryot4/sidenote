@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func runLs(args []string) {
+func runLs(notePath string, args []string) {
 	var longFormat, sortByMtime bool
 
 	lsFlag := flag.NewFlagSet("ls", flag.ExitOnError)
@@ -16,7 +16,7 @@ func runLs(args []string) {
 	lsFlag.BoolVar(&sortByMtime, "t", false, "sort by modification time")
 	lsFlag.Parse(args)
 
-	dir, err := OpenDirectory(NotePath)
+	dir, err := OpenDirectory(notePath)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
