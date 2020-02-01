@@ -8,10 +8,10 @@ import (
 )
 
 const (
-	NoteDir = ".notes"
+	NoteDirName = ".notes"
 )
 
-type HandlerFunc func(notePath string, args []string)
+type HandlerFunc func(noteDir string, args []string)
 
 var handlers = map[string]HandlerFunc{
 	"init": runInit,
@@ -20,12 +20,12 @@ var handlers = map[string]HandlerFunc{
 }
 
 func main() {
-	notePath := flag.String("d", findNotePath(), "path to the directory for notes")
+	noteDir := flag.String("d", findNoteDir(), "path to the directory for notes")
 	flag.Parse()
-	run(*notePath, flag.Args())
+	run(*noteDir, flag.Args())
 }
 
-func findNotePath() string {
+func findNoteDir() string {
 	wd, err := os.Getwd()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "cannot get current directory: %s\n", err)
@@ -33,31 +33,31 @@ func findNotePath() string {
 	}
 	separator := string(filepath.Separator)
 	for dir := wd; dir != "." && dir != separator; dir = filepath.Dir(dir) {
-		notePath := filepath.Join(dir, NoteDir)
-		fi, err := os.Stat(notePath)
+		noteDir := filepath.Join(dir, NoteDirName)
+		fi, err := os.Stat(noteDir)
 		if err != nil {
 			if !os.IsNotExist(err) {
-				fmt.Fprintf(os.Stderr, "cannot stat %s: %s. ignoring\n", notePath, err)
+				fmt.Fprintf(os.Stderr, "cannot stat %s: %s. ignoring\n", noteDir, err)
 			}
 			continue
 		}
 		if fi.IsDir() {
-			rel, err := filepath.Rel(wd, notePath)
+			rel, err := filepath.Rel(wd, noteDir)
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "cannot get relative path to %s: %s. ignoring\n", notePath, err)
+				fmt.Fprintf(os.Stderr, "cannot get relative path to %s: %s. ignoring\n", noteDir, err)
 				continue
 			}
 			return rel
 		}
 	}
-	return NoteDir
+	return NoteDirName
 }
 
-func run(notePath string, args []string) {
+func run(noteDir string, args []string) {
 	if len(args) > 0 {
 		command := args[0]
 		if fn, ok := handlers[command]; ok {
-			fn(notePath, args[1:])
+			fn(noteDir, args[1:])
 		} else {
 			fmt.Fprintf(os.Stderr, "unknown command %q\n", command)
 			flag.Usage()

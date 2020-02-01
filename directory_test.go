@@ -6,8 +6,8 @@ import (
 )
 
 func TestFilePath(t *testing.T) {
-	notePath := "/path/to/note"
-	dir := newDirectory(notePath)
+	noteDir := "/path/to/note"
+	dir := newDirectory(noteDir)
 
 	tests := []struct {
 		path   string
@@ -27,7 +27,7 @@ func TestFilePath(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			relPath, err := filepath.Rel(notePath, path)
+			relPath, err := filepath.Rel(noteDir, path)
 			if err != nil {
 				t.Error(err)
 			}

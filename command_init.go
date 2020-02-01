@@ -6,18 +6,18 @@ import (
 	"os"
 )
 
-func runInit(notePath string, args []string) {
+func runInit(noteDir string, args []string) {
 	var linkDir string
 
 	initFlag := flag.NewFlagSet("init", flag.ExitOnError)
-	initFlag.StringVar(&linkDir, "l", "", fmt.Sprintf("make %s a symlink to the directory", notePath))
+	initFlag.StringVar(&linkDir, "l", "", fmt.Sprintf("make %s a symlink to the directory", noteDir))
 	initFlag.Parse(args)
 
 	var err error
 	if linkDir == "" {
-		_, err = InitDirectory(notePath)
+		_, err = InitDirectory(noteDir)
 	} else {
-		_, err = InitDirectoryLink(linkDir, notePath)
+		_, err = InitDirectoryLink(linkDir, noteDir)
 	}
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "init failed: %s\n", err)

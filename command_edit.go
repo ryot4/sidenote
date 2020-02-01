@@ -8,14 +8,14 @@ import (
 	"path/filepath"
 )
 
-func runEdit(notePath string, args []string) {
+func runEdit(noteDir string, args []string) {
 	var editor string
 
 	editFlag := flag.NewFlagSet("edit", flag.ExitOnError)
 	editFlag.StringVar(&editor, "e", os.Getenv("EDITOR"), "editor to use")
 	editFlag.Parse(args)
 
-	dir, err := OpenDirectory(notePath)
+	dir, err := OpenDirectory(noteDir)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
