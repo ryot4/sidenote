@@ -8,29 +8,37 @@ import (
 	"path/filepath"
 )
 
-func runEdit(noteDir string, args []string) {
-	var editor string
+type EditCommand struct {
+	flag *flag.FlagSet
 
-	editFlag := flag.NewFlagSet("edit", flag.ExitOnError)
-	editFlag.StringVar(&editor, "e", os.Getenv("EDITOR"), "editor to use")
-	editFlag.Parse(args)
+	editor string
+}
 
-	dir, err := OpenDirectory(noteDir)
+func (c *EditCommand) Name() string {
+	return "edit"
+}
+
+func (c *EditCommand) Run(args []string, options *Options) {
+	c.flag = flag.NewFlagSet(c.Name(), flag.ExitOnError)
+	c.flag.StringVar(&c.editor, "e", os.Getenv("EDITOR"), "editor to use")
+	c.flag.Parse(args)
+
+	dir, err := OpenDirectory(options.noteDir)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 
-	if len(editFlag.Args()) == 0 {
+	if len(c.flag.Args()) == 0 {
 		fmt.Fprintln(os.Stderr, "no filename specified")
 		os.Exit(1)
 	}
-	path, err := dir.FilePath(editFlag.Arg(0))
+	path, err := dir.FilePath(c.flag.Arg(0))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "invalid path: %s\n", err)
 		os.Exit(2)
 	}
-	runEditor(editor, path)
+	runEditor(c.editor, path)
 }
 
 func runEditor(editor, path string) {

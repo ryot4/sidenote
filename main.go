@@ -11,18 +11,39 @@ const (
 	NoteDirName = ".notes"
 )
 
-type HandlerFunc func(noteDir string, args []string)
+type Options struct {
+	noteDir string
+}
 
-var handlers = map[string]HandlerFunc{
-	"init": runInit,
-	"edit": runEdit,
-	"ls":   runLs,
+type Command interface {
+	Name() string
+	Run(args []string, options *Options)
+}
+
+var subCommands = []Command{
+	&InitCommand{},
+	&EditCommand{},
+	&LsCommand{},
 }
 
 func main() {
-	noteDir := flag.String("d", findNoteDir(), "path to the directory for notes")
+	var options Options
+
+	flag.Usage = usage
+	flag.StringVar(&options.noteDir, "d", findNoteDir(), "path to the directory for notes")
 	flag.Parse()
-	run(*noteDir, flag.Args())
+
+	run(flag.Args(), &options)
+}
+
+func usage() {
+	fmt.Fprintf(flag.CommandLine.Output(), "Usage: %s [options] <command> [command-args]\n", os.Args[0])
+	fmt.Fprintln(flag.CommandLine.Output(), "\noptions:")
+	flag.PrintDefaults()
+	fmt.Fprintf(flag.CommandLine.Output(), "\ncommands (run \"%s <command> -h\" for command usage):\n", os.Args[0])
+	for _, cmd := range subCommands {
+		fmt.Fprintf(flag.CommandLine.Output(), "  %s\n", cmd.Name())
+	}
 }
 
 func findNoteDir() string {
@@ -53,18 +74,20 @@ func findNoteDir() string {
 	return NoteDirName
 }
 
-func run(noteDir string, args []string) {
+func run(args []string, options *Options) {
 	if len(args) > 0 {
-		command := args[0]
-		if fn, ok := handlers[command]; ok {
-			fn(noteDir, args[1:])
-		} else {
-			fmt.Fprintf(os.Stderr, "unknown command %q\n", command)
-			flag.Usage()
-			os.Exit(2)
+		cmdName := args[0]
+		for _, cmd := range subCommands {
+			if cmdName == cmd.Name() {
+				cmd.Run(args[1:], options)
+				return
+			}
 		}
+		fmt.Fprintf(os.Stderr, "unknown command %q\n\n", cmdName)
+		flag.Usage()
+		os.Exit(2)
 	} else {
-		fmt.Fprintln(os.Stderr, "no command specified")
+		fmt.Fprint(os.Stderr, "no command specified\n\n")
 		flag.Usage()
 		os.Exit(2)
 	}

@@ -8,21 +8,30 @@ import (
 	"time"
 )
 
-func runLs(noteDir string, args []string) {
-	var longFormat, sortByMtime bool
+type LsCommand struct {
+	flag *flag.FlagSet
 
-	lsFlag := flag.NewFlagSet("ls", flag.ExitOnError)
-	lsFlag.BoolVar(&longFormat, "l", false, "long format")
-	lsFlag.BoolVar(&sortByMtime, "t", false, "sort by modification time")
-	lsFlag.Parse(args)
+	longFormat  bool
+	sortByMtime bool
+}
 
-	dir, err := OpenDirectory(noteDir)
+func (c *LsCommand) Name() string {
+	return "ls"
+}
+
+func (c *LsCommand) Run(args []string, options *Options) {
+	c.flag = flag.NewFlagSet(c.Name(), flag.ExitOnError)
+	c.flag.BoolVar(&c.longFormat, "l", false, "long format")
+	c.flag.BoolVar(&c.sortByMtime, "t", false, "sort by modification time")
+	c.flag.Parse(args)
+
+	dir, err := OpenDirectory(options.noteDir)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 
-	listPaths := lsFlag.Args()
+	listPaths := c.flag.Args()
 	if len(listPaths) == 0 {
 		listPaths = append(listPaths, "/")
 	}
@@ -43,25 +52,25 @@ func runLs(noteDir string, args []string) {
 		}
 	}
 
-	listItems(files, longFormat, sortByMtime)
+	c.listItems(files)
 	for i, fi := range dirs {
 		if len(listPaths) > 1 {
 			fmt.Printf("\n%s:\n", fi.Name())
 		}
-		listDir(dir, dirPaths[i], longFormat, sortByMtime)
+		c.listDir(dir, dirPaths[i])
 	}
 }
 
-func listDir(dir *Directory, path string, longFormat, sortByMtime bool) {
+func (c *LsCommand) listDir(dir *Directory, path string) {
 	children, err := dir.Readdir(path)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "cannot read %s: %s\n", path, err)
 	}
-	listItems(children, longFormat, sortByMtime)
+	c.listItems(children)
 }
 
-func listItems(items []os.FileInfo, longFormat, sortByMtime bool) {
-	if sortByMtime {
+func (c *LsCommand) listItems(items []os.FileInfo) {
+	if c.sortByMtime {
 		sort.Slice(items, func(i, j int) bool {
 			return items[i].ModTime().After(items[j].ModTime())
 		})
@@ -72,16 +81,16 @@ func listItems(items []os.FileInfo, longFormat, sortByMtime bool) {
 	}
 
 	for _, fi := range items {
-		printFile(fi, longFormat)
+		c.printFile(fi)
 	}
 }
 
-func printFile(fi os.FileInfo, longFormat bool) {
+func (c *LsCommand) printFile(fi os.FileInfo) {
 	name := fi.Name()
 	if fi.IsDir() {
 		name += "/"
 	}
-	if longFormat {
+	if c.longFormat {
 		fmt.Printf("%s %s\n", formatTime(fi.ModTime()), name)
 	} else {
 		fmt.Println(name)

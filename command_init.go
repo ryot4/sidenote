@@ -6,18 +6,26 @@ import (
 	"os"
 )
 
-func runInit(noteDir string, args []string) {
-	var linkDir string
+type InitCommand struct {
+	flag *flag.FlagSet
 
-	initFlag := flag.NewFlagSet("init", flag.ExitOnError)
-	initFlag.StringVar(&linkDir, "l", "", fmt.Sprintf("make %s a symlink to the directory", noteDir))
-	initFlag.Parse(args)
+	linkDir string
+}
+
+func (c *InitCommand) Name() string {
+	return "init"
+}
+
+func (c *InitCommand) Run(args []string, options *Options) {
+	c.flag = flag.NewFlagSet(c.Name(), flag.ExitOnError)
+	c.flag.StringVar(&c.linkDir, "l", "", fmt.Sprintf("make %s a symlink to the directory", options.noteDir))
+	c.flag.Parse(args)
 
 	var err error
-	if linkDir == "" {
-		_, err = InitDirectory(noteDir)
+	if c.linkDir == "" {
+		_, err = InitDirectory(options.noteDir)
 	} else {
-		_, err = InitDirectoryLink(linkDir, noteDir)
+		_, err = InitDirectoryLink(c.linkDir, options.noteDir)
 	}
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "init failed: %s\n", err)
