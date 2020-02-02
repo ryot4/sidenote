@@ -34,56 +34,35 @@ func (c *LsCommand) Run(args []string, options *Options) {
 		os.Exit(1)
 	}
 
-	listPaths := c.flag.Args()
-	if len(listPaths) == 0 {
-		listPaths = append(listPaths, "")
+	var listPath string
+	if c.flag.NArg() > 1 {
+		fmt.Fprintln(os.Stderr, "too many arguments")
+		os.Exit(2)
+	} else if c.flag.NArg() == 1 {
+		listPath = c.flag.Arg(0)
+	} else {
+		listPath = ""
 	}
 
-	var files []os.FileInfo
-	var dirPaths []string
-	for _, path := range listPaths {
-		fi, err := dir.Stat(path)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "cannot stat %s: %s\n", path, err)
-			continue
-		}
-		if fi.IsDir() {
-			dirPaths = append(dirPaths, path)
-		} else {
-			files = append(files, fi)
-		}
+	fi, err := dir.Stat(listPath)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "cannot stat %s: %s\n", listPath, err)
+		os.Exit(1)
 	}
-
-	c.listItems(files)
-	for i, path := range dirPaths {
-		if len(listPaths) > 1 && i > 0 {
-			fmt.Println()
-		}
-		if len(listPaths) > 1 {
-			fmt.Printf("%s:\n", path)
-		}
-		c.listDir(dir, path)
+	if fi.IsDir() {
+		c.listDir(dir, listPath)
+	} else {
+		c.printFile(fi)
 	}
 }
 
 func (c *LsCommand) listDir(dir *Directory, path string) {
-	children, err := dir.Readdir(path)
+	items, err := dir.Readdir(path)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "cannot read %s: %s\n", path, err)
+		return
 	}
-	c.listItems(children)
-	if c.recurse {
-		for _, item := range children {
-			if item.IsDir() {
-				itemPath := filepath.Join(path, item.Name())
-				fmt.Printf("\n%s:\n", itemPath)
-				c.listDir(dir, itemPath)
-			}
-		}
-	}
-}
 
-func (c *LsCommand) listItems(items []os.FileInfo) {
 	if c.sortByMtime {
 		sort.Slice(items, func(i, j int) bool {
 			return items[i].ModTime().After(items[j].ModTime())
@@ -96,6 +75,16 @@ func (c *LsCommand) listItems(items []os.FileInfo) {
 
 	for _, fi := range items {
 		c.printFile(fi)
+	}
+
+	if c.recurse {
+		for _, fi := range items {
+			if fi.IsDir() {
+				itemPath := filepath.Join(path, fi.Name())
+				fmt.Printf("\n%s:\n", itemPath)
+				c.listDir(dir, itemPath)
+			}
+		}
 	}
 }
 
