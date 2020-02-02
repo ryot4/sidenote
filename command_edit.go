@@ -38,16 +38,22 @@ func (c *EditCommand) Run(args []string, options *Options) {
 		os.Exit(1)
 	}
 
-	if len(c.flag.Args()) == 0 {
-		fmt.Fprintln(os.Stderr, "no filename specified")
-		os.Exit(1)
+	var filePath string
+	if c.flag.NArg() > 1 {
+		fmt.Fprintln(os.Stderr, "too many arguments")
+		os.Exit(2)
+	} else if c.flag.NArg() == 1 {
+		filePath = c.flag.Arg(0)
+	} else {
+		fmt.Fprintln(os.Stderr, "no file specified")
+		os.Exit(2)
 	}
-	path, err := dir.FilePath(c.flag.Arg(0))
+	realPath, err := dir.FilePath(filePath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "invalid path: %s\n", err)
 		os.Exit(2)
 	}
-	runEditor(c.editor, path)
+	runEditor(c.editor, realPath)
 }
 
 func runEditor(editor, path string) {

@@ -30,6 +30,11 @@ func (c *InitCommand) setup(args []string, options *Options) {
 func (c *InitCommand) Run(args []string, options *Options) {
 	c.setup(args, options)
 
+	if c.flag.NArg() > 0 {
+		fmt.Fprintln(os.Stderr, "too many arguments")
+		os.Exit(2)
+	}
+
 	var err error
 	if c.linkDir == "" {
 		_, err = InitDirectory(options.noteDir)
