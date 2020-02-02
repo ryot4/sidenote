@@ -25,6 +25,7 @@ var subCommands = []Command{
 	&EditCommand{},
 	&LsCommand{},
 	&MvCommand{},
+	&RmCommand{},
 }
 
 func main() {
