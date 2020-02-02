@@ -18,10 +18,19 @@ func (c *EditCommand) Name() string {
 	return "edit"
 }
 
-func (c *EditCommand) Run(args []string, options *Options) {
+func (c *EditCommand) setup(args []string, _options *Options) {
 	c.flag = flag.NewFlagSet(c.Name(), flag.ExitOnError)
+	c.flag.Usage = func() {
+		fmt.Fprintf(c.flag.Output(), "Usage: %s [options] path-to-file\n", c.Name())
+		fmt.Fprintln(c.flag.Output(), "\noptions:")
+		c.flag.PrintDefaults()
+	}
 	c.flag.StringVar(&c.editor, "e", os.Getenv("EDITOR"), "editor to use")
 	c.flag.Parse(args)
+}
+
+func (c *EditCommand) Run(args []string, options *Options) {
+	c.setup(args, options)
 
 	dir, err := OpenDirectory(options.noteDir)
 	if err != nil {

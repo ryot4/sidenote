@@ -21,12 +21,21 @@ func (c *LsCommand) Name() string {
 	return "ls"
 }
 
-func (c *LsCommand) Run(args []string, options *Options) {
+func (c *LsCommand) setup(args []string, options *Options) {
 	c.flag = flag.NewFlagSet(c.Name(), flag.ExitOnError)
+	c.flag.Usage = func() {
+		fmt.Fprintf(c.flag.Output(), "Usage: %s [options] path\n", c.Name())
+		fmt.Fprintln(c.flag.Output(), "\noptions:")
+		c.flag.PrintDefaults()
+	}
 	c.flag.BoolVar(&c.longFormat, "l", false, "long format")
 	c.flag.BoolVar(&c.recurse, "r", false, "list directories recursively")
 	c.flag.BoolVar(&c.sortByMtime, "t", false, "sort by modification time")
 	c.flag.Parse(args)
+}
+
+func (c *LsCommand) Run(args []string, options *Options) {
+	c.setup(args, options)
 
 	dir, err := OpenDirectory(options.noteDir)
 	if err != nil {
