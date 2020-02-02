@@ -41,7 +41,7 @@ func main() {
 }
 
 func usage() {
-	fmt.Fprintf(flag.CommandLine.Output(), "Usage: %s [options] <command> [command-args]\n", os.Args[0])
+	fmt.Fprintf(flag.CommandLine.Output(), "Usage: %s [options] <command> [command-arguments]\n", os.Args[0])
 	fmt.Fprintln(flag.CommandLine.Output(), "\noptions:")
 	flag.PrintDefaults()
 	fmt.Fprintf(flag.CommandLine.Output(), "\ncommands (run \"%s <command> -h\" for command usage):\n", os.Args[0])

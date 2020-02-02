@@ -18,7 +18,7 @@ func (c *ShowCommand) Name() string {
 func (c *ShowCommand) setup(args []string, _options *Options) {
 	c.flag = flag.NewFlagSet(c.Name(), flag.ExitOnError)
 	c.flag.Usage = func() {
-		fmt.Fprintf(c.flag.Output(), "Usage: %s path-to-file\n", c.Name())
+		fmt.Fprintf(c.flag.Output(), "Usage: %s <name>\n", c.Name())
 	}
 	c.flag.Parse(args)
 }
