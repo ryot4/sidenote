@@ -6,12 +6,19 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"time"
+)
+
+const (
+	EditorEnv     = "EDITOR"
+	NameFormatEnv = "SIDENOTE_NAME_FORMAT"
 )
 
 type EditCommand struct {
 	flag *flag.FlagSet
 
-	editor string
+	editor     string
+	nameFormat string
 }
 
 func (c *EditCommand) Name() string {
@@ -21,11 +28,14 @@ func (c *EditCommand) Name() string {
 func (c *EditCommand) setup(args []string, _options *Options) {
 	c.flag = flag.NewFlagSet(c.Name(), flag.ExitOnError)
 	c.flag.Usage = func() {
-		fmt.Fprintf(c.flag.Output(), "Usage: %s [options] path-to-file\n", c.Name())
+		fmt.Fprintf(c.flag.Output(), "Usage: %s [options] [path-to-file]\n", c.Name())
 		fmt.Fprintln(c.flag.Output(), "\noptions:")
 		c.flag.PrintDefaults()
 	}
-	c.flag.StringVar(&c.editor, "e", os.Getenv("EDITOR"), "editor to use")
+	c.flag.StringVar(&c.editor, "e", os.Getenv(EditorEnv),
+		"editor to use")
+	c.flag.StringVar(&c.nameFormat, "f", os.Getenv(NameFormatEnv),
+		"generate file name (a subset of strftime format string can be used)")
 	c.flag.Parse(args)
 }
 
@@ -45,8 +55,11 @@ func (c *EditCommand) Run(args []string, options *Options) {
 	} else if c.flag.NArg() == 1 {
 		filePath = c.flag.Arg(0)
 	} else {
-		fmt.Fprintln(os.Stderr, "no file specified")
-		os.Exit(2)
+		if c.nameFormat == "" {
+			fmt.Fprintln(os.Stderr, "no file name specified")
+			os.Exit(2)
+		}
+		filePath = Strftime(time.Now(), c.nameFormat)
 	}
 	realPath, err := dir.FilePath(filePath)
 	if err != nil {
