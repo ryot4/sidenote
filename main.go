@@ -32,10 +32,17 @@ var subCommands = []Command{
 
 func main() {
 	var options Options
+	var printVersion bool
 
 	flag.Usage = usage
 	flag.StringVar(&options.noteDir, "d", findNoteDir(), "path to the directory for notes")
+	flag.BoolVar(&printVersion, "version", false, "print version and exit")
 	flag.Parse()
+
+	if printVersion {
+		fmt.Println(version)
+		os.Exit(0)
+	}
 
 	run(flag.Args(), &options)
 }
