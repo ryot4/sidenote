@@ -39,39 +39,39 @@ func (c *LsCommand) Run(args []string, options *Options) {
 
 	dir, err := OpenDirectory(options.noteDir)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		exitWithError(err)
 	}
 
 	var listPath string
 	if c.flag.NArg() > 1 {
-		fmt.Fprintln(os.Stderr, "too many arguments")
-		os.Exit(2)
+		exitWithSyntaxError("too many arguments")
 	} else if c.flag.NArg() == 1 {
 		listPath = c.flag.Arg(0)
 	} else {
 		listPath = ""
 	}
 
-	c.list(dir, listPath)
+	err = c.list(dir, listPath)
+	if err != nil {
+		exitWithError(err)
+	}
 }
 
-func (c *LsCommand) list(dir *Directory, path string) {
+func (c *LsCommand) list(dir *Directory, path string) error {
 	realPath, err := dir.FilePath(path)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return err
 	}
 	fi, err := os.Stat(realPath)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return err
 	}
 	if fi.IsDir() {
 		c.listDir(dir, path)
 	} else {
 		c.printFile(fi)
 	}
+	return nil
 }
 
 func (c *LsCommand) listDir(dir *Directory, path string) {

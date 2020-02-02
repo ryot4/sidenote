@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"os"
 )
 
 type InitCommand struct {
@@ -31,8 +30,7 @@ func (c *InitCommand) Run(args []string, options *Options) {
 	c.setup(args, options)
 
 	if c.flag.NArg() > 0 {
-		fmt.Fprintln(os.Stderr, "too many arguments")
-		os.Exit(2)
+		exitWithSyntaxError("too many arguments")
 	}
 
 	var err error
@@ -42,7 +40,6 @@ func (c *InitCommand) Run(args []string, options *Options) {
 		_, err = InitDirectoryLink(c.linkDir, options.noteDir)
 	}
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "init failed: %s\n", err)
-		os.Exit(1)
+		exitWithError(err)
 	}
 }

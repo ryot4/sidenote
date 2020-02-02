@@ -44,53 +44,48 @@ func (c *EditCommand) Run(args []string, options *Options) {
 
 	dir, err := OpenDirectory(options.noteDir)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		exitWithError(err)
 	}
 
 	var filePath string
 	if c.flag.NArg() > 1 {
-		fmt.Fprintln(os.Stderr, "too many arguments")
-		os.Exit(2)
+		exitWithSyntaxError("too many arguments")
 	} else if c.flag.NArg() == 1 {
 		filePath = c.flag.Arg(0)
 	} else {
 		if c.nameFormat == "" {
-			fmt.Fprintln(os.Stderr, "no file name specified")
-			os.Exit(2)
+			exitWithSyntaxError("no file name specified")
 		}
 		filePath = Strftime(time.Now(), c.nameFormat)
 	}
 	realPath, err := dir.FilePath(filePath)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "invalid path: %s\n", err)
-		os.Exit(2)
+		exitWithError(err)
 	}
-	runEditor(c.editor, realPath)
+	err = runEditor(c.editor, realPath)
+	if err != nil {
+		exitWithError(err)
+	}
 }
 
-func runEditor(editor, path string) {
+func runEditor(editor, path string) error {
 	dir := filepath.Dir(path)
 	if err := os.MkdirAll(dir, os.ModePerm); err != nil {
-		fmt.Fprintf(os.Stderr, "cannot create %s: %v\n", dir, err)
-		os.Exit(1)
+		return err
 	}
 
 	fi, err := os.Stat(path)
 	if err != nil {
 		if !os.IsNotExist(err) {
-			fmt.Fprintf(os.Stderr, "cannot stat %s: %v\n", path, err)
-			os.Exit(1)
+			return err
 		}
 	} else if fi.IsDir() {
-		fmt.Fprintf(os.Stderr, "directory exists: %s\n", path)
-		os.Exit(1)
+		return fmt.Errorf("directory exists: %s", path)
 	}
 
 	editorCmd := exec.Command(editor, path)
 	editorCmd.Stdin = os.Stdin
 	editorCmd.Stdout = os.Stdout
 	editorCmd.Stderr = os.Stderr
-	editorCmd.Run()
-	os.Exit(editorCmd.ProcessState.ExitCode())
+	return editorCmd.Run()
 }

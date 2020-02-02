@@ -33,8 +33,7 @@ func (c *MvCommand) Run(args []string, options *Options) {
 
 	dir, err := OpenDirectory(options.noteDir)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		exitWithError(err)
 	}
 
 	var src, dest string
@@ -42,46 +41,39 @@ func (c *MvCommand) Run(args []string, options *Options) {
 		src = c.flag.Arg(0)
 		dest = c.flag.Arg(1)
 	} else if c.flag.NArg() > 2 {
-		fmt.Fprintln(os.Stderr, "too many arguments")
-		os.Exit(2)
+		exitWithSyntaxError("too many arguments")
 	} else {
-		fmt.Fprintln(os.Stderr, "too few arguments")
-		os.Exit(2)
+		exitWithSyntaxError("too few arguments")
 	}
 
-	c.move(dir, src, dest, options)
+	err = c.move(dir, src, dest, options)
+	if err != nil {
+		exitWithError(err)
+	}
 }
 
-func (c *MvCommand) move(dir *Directory, src, dest string, options *Options) {
+func (c *MvCommand) move(dir *Directory, src, dest string, options *Options) error {
 	srcReal, err := dir.FilePath(src)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return err
 	}
 	destReal, err := dir.FilePath(dest)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return err
 	}
 
 	fi, err := os.Stat(destReal)
 	if err != nil {
 		if !os.IsNotExist(err) {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
+			return err
 		}
 	} else {
 		if fi.IsDir() {
 			destReal = filepath.Join(destReal, filepath.Base(srcReal))
 		} else if !c.force {
-			fmt.Fprintf(os.Stderr, "%s already exists; use -f to overwrite\n", dest)
-			os.Exit(1)
+			return fmt.Errorf("%s already exists; use -f to overwrite", dest)
 		}
 	}
 
-	err = os.Rename(srcReal, destReal)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
-	}
+	return os.Rename(srcReal, destReal)
 }

@@ -28,52 +28,47 @@ func (c *ShowCommand) Run(args []string, options *Options) {
 
 	dir, err := OpenDirectory(options.noteDir)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		exitWithError(err)
 	}
 
 	var filePath string
 	if c.flag.NArg() > 1 {
-		fmt.Fprintln(os.Stderr, "too many arguments")
-		os.Exit(2)
+		exitWithSyntaxError("too many arguments")
 	} else if c.flag.NArg() == 1 {
 		filePath = c.flag.Arg(0)
 	} else {
-		fmt.Fprintln(os.Stderr, "no file specified")
-		os.Exit(2)
+		exitWithSyntaxError("no file specified")
 	}
 
-	os.Exit(c.show(dir, filePath))
+	err = c.show(dir, filePath)
+	if err != nil {
+		exitWithError(err)
+	}
 }
 
-func (c *ShowCommand) show(dir *Directory, path string) int {
+func (c *ShowCommand) show(dir *Directory, path string) error {
 	realPath, err := dir.FilePath(path)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "invalid path: %s\n", err)
-		return 2
+		return err
 	}
 
 	f, err := os.Open(realPath)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		return 1
+		return err
 	}
 	defer f.Close()
 
 	fi, err := f.Stat()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		return 1
+		return err
 	}
 	if fi.IsDir() {
-		fmt.Fprintf(os.Stderr, "%s is a directory\n", path)
-		return 1
+		return fmt.Errorf("%s is a directory", path)
 	}
 
 	_, err = io.Copy(os.Stdout, f)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		return 1
+		return err
 	}
-	return 0
+	return nil
 }

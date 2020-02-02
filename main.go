@@ -66,8 +66,7 @@ func findNoteDir() string {
 	// Search ".notes" directory upward from the current directory
 	wd, err := os.Getwd()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "cannot get current directory: %s\n", err)
-		os.Exit(1)
+		exitWithError(err)
 	}
 	separator := string(filepath.Separator)
 	for dir := wd; dir != "." && dir != separator; dir = filepath.Dir(dir) {
@@ -100,10 +99,8 @@ func run(args []string, options *Options) {
 				return
 			}
 		}
-		fmt.Fprintf(os.Stderr, "unknown command %q\n", cmdName)
-		os.Exit(2)
+		exitWithSyntaxError(fmt.Sprintf("unknown command %q", cmdName))
 	} else {
-		fmt.Fprintln(os.Stderr, "no command specified")
-		os.Exit(2)
+		exitWithSyntaxError("no command specified")
 	}
 }

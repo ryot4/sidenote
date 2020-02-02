@@ -33,51 +33,43 @@ func (c *RmCommand) Run(args []string, options *Options) {
 
 	dir, err := OpenDirectory(options.noteDir)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		exitWithError(err)
 	}
 
 	var rmPath string
 	if c.flag.NArg() == 1 {
 		rmPath = c.flag.Arg(0)
 	} else if c.flag.NArg() > 1 {
-		fmt.Fprintln(os.Stderr, "too many arguments")
-		os.Exit(2)
+		exitWithSyntaxError("too many arguments")
 	} else {
-		fmt.Fprintln(os.Stderr, "too few arguments")
-		os.Exit(2)
+		exitWithSyntaxError("too few arguments")
 	}
 
-	c.remove(dir, rmPath)
+	err = c.remove(dir, rmPath)
+	if err != nil {
+		exitWithError(err)
+	}
 }
 
-func (c *RmCommand) remove(dir *Directory, path string) {
+func (c *RmCommand) remove(dir *Directory, path string) error {
 	realPath, err := dir.FilePath(path)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return err
 	}
 	fi, err := os.Stat(realPath)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return err
 	}
 	if fi.IsDir() {
 		isEmpty, err := isEmptyDir(realPath)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
+			return err
 		}
 		if !isEmpty && !c.recurse {
-			fmt.Fprintln(os.Stderr, "directory not empty: use -r to remove")
-			os.Exit(1)
+			return fmt.Errorf("directory not empty: use -r to remove")
 		}
 	}
-	err = os.RemoveAll(realPath)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
-	}
+	return os.RemoveAll(realPath)
 }
 
 func isEmptyDir(path string) (bool, error) {
