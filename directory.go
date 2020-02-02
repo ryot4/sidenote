@@ -71,14 +71,6 @@ func (dir *Directory) FilePath(path string) (string, error) {
 	return filepath.Join(dir.path, path), nil
 }
 
-func (dir *Directory) Stat(path string) (os.FileInfo, error) {
-	realPath, err := dir.FilePath(path)
-	if err != nil {
-		return nil, err
-	}
-	return os.Stat(realPath)
-}
-
 func (dir *Directory) Readdir(path string) ([]os.FileInfo, error) {
 	realPath, err := dir.FilePath(path)
 	if err != nil {

@@ -53,13 +53,22 @@ func (c *LsCommand) Run(args []string, options *Options) {
 		listPath = ""
 	}
 
-	fi, err := dir.Stat(listPath)
+	c.list(dir, listPath)
+}
+
+func (c *LsCommand) list(dir *Directory, path string) {
+	realPath, err := dir.FilePath(path)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "cannot stat %s: %s\n", listPath, err)
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+	fi, err := os.Stat(realPath)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 	if fi.IsDir() {
-		c.listDir(dir, listPath)
+		c.listDir(dir, path)
 	} else {
 		c.printFile(fi)
 	}
