@@ -83,12 +83,10 @@ func run(args []string, options *Options) {
 				return
 			}
 		}
-		fmt.Fprintf(os.Stderr, "unknown command %q\n\n", cmdName)
-		flag.Usage()
+		fmt.Fprintf(os.Stderr, "unknown command %q\n", cmdName)
 		os.Exit(2)
 	} else {
-		fmt.Fprint(os.Stderr, "no command specified\n\n")
-		flag.Usage()
+		fmt.Fprintln(os.Stderr, "no command specified")
 		os.Exit(2)
 	}
 }
