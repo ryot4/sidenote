@@ -9,6 +9,7 @@ import (
 
 const (
 	NoteDirName = ".notes"
+	NoteDirEnv  = "SIDENOTE_DIR"
 )
 
 type Options struct {
@@ -50,6 +51,12 @@ func usage() {
 }
 
 func findNoteDir() string {
+	envDir := os.Getenv(NoteDirEnv)
+	if envDir != "" {
+		return envDir
+	}
+
+	// Search ".notes" directory upward from the current directory
 	wd, err := os.Getwd()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "cannot get current directory: %s\n", err)
