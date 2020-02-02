@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"path/filepath"
 	"sort"
 	"time"
 )
@@ -12,6 +13,7 @@ type LsCommand struct {
 	flag *flag.FlagSet
 
 	longFormat  bool
+	recurse     bool
 	sortByMtime bool
 }
 
@@ -22,6 +24,7 @@ func (c *LsCommand) Name() string {
 func (c *LsCommand) Run(args []string, options *Options) {
 	c.flag = flag.NewFlagSet(c.Name(), flag.ExitOnError)
 	c.flag.BoolVar(&c.longFormat, "l", false, "long format")
+	c.flag.BoolVar(&c.recurse, "r", false, "list directories recursively")
 	c.flag.BoolVar(&c.sortByMtime, "t", false, "sort by modification time")
 	c.flag.Parse(args)
 
@@ -36,7 +39,7 @@ func (c *LsCommand) Run(args []string, options *Options) {
 		listPaths = append(listPaths, "/")
 	}
 
-	var files, dirs []os.FileInfo
+	var files []os.FileInfo
 	var dirPaths []string
 	for _, path := range listPaths {
 		fi, err := dir.Stat(path)
@@ -45,7 +48,6 @@ func (c *LsCommand) Run(args []string, options *Options) {
 			continue
 		}
 		if fi.IsDir() {
-			dirs = append(dirs, fi)
 			dirPaths = append(dirPaths, path)
 		} else {
 			files = append(files, fi)
@@ -53,11 +55,14 @@ func (c *LsCommand) Run(args []string, options *Options) {
 	}
 
 	c.listItems(files)
-	for i, fi := range dirs {
-		if len(listPaths) > 1 {
-			fmt.Printf("\n%s:\n", fi.Name())
+	for i, path := range dirPaths {
+		if len(listPaths) > 1 && i > 0 {
+			fmt.Println()
 		}
-		c.listDir(dir, dirPaths[i])
+		if len(listPaths) > 1 {
+			fmt.Printf("%s:\n", path)
+		}
+		c.listDir(dir, path)
 	}
 }
 
@@ -67,6 +72,15 @@ func (c *LsCommand) listDir(dir *Directory, path string) {
 		fmt.Fprintf(os.Stderr, "cannot read %s: %s\n", path, err)
 	}
 	c.listItems(children)
+	if c.recurse {
+		for _, item := range children {
+			if item.IsDir() {
+				itemPath := filepath.Join(path, item.Name())
+				fmt.Printf("\n%s:\n", itemPath)
+				c.listDir(dir, itemPath)
+			}
+		}
+	}
 }
 
 func (c *LsCommand) listItems(items []os.FileInfo) {
