@@ -36,7 +36,7 @@ func (c *LsCommand) Run(args []string, options *Options) {
 
 	listPaths := c.flag.Args()
 	if len(listPaths) == 0 {
-		listPaths = append(listPaths, "/")
+		listPaths = append(listPaths, "")
 	}
 
 	var files []os.FileInfo
