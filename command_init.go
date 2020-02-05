@@ -9,7 +9,7 @@ import (
 type InitCommand struct {
 	flag *flag.FlagSet
 
-	linkDir string
+	linkTarget string
 }
 
 func (c *InitCommand) Name() string {
@@ -23,7 +23,7 @@ func (c *InitCommand) setup(args []string, options *Options) {
 		fmt.Fprintln(c.flag.Output(), "\noptions:")
 		c.flag.PrintDefaults()
 	}
-	c.flag.StringVar(&c.linkDir, "l", "", fmt.Sprintf("make %s a symlink to the directory", options.noteDir))
+	c.flag.StringVar(&c.linkTarget, "l", "", fmt.Sprintf("make %s a symlink to the directory", options.noteDir))
 	c.flag.Parse(args)
 }
 
@@ -35,7 +35,7 @@ func (c *InitCommand) Run(args []string, options *Options) {
 	}
 
 	var err error
-	if c.linkDir == "" {
+	if c.linkTarget == "" {
 		err = c.initDirectory(options.noteDir)
 	} else {
 		err = c.initLink(options.noteDir)
@@ -51,9 +51,9 @@ func (c *InitCommand) initDirectory(noteDir string) error {
 }
 
 func (c *InitCommand) initLink(noteDir string) error {
-	_, err := InitDirectory(c.linkDir)
+	_, err := InitDirectory(c.linkTarget)
 	if err != nil {
 		return err
 	}
-	return os.Symlink(c.linkDir, noteDir)
+	return os.Symlink(c.linkTarget, noteDir)
 }
