@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 )
 
 type InitCommand struct {
@@ -35,11 +36,24 @@ func (c *InitCommand) Run(args []string, options *Options) {
 
 	var err error
 	if c.linkDir == "" {
-		_, err = InitDirectory(options.noteDir)
+		err = c.initDirectory(options.noteDir)
 	} else {
-		_, err = InitDirectoryLink(c.linkDir, options.noteDir)
+		err = c.initLink(options.noteDir)
 	}
 	if err != nil {
 		exitWithError(err)
 	}
+}
+
+func (c *InitCommand) initDirectory(noteDir string) error {
+	_, err := InitDirectory(noteDir)
+	return err
+}
+
+func (c *InitCommand) initLink(noteDir string) error {
+	_, err := InitDirectory(c.linkDir)
+	if err != nil {
+		return err
+	}
+	return os.Symlink(c.linkDir, noteDir)
 }

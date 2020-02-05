@@ -37,18 +37,6 @@ func InitDirectory(path string) (*Directory, error) {
 	return dir, nil
 }
 
-func InitDirectoryLink(path, link string) (*Directory, error) {
-	dir, err := InitDirectory(path)
-	if err != nil {
-		return nil, err
-	}
-	err = os.Symlink(dir.path, link)
-	if err != nil {
-		return nil, err
-	}
-	return dir, nil
-}
-
 func OpenDirectory(path string) (*Directory, error) {
 	dir := newDirectory(path)
 
