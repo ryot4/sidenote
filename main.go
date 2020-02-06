@@ -35,8 +35,8 @@ func main() {
 	var printVersion bool
 
 	flag.Usage = usage
-	flag.StringVar(&options.noteDir, "d", findNoteDir(), "path to the directory for notes")
-	flag.BoolVar(&printVersion, "version", false, "print version and exit")
+	flag.StringVar(&options.noteDir, "d", findNoteDir(), "Specify the directory for notes")
+	flag.BoolVar(&printVersion, "version", false, "Print the version and exit")
 	flag.Parse()
 
 	if printVersion {

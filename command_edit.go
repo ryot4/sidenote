@@ -33,9 +33,9 @@ func (c *EditCommand) setup(args []string, _options *Options) {
 		c.flag.PrintDefaults()
 	}
 	c.flag.StringVar(&c.editor, "e", os.Getenv(EditorEnv),
-		"editor to use")
+		"Specify the editor to use")
 	c.flag.StringVar(&c.nameFormat, "f", os.Getenv(NameFormatEnv),
-		"generate file name (a subset of strftime format string can be used)")
+		"Generate file name according to the format string (subset of strftime format)")
 	c.flag.Parse(args)
 }
 

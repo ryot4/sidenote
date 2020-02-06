@@ -23,7 +23,7 @@ func (c *InitCommand) setup(args []string, options *Options) {
 		fmt.Fprintln(c.flag.Output(), "\noptions:")
 		c.flag.PrintDefaults()
 	}
-	c.flag.StringVar(&c.linkTarget, "l", "", fmt.Sprintf("make %s a symlink to the directory", options.noteDir))
+	c.flag.StringVar(&c.linkTarget, "l", "", fmt.Sprintf("Link %s to the specified directory", options.noteDir))
 	c.flag.Parse(args)
 }
 

@@ -24,7 +24,7 @@ func (c *MvCommand) setup(args []string, options *Options) {
 		fmt.Fprintln(c.flag.Output(), "\noptions:")
 		c.flag.PrintDefaults()
 	}
-	c.flag.BoolVar(&c.force, "f", false, "allow overwriting existing files")
+	c.flag.BoolVar(&c.force, "f", false, "Allow overwriting existing files")
 	c.flag.Parse(args)
 }
 

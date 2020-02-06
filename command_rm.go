@@ -24,7 +24,7 @@ func (c *RmCommand) setup(args []string, options *Options) {
 		fmt.Fprintln(c.flag.Output(), "\noptions:")
 		c.flag.PrintDefaults()
 	}
-	c.flag.BoolVar(&c.recurse, "r", false, "remove directories recursively")
+	c.flag.BoolVar(&c.recurse, "r", false, "Remove directories recursively")
 	c.flag.Parse(args)
 }
 
