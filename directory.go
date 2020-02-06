@@ -1,16 +1,27 @@
 package main
 
 import (
-	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 )
 
-var (
-	ErrDotFileInPath = errors.New("contains dotfile")
-	ErrNotDirectory  = errors.New("not a directory")
-)
+type DotFileError struct {
+	Path string
+}
+
+func (e *DotFileError) Error() string {
+	return fmt.Sprintf("path %s contains dotfile", e.Path)
+}
+
+type NotDirectoryError struct {
+	Path string
+}
+
+func (e *NotDirectoryError) Error() string {
+	return fmt.Sprintf("%s already exists, but is not a directory", e.Path)
+}
 
 type Directory struct {
 	path string
@@ -32,7 +43,7 @@ func InitDirectory(path string) (*Directory, error) {
 	} else if err != nil {
 		return nil, err
 	} else if !fi.IsDir() {
-		return nil, ErrNotDirectory
+		return nil, &NotDirectoryError{Path: dir.path}
 	}
 	return dir, nil
 }
@@ -44,7 +55,7 @@ func OpenDirectory(path string) (*Directory, error) {
 	if err != nil {
 		return nil, err
 	} else if !fi.IsDir() {
-		return nil, ErrNotDirectory
+		return nil, &NotDirectoryError{Path: dir.path}
 	}
 	return dir, nil
 }
@@ -53,7 +64,7 @@ func (dir *Directory) FilePath(path string) (string, error) {
 	separator := string(filepath.Separator)
 	for _, elem := range strings.Split(path, separator) {
 		if strings.HasPrefix(elem, ".") {
-			return "", ErrDotFileInPath
+			return "", &DotFileError{Path: path}
 		}
 	}
 	return filepath.Join(dir.path, path), nil
