@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -10,14 +11,12 @@ import (
 )
 
 const (
-	EditorEnv     = "EDITOR"
 	NameFormatEnv = "SIDENOTE_NAME_FORMAT"
 )
 
 type EditCommand struct {
 	flag *flag.FlagSet
 
-	editor     string
 	nameFormat string
 }
 
@@ -32,8 +31,6 @@ func (c *EditCommand) setup(args []string, _options *Options) {
 		fmt.Fprintln(c.flag.Output(), "\noptions:")
 		c.flag.PrintDefaults()
 	}
-	c.flag.StringVar(&c.editor, "e", os.Getenv(EditorEnv),
-		"Specify the editor to use")
 	c.flag.StringVar(&c.nameFormat, "f", os.Getenv(NameFormatEnv),
 		"Generate file name according to the format string (subset of strftime format)")
 	c.flag.Parse(args)
@@ -41,6 +38,11 @@ func (c *EditCommand) setup(args []string, _options *Options) {
 
 func (c *EditCommand) Run(args []string, options *Options) {
 	c.setup(args, options)
+
+	editor, ok := os.LookupEnv("EDITOR")
+	if !ok {
+		exitWithError(errors.New("EDITOR environment variable is not set"))
+	}
 
 	dir, err := openDirectory(options.noteDir)
 	if err != nil {
@@ -62,7 +64,7 @@ func (c *EditCommand) Run(args []string, options *Options) {
 	if err != nil {
 		exitWithError(err)
 	}
-	err = runEditor(c.editor, realPath)
+	err = runEditor(editor, realPath)
 	if err != nil {
 		exitWithError(err)
 	}
