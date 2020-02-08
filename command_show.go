@@ -26,7 +26,7 @@ func (c *ShowCommand) setup(args []string, _options *Options) {
 func (c *ShowCommand) Run(args []string, options *Options) {
 	c.setup(args, options)
 
-	dir, err := OpenDirectory(options.noteDir)
+	dir, err := openDirectory(options.noteDir)
 	if err != nil {
 		exitWithError(err)
 	}

@@ -34,11 +34,16 @@ func (c *InitCommand) Run(args []string, options *Options) {
 		exitWithSyntaxError("too many arguments")
 	}
 
+	noteDir := options.noteDir
+	if noteDir == "" {
+		noteDir = NoteDirName
+	}
+
 	var err error
 	if c.linkTarget == "" {
-		err = c.initDirectory(options.noteDir)
+		err = c.initDirectory(noteDir)
 	} else {
-		err = c.initLink(options.noteDir)
+		err = c.initLink(noteDir)
 	}
 	if err != nil {
 		exitWithError(err)

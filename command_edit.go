@@ -42,7 +42,7 @@ func (c *EditCommand) setup(args []string, _options *Options) {
 func (c *EditCommand) Run(args []string, options *Options) {
 	c.setup(args, options)
 
-	dir, err := OpenDirectory(options.noteDir)
+	dir, err := openDirectory(options.noteDir)
 	if err != nil {
 		exitWithError(err)
 	}

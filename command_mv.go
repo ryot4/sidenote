@@ -31,7 +31,7 @@ func (c *MvCommand) setup(args []string, options *Options) {
 func (c *MvCommand) Run(args []string, options *Options) {
 	c.setup(args, options)
 
-	dir, err := OpenDirectory(options.noteDir)
+	dir, err := openDirectory(options.noteDir)
 	if err != nil {
 		exitWithError(err)
 	}

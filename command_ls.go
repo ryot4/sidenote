@@ -37,7 +37,7 @@ func (c *LsCommand) setup(args []string, options *Options) {
 func (c *LsCommand) Run(args []string, options *Options) {
 	c.setup(args, options)
 
-	dir, err := OpenDirectory(options.noteDir)
+	dir, err := openDirectory(options.noteDir)
 	if err != nil {
 		exitWithError(err)
 	}
