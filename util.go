@@ -40,13 +40,8 @@ func findDirectory() string {
 			continue
 		}
 		if fi.IsDir() {
-			rel, err := filepath.Rel(wd, noteDir)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "cannot get relative path to %s: %s. ignoring\n", noteDir, err)
-				continue
-			}
-			return rel
+			return noteDir
 		}
 	}
-	return NoteDirName
+	return filepath.Join(wd, NoteDirName)
 }
