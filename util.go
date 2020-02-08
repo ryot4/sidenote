@@ -18,30 +18,28 @@ func exitWithError(err error) {
 
 func openDirectory(path string) (*Directory, error) {
 	if path == "" {
-		path = findDirectory()
+		return findDirectory()
+	} else {
+		return OpenDirectory(path)
 	}
-	return OpenDirectory(path)
 }
 
 // findDirectory searches the directory for notes upward from the current directory.
-func findDirectory() string {
+func findDirectory() (*Directory, error) {
 	wd, err := os.Getwd()
 	if err != nil {
-		exitWithError(err)
+		return nil, err
 	}
 	separator := string(filepath.Separator)
-	for dir := wd; dir != "." && dir != separator; dir = filepath.Dir(dir) {
-		noteDir := filepath.Join(dir, NoteDirName)
-		fi, err := os.Stat(noteDir)
-		if err != nil {
-			if !os.IsNotExist(err) {
-				fmt.Fprintf(os.Stderr, "cannot stat %s: %s. ignoring\n", noteDir, err)
-			}
+	for cur := wd; cur != "." && cur != separator; cur = filepath.Dir(cur) {
+		dir, err := OpenDirectory(filepath.Join(cur, NoteDirName))
+		if err == nil {
+			return dir, nil
+		}
+		if os.IsNotExist(err) || IsNotDirectory(err) {
 			continue
 		}
-		if fi.IsDir() {
-			return noteDir
-		}
+		fmt.Fprintln(os.Stderr, err)
 	}
-	return filepath.Join(wd, NoteDirName)
+	return nil, fmt.Errorf("%s directory is not found", NoteDirName)
 }

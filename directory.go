@@ -20,7 +20,12 @@ type NotDirectoryError struct {
 }
 
 func (e *NotDirectoryError) Error() string {
-	return fmt.Sprintf("%s already exists, but is not a directory", e.Path)
+	return fmt.Sprintf("%s is not a directory", e.Path)
+}
+
+func IsNotDirectory(err error) bool {
+	_, ok := err.(*NotDirectoryError)
+	return ok
 }
 
 type Directory struct {
