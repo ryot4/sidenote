@@ -50,6 +50,7 @@ func (c *InitCommand) initDirectory(options *Options) error {
 	if options.noteDir != "" {
 		noteDir = options.noteDir
 	}
+
 	_, err := InitDirectory(noteDir)
 	return err
 }
@@ -58,9 +59,16 @@ func (c *InitCommand) initLink(options *Options) error {
 	if options.noteDir != "" {
 		fmt.Fprintln(os.Stderr, "warning: -d is ignored when -l is specified")
 	}
-	_, err := InitDirectory(c.linkTarget)
+
+	// Create the symlink first; if this fails, do not initialize the target directory.
+	err := os.Symlink(c.linkTarget, NoteDirName)
+	if err != nil {
+		return err
+	}
+
+	_, err = InitDirectory(c.linkTarget)
 	if err != nil && !os.IsExist(err) {
 		return err
 	}
-	return os.Symlink(c.linkTarget, NoteDirName)
+	return nil
 }
