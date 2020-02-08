@@ -23,7 +23,7 @@ func (c *InitCommand) setup(args []string, options *Options) {
 		fmt.Fprintln(c.flag.Output(), "\noptions:")
 		c.flag.PrintDefaults()
 	}
-	c.flag.StringVar(&c.linkTarget, "l", "", fmt.Sprintf("Link %s to the specified directory", options.noteDir))
+	c.flag.StringVar(&c.linkTarget, "l", "", fmt.Sprintf("Link %s to the specified directory", NoteDirName))
 	c.flag.Parse(args)
 }
 
@@ -34,31 +34,33 @@ func (c *InitCommand) Run(args []string, options *Options) {
 		exitWithSyntaxError("too many arguments")
 	}
 
-	noteDir := options.noteDir
-	if noteDir == "" {
-		noteDir = NoteDirName
-	}
-
 	var err error
 	if c.linkTarget == "" {
-		err = c.initDirectory(noteDir)
+		err = c.initDirectory(options)
 	} else {
-		err = c.initLink(noteDir)
+		err = c.initLink(options)
 	}
 	if err != nil {
 		exitWithError(err)
 	}
 }
 
-func (c *InitCommand) initDirectory(noteDir string) error {
+func (c *InitCommand) initDirectory(options *Options) error {
+	noteDir := NoteDirName
+	if options.noteDir != "" {
+		noteDir = options.noteDir
+	}
 	_, err := InitDirectory(noteDir)
 	return err
 }
 
-func (c *InitCommand) initLink(noteDir string) error {
+func (c *InitCommand) initLink(options *Options) error {
+	if options.noteDir != "" {
+		fmt.Fprintln(os.Stderr, "warning: -d is ignored when -l is specified")
+	}
 	_, err := InitDirectory(c.linkTarget)
 	if err != nil {
 		return err
 	}
-	return os.Symlink(c.linkTarget, noteDir)
+	return os.Symlink(c.linkTarget, NoteDirName)
 }
