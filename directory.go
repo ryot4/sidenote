@@ -39,16 +39,16 @@ func newDirectory(path string) *Directory {
 func InitDirectory(path string) (*Directory, error) {
 	dir := newDirectory(path)
 
-	fi, err := os.Stat(dir.path)
-	if os.IsNotExist(err) {
-		err = os.MkdirAll(dir.path, os.ModePerm)
-		if err != nil {
-			return nil, err
-		}
-	} else if err != nil {
+	_, err := os.Stat(dir.path)
+	if err == nil {
+		return dir, &os.PathError{"initialize", dir.path, os.ErrExist}
+	} else if !os.IsNotExist(err) {
 		return nil, err
-	} else if !fi.IsDir() {
-		return nil, &NotDirectoryError{Path: dir.path}
+	}
+
+	err = os.MkdirAll(dir.path, os.ModePerm)
+	if err != nil {
+		return nil, err
 	}
 	return dir, nil
 }

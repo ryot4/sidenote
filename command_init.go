@@ -59,7 +59,7 @@ func (c *InitCommand) initLink(options *Options) error {
 		fmt.Fprintln(os.Stderr, "warning: -d is ignored when -l is specified")
 	}
 	_, err := InitDirectory(c.linkTarget)
-	if err != nil {
+	if err != nil && !os.IsExist(err) {
 		return err
 	}
 	return os.Symlink(c.linkTarget, NoteDirName)
