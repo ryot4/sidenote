@@ -1,0 +1,117 @@
+= sidenote
+
+sidenote is a command line utility for managing plain text notes.
+
+== Quick start
+
+=== Initialization
+
+sidenote stores all files in `.notes` directory, and this directory can be created with `sidenote init`.
+
+----
+$ sidenote init
+$ ls -dl .notes
+drwxr-xr-x 2 ryot4 ryot4 4096 Feb  9 19:03 .notes
+----
+
+If you want to store files outside the current working directory, use `init -l`:
+
+----
+$ sidenote init -l ~/Documents/notes
+$ ls -l .notes
+lrwxrwxrwx 1 ryot4 ryot4 31 Feb  9 19:03 .notes -> /home/ryot4/Documents/notes
+----
+
+=== Editing
+
+Open a file with your favorite text editor (`$VISUAL` or `$EDITOR`):
+
+----
+$ sidenote edit todo                 # This opens .notes/todo with the editor.
+$ sidenote edit issues/issue-123.md  # You can create subdirectories.
+----
+
+Filenames can be generated based on the current date. (subset of `strftime(3)` format is available)
+
+```
+$ date +'%Y-%m-%d'
+2020-02-09
+$ sidenote edit -f '%Y-%m-%d.md'             # This opens 2020-02-09.md.
+$ export SIDENOTE_NAME_FORMAT='%Y-%m-%d.md'
+$ sidenote edit                              # Same as above, but no need to specify the format every time.
+```
+
+When `.notes` does not exist in the current working directory, sidenote searchs the directory hierarchy upward.
+
+----
+$ sidenote path            # Print the relative path to the .notes directory.
+.notes
+$ sidenote edit todo.txt   # This opens .notes/todo.txt.
+$ mkdir subdir; cd subdir
+$ sidenote path
+../.notes
+$ sidenote edit todo.txt   # This opens ../.notes/todo.txt (the same file as above).
+----
+
+=== File operations
+
+There are some bulitin commands for basic file operations.
+
+----
+$ sidenote ls
+todo.txt
+$ sidenote ls -l
+Feb  9 21:37 todo.txt
+$ sidenote mv todo.txt done.txt
+$ sidenote ls
+done.txt
+$ sidenote rm done.txt
+----
+
+Of course you can use standard command line utilities for more complex operations.
+
+----
+$ find .notes -name todo.txt            # Find notes named todo.txt.
+$ find $(sidenote path) -name todo.txt  # Same as above, but this is convenient when you are not in the toplevel directory.
+----
+
+== Searching
+
+Searching can be done with a combination of `sidenote path` and existing searching commands such as `grep`.
+
+```
+$ grep -R pattern $(sidenote path)          # Search all files.
+$ grep -R pattern $(sidenote path 2020/02)  # Search files in 2020/02/.
+```
+
+== Tips
+
+=== Store files in the directory other than .notes
+
+You can use `-d` option or `SIDENOTE_DIR` environment variable to change the directory where files are stored.
+
+----
+$ sidenote -d /path/to/notes edit todo.txt  # Open /path/to/notes/todo.txt
+$ export SIDENOTE_DIR=/path/to/notes
+$ sidenote edit todo.txt                    # Same as above.
+----
+
+=== Dotfiles are ignored
+
+You cannot use filenames beginning with a dot (`.`), and such files are ignored by `sidenote ls`.
+
+----
+$ sidenote edit .test
+error: path .test contains dotfile
+$ sidenote edit dir/.test
+error: path dir/.test contains dotfile
+----
+
+----
+$ git --git-dir=$(sidenote path)/.git init -q  # Initialize the Git repository for notes.
+$ sidenote ls                                  # This does not list .notes/.git.
+----
+
+=== Command-line completions
+
+See `completions` directory. (Currently only Bash is supported)
