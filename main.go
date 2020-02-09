@@ -34,7 +34,8 @@ func main() {
 	var printVersion bool
 
 	flag.Usage = usage
-	flag.StringVar(&options.noteDir, "d", os.Getenv(NoteDirEnv), "Specify the directory for notes")
+	flag.StringVar(&options.noteDir, "d", os.Getenv(NoteDirEnv),
+		fmt.Sprintf("Specify the directory for notes (env: %s)", NoteDirEnv))
 	flag.BoolVar(&printVersion, "version", false, "Print the version and exit")
 	flag.Parse()
 

@@ -32,7 +32,8 @@ func (c *EditCommand) setup(args []string, _options *Options) {
 		c.flag.PrintDefaults()
 	}
 	c.flag.StringVar(&c.nameFormat, "f", os.Getenv(NameFormatEnv),
-		"Generate file name according to the format string (subset of strftime format)")
+		fmt.Sprintf("Generate file name using the given strftime format string (env: %s)",
+			NameFormatEnv))
 	c.flag.Parse(args)
 }
 
