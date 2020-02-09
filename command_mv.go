@@ -53,32 +53,32 @@ func (c *MvCommand) Run(args []string, options *Options) {
 }
 
 func (c *MvCommand) move(dir *Directory, src, dest string, options *Options) error {
-	srcReal, err := dir.FilePath(src)
+	srcAbs, err := dir.AbsPath(src)
 	if err != nil {
 		return err
 	}
-	destReal, err := dir.FilePath(dest)
+	destAbs, err := dir.AbsPath(dest)
 	if err != nil {
 		return err
 	}
 
-	parentDir := filepath.Dir(destReal)
+	parentDir := filepath.Dir(destAbs)
 	if err = os.MkdirAll(parentDir, os.ModePerm); err != nil {
 		return err
 	}
 
-	fi, err := os.Stat(destReal)
+	fi, err := os.Stat(destAbs)
 	if err != nil {
 		if !os.IsNotExist(err) {
 			return err
 		}
 	} else {
 		if fi.IsDir() {
-			destReal = filepath.Join(destReal, filepath.Base(srcReal))
+			destAbs = filepath.Join(destAbs, filepath.Base(srcAbs))
 		} else if !c.force {
 			return fmt.Errorf("%s already exists; use -f to overwrite", dest)
 		}
 	}
 
-	return os.Rename(srcReal, destReal)
+	return os.Rename(srcAbs, destAbs)
 }

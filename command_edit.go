@@ -64,11 +64,11 @@ func (c *EditCommand) Run(args []string, options *Options) {
 		}
 		filePath = Strftime(time.Now(), c.nameFormat)
 	}
-	realPath, err := dir.FilePath(filePath)
+	absPath, err := dir.AbsPath(filePath)
 	if err != nil {
 		exitWithError(err)
 	}
-	err = runEditor(editor, realPath)
+	err = runEditor(editor, absPath)
 	if err != nil {
 		exitWithError(err)
 	}

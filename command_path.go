@@ -51,7 +51,7 @@ func (c *PathCommand) Run(args []string, options *Options) {
 }
 
 func (c *PathCommand) showPath(dir *Directory, path string) error {
-	absPath, err := dir.FilePath(path)
+	absPath, err := dir.AbsPath(path)
 	if err != nil {
 		exitWithError(err)
 	}

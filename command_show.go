@@ -47,12 +47,12 @@ func (c *ShowCommand) Run(args []string, options *Options) {
 }
 
 func (c *ShowCommand) show(dir *Directory, path string) error {
-	realPath, err := dir.FilePath(path)
+	absPath, err := dir.AbsPath(path)
 	if err != nil {
 		return err
 	}
 
-	f, err := os.Open(realPath)
+	f, err := os.Open(absPath)
 	if err != nil {
 		return err
 	}

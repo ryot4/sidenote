@@ -1,44 +1,38 @@
 package main
 
 import (
-	"path/filepath"
 	"testing"
 )
 
-func TestFilePath(t *testing.T) {
-	noteDir := "/path/to/note"
+func TestAbsPath(t *testing.T) {
+	noteDir := "/note"
 	dir := newDirectory(noteDir)
 
 	tests := []struct {
 		path   string
 		expect string
 	}{
-		{"foo", "foo"},
-		{"/foo", "foo"},
-		{"foo.txt", "foo.txt"},
-		{"foo.", "foo."},
-		{"foo/bar", "foo/bar"},
-		{"/foo//bar", "foo/bar"},
+		{"foo", "/note/foo"},
+		{"/foo", "/note/foo"},
+		{"foo.txt", "/note/foo.txt"},
+		{"foo.", "/note/foo."},
+		{"foo/bar", "/note/foo/bar"},
+		{"/foo//bar", "/note/foo/bar"},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.path, func(t *testing.T) {
-			path, err := dir.FilePath(tt.path)
+			path, err := dir.AbsPath(tt.path)
 			if err != nil {
 				t.Error(err)
-			}
-			relPath, err := filepath.Rel(noteDir, path)
-			if err != nil {
-				t.Error(err)
-			}
-			if relPath != tt.expect {
-				t.Errorf("expect %q, got %q", tt.expect, relPath)
+			} else if path != tt.expect {
+				t.Errorf("expect %q, got %q", tt.expect, path)
 			}
 		})
 	}
 }
 
-func TestFilePathDotFileError(t *testing.T) {
+func TestAbsPathDotFileError(t *testing.T) {
 	dir := newDirectory("/path/to/note")
 
 	tests := []string{
@@ -53,7 +47,7 @@ func TestFilePathDotFileError(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt, func(t *testing.T) {
-			_, err := dir.FilePath(tt)
+			_, err := dir.AbsPath(tt)
 			_, ok := err.(*DotFileError)
 			if !ok {
 				t.Errorf("expect DotFileError, got %v", err)
