@@ -23,7 +23,7 @@ _sidenote()
     local cur prev
     _get_comp_words_by_ref cur prev
 
-    local -r cmds=(init edit path ls show mv rm)
+    local -r cmds=(init path ls show edit mv rm)
     local i=1 cmd= opts=
     while [[ $i -lt ${COMP_CWORD} ]]; do
         local word="${COMP_WORDS[i]}"
@@ -76,18 +76,6 @@ _sidenote()
             ;;
         esac
         ;;
-    edit)
-        case "${cur}" in
-        -*)
-            COMPREPLY=($(compgen -W '-f -h' -- "${cur}"))
-            ;;
-        *)
-            if [[ ${prev} != '-f' ]]; then
-                _sidenote_path "${opts}"
-            fi
-            ;;
-        esac
-        ;;
     path)
         case "${cur}" in
         -*)
@@ -110,6 +98,18 @@ _sidenote()
         ;;
     show)
         _sidenote_path "${opts}"
+        ;;
+    edit)
+        case "${cur}" in
+        -*)
+            COMPREPLY=($(compgen -W '-f -h' -- "${cur}"))
+            ;;
+        *)
+            if [[ ${prev} != '-f' ]]; then
+                _sidenote_path "${opts}"
+            fi
+            ;;
+        esac
         ;;
     mv)
         case "${cur}" in

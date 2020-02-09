@@ -22,10 +22,10 @@ type Command interface {
 
 var subCommands = []Command{
 	&InitCommand{},
-	&EditCommand{},
 	&PathCommand{},
 	&LsCommand{},
 	&ShowCommand{},
+	&EditCommand{},
 	&MvCommand{},
 	&RmCommand{},
 }
