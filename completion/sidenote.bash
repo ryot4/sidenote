@@ -19,14 +19,13 @@ _sidenote_path()
 
 _sidenote()
 {
-    COMPREPLY=()
+    local -r cmds=(init path ls show edit mv rm)
     local cur prev
     _get_comp_words_by_ref cur prev
 
-    local -r cmds=(init path ls show edit mv rm)
-    local i=1 cmd= opts= notes=
+    local i=1 word cmd opts notes
     while [[ $i -lt ${COMP_CWORD} ]]; do
-        local word="${COMP_WORDS[i]}"
+        word="${COMP_WORDS[i]}"
         case "${word}" in
         -d)
             notes="${COMP_WORDS[i+1]}"
@@ -45,6 +44,8 @@ _sidenote()
         esac
         i=$((i + 1))
     done
+
+    COMPREPLY=()
 
     if [[ -z ${cmd} ]]; then
         case "${cur}" in
