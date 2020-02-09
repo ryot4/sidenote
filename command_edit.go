@@ -32,7 +32,7 @@ func (c *EditCommand) setup(args []string, _options *Options) {
 		c.flag.PrintDefaults()
 	}
 	c.flag.StringVar(&c.nameFormat, "f", os.Getenv(NameFormatEnv),
-		fmt.Sprintf("Generate file name using the given strftime format string (env: %s)",
+		fmt.Sprintf("Generate filename using the given strftime format string (env: %s)",
 			NameFormatEnv))
 	c.flag.Parse(args)
 }
@@ -60,7 +60,7 @@ func (c *EditCommand) Run(args []string, options *Options) {
 		filePath = c.flag.Arg(0)
 	} else {
 		if c.nameFormat == "" {
-			exitWithSyntaxError("no file name specified")
+			exitWithSyntaxError("no filename specified")
 		}
 		filePath = Strftime(time.Now(), c.nameFormat)
 	}
