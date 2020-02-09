@@ -100,7 +100,14 @@ _sidenote()
         esac
         ;;
     show)
-        _sidenote_path "${opts}"
+        case "${cur}" in
+        -*)
+            COMPREPLY=($(compgen -W '-h' -- "${cur}"))
+            ;;
+        *)
+            _sidenote_path "${opts}"
+            ;;
+        esac
         ;;
     edit)
         case "${cur}" in
@@ -117,7 +124,7 @@ _sidenote()
     mv)
         case "${cur}" in
         -*)
-            COMPREPLY=($(compgen -W '-f' -- "${cur}"))
+            COMPREPLY=($(compgen -W '-f -h' -- "${cur}"))
             ;;
         *)
             _sidenote_path "${opts}"
@@ -127,7 +134,7 @@ _sidenote()
     rm)
         case "${cur}" in
         -*)
-            COMPREPLY=($(compgen -W '-r' -- "${cur}"))
+            COMPREPLY=($(compgen -W '-h -r' -- "${cur}"))
             ;;
         *)
             _sidenote_path "${opts}"
