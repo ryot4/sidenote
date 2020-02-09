@@ -40,9 +40,12 @@ func (c *EditCommand) setup(args []string, _options *Options) {
 func (c *EditCommand) Run(args []string, options *Options) {
 	c.setup(args, options)
 
-	editor, ok := os.LookupEnv("EDITOR")
+	editor, ok := os.LookupEnv("VISUAL")
 	if !ok {
-		exitWithError(errors.New("EDITOR environment variable is not set"))
+		editor, ok = os.LookupEnv("EDITOR")
+		if !ok {
+			exitWithError(errors.New("neither VISUAL nor EDITOR is set"))
+		}
 	}
 
 	dir, err := openDirectory(options.noteDir)
