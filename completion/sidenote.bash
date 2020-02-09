@@ -24,12 +24,14 @@ _sidenote()
     _get_comp_words_by_ref cur prev
 
     local -r cmds=(init path ls show edit mv rm)
-    local i=1 cmd= opts=
+    local i=1 cmd= opts= notes=
     while [[ $i -lt ${COMP_CWORD} ]]; do
         local word="${COMP_WORDS[i]}"
         case "${word}" in
         -d)
-            opts="${opts} -d ${COMP_WORDS[i+1]}"
+            notes="${COMP_WORDS[i+1]}"
+            __expand_tilde_by_ref notes
+            opts="${opts} -d ${notes}"
             ;;
         *)
             for c in "${cmds[@]}"; do
