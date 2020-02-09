@@ -19,7 +19,7 @@ func (c *InitCommand) Name() string {
 func (c *InitCommand) setup(args []string, options *Options) {
 	c.flag = flag.NewFlagSet(c.Name(), flag.ExitOnError)
 	c.flag.Usage = func() {
-		fmt.Fprintf(c.flag.Output(), "Usage: %s [options]\n", c.Name())
+		fmt.Fprintf(c.flag.Output(), "Usage: %s [-l path]\n", c.Name())
 		fmt.Fprintln(c.flag.Output(), "\noptions:")
 		c.flag.PrintDefaults()
 	}

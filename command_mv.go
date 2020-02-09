@@ -20,7 +20,7 @@ func (c *MvCommand) Name() string {
 func (c *MvCommand) setup(args []string, options *Options) {
 	c.flag = flag.NewFlagSet(c.Name(), flag.ExitOnError)
 	c.flag.Usage = func() {
-		fmt.Fprintf(c.flag.Output(), "Usage: %s [options] <source> <destination>\n", c.Name())
+		fmt.Fprintf(c.flag.Output(), "Usage: %s [-f] <source> <destination>\n", c.Name())
 		fmt.Fprintln(c.flag.Output(), "\noptions:")
 		c.flag.PrintDefaults()
 	}

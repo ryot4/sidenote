@@ -27,7 +27,7 @@ func (c *EditCommand) Name() string {
 func (c *EditCommand) setup(args []string, _options *Options) {
 	c.flag = flag.NewFlagSet(c.Name(), flag.ExitOnError)
 	c.flag.Usage = func() {
-		fmt.Fprintf(c.flag.Output(), "Usage: %s [options] [name]\n", c.Name())
+		fmt.Fprintf(c.flag.Output(), "Usage: %s [-f format] [name]\n", c.Name())
 		fmt.Fprintln(c.flag.Output(), "\noptions:")
 		c.flag.PrintDefaults()
 	}

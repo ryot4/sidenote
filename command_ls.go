@@ -24,7 +24,7 @@ func (c *LsCommand) Name() string {
 func (c *LsCommand) setup(args []string, options *Options) {
 	c.flag = flag.NewFlagSet(c.Name(), flag.ExitOnError)
 	c.flag.Usage = func() {
-		fmt.Fprintf(c.flag.Output(), "Usage: %s [options] [name]\n", c.Name())
+		fmt.Fprintf(c.flag.Output(), "Usage: %s [-l] [-r] [-t] [name]\n", c.Name())
 		fmt.Fprintln(c.flag.Output(), "\noptions:")
 		c.flag.PrintDefaults()
 	}

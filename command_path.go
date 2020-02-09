@@ -20,7 +20,7 @@ func (c *PathCommand) Name() string {
 func (c *PathCommand) setup(args []string, _options *Options) {
 	c.flag = flag.NewFlagSet(c.Name(), flag.ExitOnError)
 	c.flag.Usage = func() {
-		fmt.Fprintf(c.flag.Output(), "Usage: %s [options] [name]\n", c.Name())
+		fmt.Fprintf(c.flag.Output(), "Usage: %s [-a] [name]\n", c.Name())
 		fmt.Fprintln(c.flag.Output(), "\noptions:")
 		c.flag.PrintDefaults()
 	}
