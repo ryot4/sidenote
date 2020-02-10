@@ -4,6 +4,12 @@ _sidenote_path()
     local cur prev path_prefix path
     _get_comp_words_by_ref cur prev
 
+    sidenote ${opts} path > /dev/null 2>&1
+    if [[ $? -ne 0 ]]; then
+        COMPREPLY=()
+        return
+    fi
+
     compopt -o nospace
     case "${cur}" in
     -*)
