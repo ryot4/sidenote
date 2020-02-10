@@ -23,7 +23,7 @@ func (c *InitCommand) setup(args []string, options *Options) {
 		fmt.Fprintln(c.flag.Output(), "\noptions:")
 		c.flag.PrintDefaults()
 	}
-	c.flag.StringVar(&c.linkTarget, "l", "", fmt.Sprintf("Link %s to the specified directory", NoteDirName))
+	c.flag.StringVar(&c.linkTarget, "l", "", "Link notes to the specified directory")
 	c.flag.Parse(args)
 }
 
@@ -56,12 +56,13 @@ func (c *InitCommand) initDirectory(options *Options) error {
 }
 
 func (c *InitCommand) initLink(options *Options) error {
+	noteDir := NoteDirName
 	if options.noteDir != "" {
-		fmt.Fprintln(os.Stderr, "warning: -d is ignored when -l is specified")
+		noteDir = options.noteDir
 	}
 
 	// Create the symlink first; if this fails, do not initialize the target directory.
-	err := os.Symlink(c.linkTarget, NoteDirName)
+	err := os.Symlink(c.linkTarget, noteDir)
 	if err != nil {
 		return err
 	}
