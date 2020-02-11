@@ -1,24 +1,23 @@
 package main
 
 import (
-	"path/filepath"
 	"testing"
 )
 
 func TestFilePath(t *testing.T) {
-	noteDir := "/path/to/note"
+	noteDir := ".notes"
 	dir := newDirectory(noteDir)
 
 	tests := []struct {
 		path   string
 		expect string
 	}{
-		{"foo", "foo"},
-		{"/foo", "foo"},
-		{"foo.txt", "foo.txt"},
-		{"foo.", "foo."},
-		{"foo/bar", "foo/bar"},
-		{"/foo//bar", "foo/bar"},
+		{"foo", ".notes/foo"},
+		{"/foo", ".notes/foo"},
+		{"foo.txt", ".notes/foo.txt"},
+		{"foo.", ".notes/foo."},
+		{"foo/bar", ".notes/foo/bar"},
+		{"/foo//bar", ".notes/foo/bar"},
 	}
 
 	for _, tt := range tests {
@@ -27,12 +26,8 @@ func TestFilePath(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			relPath, err := filepath.Rel(noteDir, path)
-			if err != nil {
-				t.Error(err)
-			}
-			if relPath != tt.expect {
-				t.Errorf("expect %q, got %q", tt.expect, relPath)
+			if path != tt.expect {
+				t.Errorf("expect %q, got %q", tt.expect, path)
 			}
 		})
 	}
