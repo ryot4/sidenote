@@ -64,32 +64,34 @@ func (c *EditCommand) Run(args []string, options *Options) {
 		}
 		filePath = Strftime(time.Now(), c.nameFormat)
 	}
-	realPath, err := dir.JoinPath(filePath)
-	if err != nil {
-		exitWithError(err)
-	}
-	err = runEditor(editor, realPath)
+
+	err = c.runEditor(dir, editor, filePath)
 	if err != nil {
 		exitWithError(err)
 	}
 }
 
-func runEditor(editor, path string) error {
-	dir := filepath.Dir(path)
-	if err := os.MkdirAll(dir, os.ModePerm); err != nil {
+func (c *EditCommand) runEditor(dir *Directory, editor, path string) error {
+	realPath, err := dir.JoinPath(path)
+	if err != nil {
+		exitWithError(err)
+	}
+
+	err = os.MkdirAll(filepath.Dir(realPath), os.ModePerm)
+	if err != nil {
 		return err
 	}
 
-	fi, err := os.Stat(path)
+	fi, err := os.Stat(realPath)
 	if err != nil {
 		if !os.IsNotExist(err) {
 			return err
 		}
 	} else if fi.IsDir() {
-		return fmt.Errorf("directory exists: %s", path)
+		return fmt.Errorf("directory exists: %s", realPath)
 	}
 
-	editorCmd := exec.Command(editor, path)
+	editorCmd := exec.Command(editor, realPath)
 	editorCmd.Stdin = os.Stdin
 	editorCmd.Stdout = os.Stdout
 	editorCmd.Stderr = os.Stderr
