@@ -11,6 +11,7 @@ type PathCommand struct {
 	flag *flag.FlagSet
 
 	absolute bool
+	check    bool
 }
 
 func (c *PathCommand) Name() string {
@@ -25,13 +26,14 @@ func (c *PathCommand) setup(args []string, _options *Options) {
 		c.flag.PrintDefaults()
 	}
 	c.flag.BoolVar(&c.absolute, "a", false, "Show absolute path")
+	c.flag.BoolVar(&c.check, "c", false, "Check existence of the path")
 	c.flag.Parse(args)
 }
 
 func (c *PathCommand) Run(args []string, options *Options) {
 	c.setup(args, options)
 
-	dir, err := checkDirectory(options.noteDir)
+	dir, err := getDirectory(options.noteDir)
 	if err != nil {
 		exitWithError(err)
 	}
@@ -54,6 +56,13 @@ func (c *PathCommand) showPath(dir *Directory, path string) error {
 	realPath, err := dir.JoinPath(path)
 	if err != nil {
 		exitWithError(err)
+	}
+
+	if c.check {
+		_, err := os.Stat(realPath)
+		if err != nil {
+			return err
+		}
 	}
 
 	if c.absolute {
