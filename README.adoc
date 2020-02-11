@@ -6,6 +6,10 @@ It aims to be simple and work well with existing text editors and Unix command l
 
 == Installation
 
+=== Binary releases
+
+(Preparing)
+
 === Build from source
 
 Make sure https://golang.org/doc/install[Go distribution is installed], and then run `go get`.
