@@ -75,13 +75,21 @@ func (c *MvCommand) move(dir *Directory, src, dest string) error {
 }
 
 func (c *MvCommand) doMove(srcReal, destReal string) error {
-	_, err := os.Stat(destReal)
+	srcFi, err := os.Stat(srcReal)
+	if err != nil {
+		return err
+	}
+	destFi, err := os.Stat(destReal)
 	if err != nil {
 		if !os.IsNotExist(err) {
 			return err
 		}
 	} else if !c.force {
 		return fmt.Errorf("%s already exists; use -f to overwrite", destReal)
+	}
+
+	if os.SameFile(srcFi, destFi) {
+		return fmt.Errorf("%s and %s are the same file", srcReal, destReal)
 	}
 
 	err = os.MkdirAll(filepath.Dir(destReal), os.ModePerm)
