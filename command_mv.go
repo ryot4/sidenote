@@ -62,11 +62,6 @@ func (c *MvCommand) move(dir *Directory, src, dest string, options *Options) err
 		return err
 	}
 
-	parentDir := filepath.Dir(destReal)
-	if err = os.MkdirAll(parentDir, os.ModePerm); err != nil {
-		return err
-	}
-
 	fi, err := os.Stat(destReal)
 	if err != nil {
 		if !os.IsNotExist(err) {
@@ -80,5 +75,9 @@ func (c *MvCommand) move(dir *Directory, src, dest string, options *Options) err
 		}
 	}
 
+	err = os.MkdirAll(filepath.Dir(destReal), os.ModePerm)
+	if err != nil {
+		return err
+	}
 	return os.Rename(srcReal, destReal)
 }
