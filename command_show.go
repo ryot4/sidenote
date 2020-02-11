@@ -18,7 +18,7 @@ func (c *ShowCommand) Name() string {
 func (c *ShowCommand) setup(args []string, _options *Options) {
 	c.flag = flag.NewFlagSet(c.Name(), flag.ExitOnError)
 	c.flag.Usage = func() {
-		fmt.Fprintf(c.flag.Output(), "Usage: %s <name>\n", c.Name())
+		fmt.Fprintf(c.flag.Output(), "Usage: %s <name>...\n", c.Name())
 	}
 	c.flag.Parse(args)
 }
@@ -31,22 +31,24 @@ func (c *ShowCommand) Run(args []string, options *Options) {
 		exitWithError(err)
 	}
 
-	var filePath string
-	if c.flag.NArg() > 1 {
-		exitWithSyntaxError("too many arguments")
-	} else if c.flag.NArg() == 1 {
-		filePath = c.flag.Arg(0)
-	} else {
+	if c.flag.NArg() == 0 {
 		exitWithSyntaxError("no file specified")
 	}
 
-	err = c.show(dir, filePath)
-	if err != nil {
-		exitWithError(err)
+	var lastErr error
+	for _, filePath := range c.flag.Args() {
+		err = c.showFile(dir, filePath)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		os.Exit(1)
 	}
 }
 
-func (c *ShowCommand) show(dir *Directory, path string) error {
+func (c *ShowCommand) showFile(dir *Directory, path string) error {
 	realPath, err := dir.JoinPath(path)
 	if err != nil {
 		return err
