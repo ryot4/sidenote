@@ -52,7 +52,7 @@ func (c *RmCommand) Run(args []string, options *Options) {
 }
 
 func (c *RmCommand) remove(dir *Directory, path string) error {
-	realPath, err := dir.FilePath(path)
+	realPath, err := dir.JoinPath(path)
 	if err != nil {
 		return err
 	}

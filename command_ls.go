@@ -58,7 +58,7 @@ func (c *LsCommand) Run(args []string, options *Options) {
 }
 
 func (c *LsCommand) list(dir *Directory, path string) error {
-	realPath, err := dir.FilePath(path)
+	realPath, err := dir.JoinPath(path)
 	if err != nil {
 		return err
 	}

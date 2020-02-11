@@ -64,7 +64,7 @@ func (c *EditCommand) Run(args []string, options *Options) {
 		}
 		filePath = Strftime(time.Now(), c.nameFormat)
 	}
-	realPath, err := dir.FilePath(filePath)
+	realPath, err := dir.JoinPath(filePath)
 	if err != nil {
 		exitWithError(err)
 	}

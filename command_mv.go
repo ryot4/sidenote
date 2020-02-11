@@ -53,11 +53,11 @@ func (c *MvCommand) Run(args []string, options *Options) {
 }
 
 func (c *MvCommand) move(dir *Directory, src, dest string, options *Options) error {
-	srcReal, err := dir.FilePath(src)
+	srcReal, err := dir.JoinPath(src)
 	if err != nil {
 		return err
 	}
-	destReal, err := dir.FilePath(dest)
+	destReal, err := dir.JoinPath(dest)
 	if err != nil {
 		return err
 	}

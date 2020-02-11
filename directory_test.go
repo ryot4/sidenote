@@ -22,7 +22,7 @@ func TestFilePath(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.path, func(t *testing.T) {
-			path, err := dir.FilePath(tt.path)
+			path, err := dir.JoinPath(tt.path)
 			if err != nil {
 				t.Error(err)
 			}
@@ -48,7 +48,7 @@ func TestFilePathDotFileError(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt, func(t *testing.T) {
-			_, err := dir.FilePath(tt)
+			_, err := dir.JoinPath(tt)
 			_, ok := err.(*DotFileError)
 			if !ok {
 				t.Errorf("expect DotFileError, got %v", err)

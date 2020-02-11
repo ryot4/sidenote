@@ -47,7 +47,7 @@ func (c *ShowCommand) Run(args []string, options *Options) {
 }
 
 func (c *ShowCommand) show(dir *Directory, path string) error {
-	realPath, err := dir.FilePath(path)
+	realPath, err := dir.JoinPath(path)
 	if err != nil {
 		return err
 	}
