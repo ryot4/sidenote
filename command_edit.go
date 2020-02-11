@@ -7,17 +7,20 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
 const (
 	NameFormatEnv = "SIDENOTE_NAME_FORMAT"
+	FileExtEnv    = "SIDENOTE_FILE_EXT"
 )
 
 type EditCommand struct {
 	flag *flag.FlagSet
 
 	nameFormat string
+	fileExt    string
 }
 
 func (c *EditCommand) Name() string {
@@ -27,13 +30,16 @@ func (c *EditCommand) Name() string {
 func (c *EditCommand) setup(args []string, _options *Options) {
 	c.flag = flag.NewFlagSet(c.Name(), flag.ExitOnError)
 	c.flag.Usage = func() {
-		fmt.Fprintf(c.flag.Output(), "Usage: %s [-f format] [name]\n", c.Name())
+		fmt.Fprintf(c.flag.Output(), "Usage: %s [-f format] [-x extension] [name]\n", c.Name())
 		fmt.Fprintln(c.flag.Output(), "\noptions:")
 		c.flag.PrintDefaults()
 	}
 	c.flag.StringVar(&c.nameFormat, "f", os.Getenv(NameFormatEnv),
 		fmt.Sprintf("Generate filename using the given strftime format string (env: %s)",
 			NameFormatEnv))
+	c.flag.StringVar(&c.fileExt, "x", os.Getenv(FileExtEnv),
+		fmt.Sprintf("Specify the default file extension for new files (env: %s)",
+			FileExtEnv))
 	c.flag.Parse(args)
 }
 
@@ -83,10 +89,16 @@ func (c *EditCommand) runEditor(dir *Directory, editor, path string) error {
 	}
 
 	fi, err := os.Stat(realPath)
-	if err != nil {
-		if !os.IsNotExist(err) {
-			return err
+	if os.IsNotExist(err) {
+		if filepath.Ext(realPath) == "" && c.fileExt != "" {
+			if strings.HasPrefix(c.fileExt, ".") {
+				realPath += c.fileExt
+			} else {
+				realPath += "." + c.fileExt
+			}
 		}
+	} else if err != nil {
+		return err
 	} else if fi.IsDir() {
 		return fmt.Errorf("directory exists: %s", realPath)
 	}

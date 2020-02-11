@@ -118,10 +118,10 @@ _sidenote()
     edit)
         case "${cur}" in
         -*)
-            COMPREPLY=($(compgen -W '-f -h' -- "${cur}"))
+            COMPREPLY=($(compgen -W '-f -h -x' -- "${cur}"))
             ;;
         *)
-            if [[ ${prev} != '-f' ]]; then
+            if [[ ${prev} != '-f' ]] && [[ ${prev} != '-x' ]]; then
                 _sidenote_path "${opts}"
             fi
             ;;
