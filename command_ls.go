@@ -58,11 +58,11 @@ func (c *LsCommand) Run(args []string, options *Options) {
 }
 
 func (c *LsCommand) list(dir *Directory, path string) error {
-	absPath, err := dir.AbsPath(path)
+	realPath, err := dir.FilePath(path)
 	if err != nil {
 		return err
 	}
-	fi, err := os.Stat(absPath)
+	fi, err := os.Stat(realPath)
 	if err != nil {
 		return err
 	}

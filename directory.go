@@ -65,7 +65,7 @@ func OpenDirectory(path string) (*Directory, error) {
 	return dir, nil
 }
 
-func (dir *Directory) AbsPath(path string) (string, error) {
+func (dir *Directory) FilePath(path string) (string, error) {
 	separator := string(filepath.Separator)
 	for _, elem := range strings.Split(path, separator) {
 		if strings.HasPrefix(elem, ".") {
@@ -76,7 +76,7 @@ func (dir *Directory) AbsPath(path string) (string, error) {
 }
 
 func (dir *Directory) Readdir(path string) ([]os.FileInfo, error) {
-	realPath, err := dir.AbsPath(path)
+	realPath, err := dir.FilePath(path)
 	if err != nil {
 		return nil, err
 	}

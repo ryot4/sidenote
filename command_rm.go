@@ -52,16 +52,16 @@ func (c *RmCommand) Run(args []string, options *Options) {
 }
 
 func (c *RmCommand) remove(dir *Directory, path string) error {
-	absPath, err := dir.AbsPath(path)
+	realPath, err := dir.FilePath(path)
 	if err != nil {
 		return err
 	}
-	fi, err := os.Stat(absPath)
+	fi, err := os.Stat(realPath)
 	if err != nil {
 		return err
 	}
 	if fi.IsDir() {
-		isEmpty, err := isEmptyDir(absPath)
+		isEmpty, err := isEmptyDir(realPath)
 		if err != nil {
 			return err
 		}
@@ -69,7 +69,7 @@ func (c *RmCommand) remove(dir *Directory, path string) error {
 			return fmt.Errorf("directory not empty: use -r to remove")
 		}
 	}
-	return os.RemoveAll(absPath)
+	return os.RemoveAll(realPath)
 }
 
 func isEmptyDir(path string) (bool, error) {
