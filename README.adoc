@@ -2,11 +2,27 @@
 
 sidenote is a command line utility for managing plain text notes.
 
+It aims to be simple and work well with existing text editors and Unix command line utilities.
+
+== Installation
+
+=== Build from source
+
+Make sure https://golang.org/doc/install[Go distribution is installed], and then run `go get`.
+
+----
+$ go get -u github.com/ryot4/sidenote
+----
+
+This installs `sidenote` binary into `$GOPATH/bin`. Don't forget to add the directory to your `$PATH`.
+
 == Quick start
 
 === Initialization
 
-sidenote stores all files in `.notes` directory, and this directory can be created with `sidenote init`.
+sidenote organizes notes per working directory.
+
+By default, files are stored in `.notes`, and this directory can be created with `sidenote init`.
 
 ----
 $ sidenote init
@@ -14,7 +30,8 @@ $ ls -dl .notes
 drwxr-xr-x 2 ryot4 ryot4 4096 Feb  9 19:03 .notes
 ----
 
-If you want to store files outside the current working directory, use `init -l`:
+If you want to store files outside the current working directory, you can create a symbolic link with `init -l`.
+The target directory is created if it does not exist.
 
 ----
 $ sidenote init -l ~/Documents/notes
@@ -22,9 +39,20 @@ $ ls -l .notes
 lrwxrwxrwx 1 ryot4 ryot4 31 Feb  9 19:03 .notes -> /home/ryot4/Documents/notes
 ----
 
+When `.notes` does not exist in the current working directory, sidenote searchs the directory hierarchy upward.
+Therefore you only need to initialize notes at the top-level working directory.
+
+----
+$ sidenote path            # Print the relative path to the .notes directory.
+.notes
+$ mkdir subdir; cd subdir
+$ sidenote path
+../.notes                  # notes in the parent directory is used.
+----
+
 === Editing
 
-Open a file with your favorite text editor (`$VISUAL` or `$EDITOR`):
+After creating the directory, let's open a file with your favorite text editor (sidenote refers `$VISUAL` and `$EDITOR`):
 
 ----
 $ sidenote edit todo                 # This opens .notes/todo with the editor.
@@ -33,24 +61,12 @@ $ sidenote edit issues/issue-123.md  # You can create subdirectories.
 
 Filenames can be generated based on the current date. (subset of `strftime(3)` format is available)
 
-```
+----
 $ date +'%Y-%m-%d'
 2020-02-09
 $ sidenote edit -f '%Y-%m-%d.md'             # This opens 2020-02-09.md.
 $ export SIDENOTE_NAME_FORMAT='%Y-%m-%d.md'
 $ sidenote edit                              # Same as above, but no need to specify the format every time.
-```
-
-When `.notes` does not exist in the current working directory, sidenote searchs the directory hierarchy upward.
-
-----
-$ sidenote path            # Print the relative path to the .notes directory.
-.notes
-$ sidenote edit todo.txt   # This opens .notes/todo.txt.
-$ mkdir subdir; cd subdir
-$ sidenote path
-../.notes
-$ sidenote edit todo.txt   # This opens ../.notes/todo.txt (the same file as above).
 ----
 
 === File operations
@@ -62,14 +78,14 @@ $ sidenote ls
 todo.txt
 $ sidenote ls -l
 Feb  9 21:37 todo.txt
-$ sidenote rm done.txt
+$ sidenote rm todo.txt
 ----
 
 Of course you can use standard command line utilities as well.
 
 ----
 $ find .notes -name todo.txt            # Find notes named todo.txt.
-$ find $(sidenote path) -name todo.txt  # Same as above, but this is convenient when you are not in the toplevel directory.
+$ find $(sidenote path) -name todo.txt  # Same as above, but this is convenient when you are not in the top-level directory.
 ----
 
 ----
@@ -81,10 +97,14 @@ $ mv todo.txt done.txt
 
 Searching can be done with a combination of `sidenote path` and existing searching commands such as `grep`.
 
-```
+----
 $ grep -R pattern $(sidenote path)          # Search all files.
 $ grep -R pattern $(sidenote path 2020/02)  # Search files in 2020/02/.
-```
+----
+
+== And more
+
+For full list of options and environment varibles, see `sidenote -h` and `sidenote <command> -h`.
 
 == Tips
 
@@ -117,10 +137,28 @@ error: path dir/.test contains dotfile
 ----
 
 ----
-$ git --git-dir=$(sidenote path)/.git init -q  # Initialize the Git repository for notes.
+$ git --git-dir=$(sidenote path)/.git init -q  # Initialize the Git repository to put notes under version control.
 $ sidenote ls                                  # This does not list .notes/.git.
+----
+
+=== Share the same notes directory from multiple working directories
+
+With `init -l`, you can refer the same directory from multiple working directories:
+
+----
+$ cd /path/to/project
+$ sidenote init -l ~/Documents/notes/coding
+$ sidenote edit useful-knowledge.adoc
+----
+
+----
+$ cd /path/to/another-project
+$ sidenote init -l ~/Documents/notes/coding  # Use the same directory.
+$ sidenote ls
+useful-knowledge.adoc
+...
 ----
 
 === Command-line completions
 
-See `completions` directory. (Currently only Bash is supported)
+See `completions` directory. (Currently only Bash is supported. Contributions are welcome)
