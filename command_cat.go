@@ -7,15 +7,15 @@ import (
 	"os"
 )
 
-type ShowCommand struct {
+type CatCommand struct {
 	flag *flag.FlagSet
 }
 
-func (c *ShowCommand) Name() string {
-	return "show"
+func (c *CatCommand) Name() string {
+	return "cat"
 }
 
-func (c *ShowCommand) setup(args []string, _options *Options) {
+func (c *CatCommand) setup(args []string, _options *Options) {
 	c.flag = flag.NewFlagSet(c.Name(), flag.ExitOnError)
 	c.flag.Usage = func() {
 		fmt.Fprintf(c.flag.Output(), "Usage: %s <name>...\n", c.Name())
@@ -23,7 +23,7 @@ func (c *ShowCommand) setup(args []string, _options *Options) {
 	c.flag.Parse(args)
 }
 
-func (c *ShowCommand) Run(args []string, options *Options) {
+func (c *CatCommand) Run(args []string, options *Options) {
 	c.setup(args, options)
 
 	dir, err := checkDirectory(options.noteDir)
@@ -37,7 +37,7 @@ func (c *ShowCommand) Run(args []string, options *Options) {
 
 	var lastErr error
 	for _, filePath := range c.flag.Args() {
-		err = c.showFile(dir, filePath)
+		err = c.catFile(dir, filePath)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			lastErr = err
@@ -48,7 +48,7 @@ func (c *ShowCommand) Run(args []string, options *Options) {
 	}
 }
 
-func (c *ShowCommand) showFile(dir *Directory, path string) error {
+func (c *CatCommand) catFile(dir *Directory, path string) error {
 	realPath, err := dir.JoinPath(path)
 	if err != nil {
 		return err
