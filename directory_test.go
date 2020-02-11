@@ -6,7 +6,7 @@ import (
 
 func TestFilePath(t *testing.T) {
 	noteDir := ".notes"
-	dir := newDirectory(noteDir)
+	dir := NewDirectory(noteDir)
 
 	tests := []struct {
 		path   string
@@ -34,7 +34,7 @@ func TestFilePath(t *testing.T) {
 }
 
 func TestFilePathDotFileError(t *testing.T) {
-	dir := newDirectory("/path/to/note")
+	dir := NewDirectory("/path/to/note")
 
 	tests := []string{
 		".foo",

@@ -50,9 +50,7 @@ func (c *InitCommand) initDirectory(options *Options) error {
 	if options.noteDir != "" {
 		noteDir = options.noteDir
 	}
-
-	_, err := InitDirectory(noteDir)
-	return err
+	return NewDirectory(noteDir).Init()
 }
 
 func (c *InitCommand) initLink(options *Options) error {
@@ -67,7 +65,7 @@ func (c *InitCommand) initLink(options *Options) error {
 		return err
 	}
 
-	_, err = InitDirectory(c.linkTarget)
+	err = NewDirectory(c.linkTarget).Init()
 	if err != nil && !os.IsExist(err) {
 		return err
 	}

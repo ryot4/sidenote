@@ -31,7 +31,7 @@ func (c *PathCommand) setup(args []string, _options *Options) {
 func (c *PathCommand) Run(args []string, options *Options) {
 	c.setup(args, options)
 
-	dir, err := openDirectory(options.noteDir)
+	dir, err := checkDirectory(options.noteDir)
 	if err != nil {
 		exitWithError(err)
 	}

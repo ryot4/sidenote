@@ -48,7 +48,7 @@ func (c *EditCommand) Run(args []string, options *Options) {
 		}
 	}
 
-	dir, err := openDirectory(options.noteDir)
+	dir, err := checkDirectory(options.noteDir)
 	if err != nil {
 		exitWithError(err)
 	}
