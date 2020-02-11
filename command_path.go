@@ -63,15 +63,19 @@ func (c *PathCommand) showPath(dir *Directory, path string) error {
 		}
 		fmt.Println(absPath)
 	} else {
-		wd, err := os.Getwd()
-		if err != nil {
-			return err
+		if filepath.IsAbs(realPath) {
+			wd, err := os.Getwd()
+			if err != nil {
+				return err
+			}
+			relPath, err := filepath.Rel(wd, realPath)
+			if err != nil {
+				return err
+			}
+			fmt.Println(relPath)
+		} else {
+			fmt.Println(realPath)
 		}
-		relPath, err := filepath.Rel(wd, realPath)
-		if err != nil {
-			return err
-		}
-		fmt.Println(relPath)
 	}
 	return nil
 }
