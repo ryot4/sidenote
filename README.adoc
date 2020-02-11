@@ -88,12 +88,19 @@ $ grep -R pattern $(sidenote path 2020/02)  # Search files in 2020/02/.
 
 === Store files in the directory other than .notes
 
-You can use `-d` option or `SIDENOTE_DIR` environment variable to change the directory where files are stored.
+You can use `-d` option or `SIDENOTE_DIR` environment variable to specify the directory where files are stored.
 
 ----
-$ sidenote -d /path/to/notes edit todo.txt  # Open /path/to/notes/todo.txt
-$ export SIDENOTE_DIR=/path/to/notes
-$ sidenote edit todo.txt                    # Same as above.
+$ sidenote -d .mynotes init         # Use .mynotes for notes.
+$ sidenote -d .mynotes edit todo.txt
+$ export SIDENOTE_DIR=.mynotes
+$ sidenote edit todo.txt            # Same as above.
+----
+
+You can also use absolute paths:
+
+----
+$ sidenote -d ~/Documents/notes ls  # List files in ~/Documents/notes.
 ----
 
 === Dotfiles are ignored
