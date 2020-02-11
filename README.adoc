@@ -55,24 +55,26 @@ $ sidenote edit todo.txt   # This opens ../.notes/todo.txt (the same file as abo
 
 === File operations
 
-There are some bulitin commands for basic file operations.
+You can list and remove notes with built-in command `ls` and `rm`, respectively.
 
 ----
 $ sidenote ls
 todo.txt
 $ sidenote ls -l
 Feb  9 21:37 todo.txt
-$ sidenote mv todo.txt done.txt
-$ sidenote ls
-done.txt
 $ sidenote rm done.txt
 ----
 
-Of course you can use standard command line utilities for more complex operations.
+Of course you can use standard command line utilities as well.
 
 ----
 $ find .notes -name todo.txt            # Find notes named todo.txt.
 $ find $(sidenote path) -name todo.txt  # Same as above, but this is convenient when you are not in the toplevel directory.
+----
+
+----
+$ cd $(sidenote path)   # You can operate files as usual after this.
+$ mv todo.txt done.txt
 ----
 
 == Searching

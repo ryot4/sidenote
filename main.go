@@ -26,7 +26,6 @@ var subCommands = []Command{
 	&LsCommand{},
 	&ShowCommand{},
 	&EditCommand{},
-	&MvCommand{},
 	&RmCommand{},
 }
 

@@ -25,7 +25,7 @@ _sidenote_path()
 
 _sidenote()
 {
-    local -r cmds=(init path ls show edit mv rm)
+    local -r cmds=(init path ls show edit rm)
     local cur prev
     _get_comp_words_by_ref cur prev
 
@@ -124,16 +124,6 @@ _sidenote()
             if [[ ${prev} != '-f' ]]; then
                 _sidenote_path "${opts}"
             fi
-            ;;
-        esac
-        ;;
-    mv)
-        case "${cur}" in
-        -*)
-            COMPREPLY=($(compgen -W '-f -h' -- "${cur}"))
-            ;;
-        *)
-            _sidenote_path "${opts}"
             ;;
         esac
         ;;
