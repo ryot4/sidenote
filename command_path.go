@@ -51,19 +51,23 @@ func (c *PathCommand) Run(args []string, options *Options) {
 }
 
 func (c *PathCommand) showPath(dir *Directory, path string) error {
-	absPath, err := dir.JoinPath(path)
+	realPath, err := dir.JoinPath(path)
 	if err != nil {
 		exitWithError(err)
 	}
 
 	if c.absolute {
+		absPath, err := filepath.Abs(realPath)
+		if err != nil {
+			return err
+		}
 		fmt.Println(absPath)
 	} else {
 		wd, err := os.Getwd()
 		if err != nil {
 			return err
 		}
-		relPath, err := filepath.Rel(wd, absPath)
+		relPath, err := filepath.Rel(wd, realPath)
 		if err != nil {
 			return err
 		}
