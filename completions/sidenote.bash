@@ -1,8 +1,8 @@
 _sidenote_path()
 {
     local -r opts="$1"
-    local cur prev path
-    _get_comp_words_by_ref cur prev
+    local cur path
+    _get_comp_words_by_ref cur
 
     sidenote ${opts} path -c > /dev/null 2>&1 || return
 
