@@ -1,7 +1,7 @@
 _sidenote_path()
 {
     local -r opts="$1"
-    local cur path
+    local cur dir base
     _get_comp_words_by_ref cur
 
     sidenote ${opts} path -c > /dev/null 2>&1 || return
@@ -9,10 +9,16 @@ _sidenote_path()
     compopt -o nospace
     case "${cur}" in
     */)
-        path="${cur}"
+        dir="${cur}"
+        ;;
+    *)
+        base=$(basename "${cur}")
+        if [[ ${base} != ${cur} ]]; then
+            dir=$(dirname "${cur}")/
+        fi
         ;;
     esac
-    COMPREPLY=($(compgen -W "${path}$(sidenote ${opts} ls ${path})" -- "${cur}"))
+    COMPREPLY=($(compgen -P "${dir}" -W "$(sidenote ${opts} ls "${dir}")" -- "${base}"))
 }
 
 _sidenote()
