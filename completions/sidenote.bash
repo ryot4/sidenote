@@ -6,7 +6,6 @@ _sidenote_path()
 
     sidenote ${opts} path -c > /dev/null 2>&1 || return
 
-    compopt -o nospace
     case "${cur}" in
     */)
         dir="${cur}"
@@ -19,6 +18,9 @@ _sidenote_path()
         ;;
     esac
     COMPREPLY=($(compgen -P "${dir}" -W "$(sidenote ${opts} ls "${dir}")" -- "${base}"))
+    if [[ ${#COMPREPLY[@]} -gt 1 ]] || [[ ${COMPREPLY[0]} == */ ]]; then
+        compopt -o nospace
+    fi
 }
 
 _sidenote()
