@@ -23,6 +23,18 @@ _sidenote_path()
     fi
 }
 
+_sidenote_path_one()
+{
+    local i=1 nonopts=0
+    while [[ $i -lt ${COMP_CWORD} ]]; do
+        if [[ ${COMP_WORDS[i]} != -* ]]; then
+            nonopts=$((nonopts + 1))
+        fi
+        i=$((i + 1))
+    done
+    [[ ${nonopts} -le 1 ]] && _sidenote_path "$@"
+}
+
 _sidenote()
 {
     local -r cmds=(init path ls cat edit rm)
@@ -91,7 +103,7 @@ _sidenote()
             COMPREPLY=($(compgen -W '-a -c -h' -- "${cur}"))
             ;;
         *)
-            _sidenote_path "${opts}"
+            _sidenote_path_one "${opts}"
             ;;
         esac
         ;;
@@ -101,7 +113,7 @@ _sidenote()
             COMPREPLY=($(compgen -W '-h -l -r -t' -- "${cur}"))
             ;;
         *)
-            _sidenote_path "${opts}"
+            _sidenote_path_one "${opts}"
             ;;
         esac
         ;;
@@ -122,7 +134,7 @@ _sidenote()
             ;;
         *)
             if [[ ${prev} != '-f' ]] && [[ ${prev} != '-x' ]]; then
-                _sidenote_path "${opts}"
+                _sidenote_path_one "${opts}"
             fi
             ;;
         esac
@@ -133,7 +145,7 @@ _sidenote()
             COMPREPLY=($(compgen -W '-h -r' -- "${cur}"))
             ;;
         *)
-            _sidenote_path "${opts}"
+            _sidenote_path_one "${opts}"
             ;;
         esac
         ;;
