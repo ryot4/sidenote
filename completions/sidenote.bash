@@ -37,7 +37,7 @@ _sidenote_path_one()
 
 _sidenote()
 {
-    local -r cmds=(init path ls cat edit rm)
+    local -r cmds=(cat edit init ls path rm)
     local cur prev
     _get_comp_words_by_ref cur prev
 
@@ -85,38 +85,6 @@ _sidenote()
     fi
 
     case "${cmd}" in
-    init)
-        case "${cur}" in
-        -*)
-            COMPREPLY=($(compgen -W '-h -l' -- "${cur}"))
-            ;;
-        *)
-            if [[ ${prev} == '-l' ]]; then
-                _filedir -d
-            fi
-            ;;
-        esac
-        ;;
-    path)
-        case "${cur}" in
-        -*)
-            COMPREPLY=($(compgen -W '-a -c -h' -- "${cur}"))
-            ;;
-        *)
-            _sidenote_path_one "${opts}"
-            ;;
-        esac
-        ;;
-    ls)
-        case "${cur}" in
-        -*)
-            COMPREPLY=($(compgen -W '-h -l -r -t' -- "${cur}"))
-            ;;
-        *)
-            _sidenote_path_one "${opts}"
-            ;;
-        esac
-        ;;
     cat)
         case "${cur}" in
         -*)
@@ -136,6 +104,38 @@ _sidenote()
             if [[ ${prev} != '-f' ]] && [[ ${prev} != '-x' ]]; then
                 _sidenote_path_one "${opts}"
             fi
+            ;;
+        esac
+        ;;
+    init)
+        case "${cur}" in
+        -*)
+            COMPREPLY=($(compgen -W '-h -l' -- "${cur}"))
+            ;;
+        *)
+            if [[ ${prev} == '-l' ]]; then
+                _filedir -d
+            fi
+            ;;
+        esac
+        ;;
+    ls)
+        case "${cur}" in
+        -*)
+            COMPREPLY=($(compgen -W '-h -l -r -t' -- "${cur}"))
+            ;;
+        *)
+            _sidenote_path_one "${opts}"
+            ;;
+        esac
+        ;;
+    path)
+        case "${cur}" in
+        -*)
+            COMPREPLY=($(compgen -W '-a -c -h' -- "${cur}"))
+            ;;
+        *)
+            _sidenote_path_one "${opts}"
             ;;
         esac
         ;;

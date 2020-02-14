@@ -21,11 +21,11 @@ type Command interface {
 }
 
 var subCommands = []Command{
-	&InitCommand{},
-	&PathCommand{},
-	&LsCommand{},
 	&CatCommand{},
 	&EditCommand{},
+	&InitCommand{},
+	&LsCommand{},
+	&PathCommand{},
 	&RmCommand{},
 }
 
