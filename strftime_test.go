@@ -6,7 +6,7 @@ import (
 )
 
 func TestStrftime(t *testing.T) {
-	refTime, err := time.Parse(time.UnixDate, "Sat Feb  3 16:05:06 JST 2001")
+	refTime, err := time.Parse(time.UnixDate, "Sat Feb  3 16:05:06 UTC 2001")
 	if err != nil {
 		panic(err)
 	}
@@ -30,11 +30,11 @@ func TestStrftime(t *testing.T) {
 		{"%S", "06"},
 		{"%y", "01"},
 		{"%Y", "2001"},
-		{"%z", "+0900"},
-		{"%Z", "JST"},
+		{"%z", "+0000"},
+		{"%Z", "UTC"},
 		{"%%", "%"},
 
-		{"%a %b %e %H:%M:%S %Z %Y", "Sat Feb  3 16:05:06 JST 2001"},
+		{"%a %b %e %H:%M:%S %Z %Y", "Sat Feb  3 16:05:06 UTC 2001"},
 		{"diary/%Y/%m/%d.txt", "diary/2001/02/03.txt"},
 		{"%Y年%m月%d日_%H時%M分%S秒.md", "2001年02月03日_16時05分06秒.md"},
 		{"test.txt", "test.txt"},
