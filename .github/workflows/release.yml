@@ -1,0 +1,85 @@
+name: Release
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+env:
+  GO111MODULE: on
+  GOARCH: amd64
+  GOOS: linux
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+    - name: Setup Go
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.13
+
+    - name: Checkout the repository
+      uses: actions/checkout@v2
+
+    - name: Include the license of Go in LICENSE for binary distribution
+      run: |
+        cat >> LICENSE <<EOS
+
+
+        The binary includes the Go runtime and the standard library, which are
+        distributed under the following license:
+
+        EOS
+        curl -s -L https://golang.org/LICENSE?m=text >> LICENSE
+
+    - name: Build the binary
+      run: go build -ldflags '-s -w' -trimpath
+      env:
+        CGO_ENABLED: 0
+
+    - name: Get the release version
+      id: get_release_version
+      run: |
+        VERSION=$(basename ${{ github.ref }})
+        echo ::set-output name=version::${VERSION}
+        echo ::set-output name=prerelease::$(case ${VERSION} in *-*) echo true ;; *) echo false; esac)
+
+    - name: Archive files
+      id: archive
+      run: |
+        ARCHIVE=sidenote_${{ steps.get_release_version.outputs.version }}_${{ env.GOOS }}_${{ env.GOARCH }}.tar.gz
+        SHA256SUM=${ARCHIVE%%.tar.gz}.sha256sum
+        tar -czf ${ARCHIVE} completions LICENSE README.adoc sidenote
+        sha256sum ${ARCHIVE} > ${SHA256SUM}
+        echo ::set-output name=archive::${ARCHIVE}
+        echo ::set-output name=sha256sum::${SHA256SUM}
+
+    - name: Create a release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: ${{ github.ref }}
+        draft: false
+        prerelease: ${{ steps.get_release_version.outputs.prerelease }}
+
+    - name: Upload the archive
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ steps.archive.outputs.archive }}
+        asset_name: ${{ steps.archive.outputs.archive }}
+        asset_content_type: application/gzip
+
+    - name: Upload the sha256sum
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ steps.archive.outputs.sha256sum }}
+        asset_name: ${{ steps.archive.outputs.sha256sum }}
+        asset_content_type: text/plain

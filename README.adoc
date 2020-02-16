@@ -6,9 +6,10 @@ It aims to be simple and work well with existing text editors and Unix command l
 
 == Installation
 
-=== Binary releases
+=== Binary releases (linux/amd64 only for now)
 
-(Preparing)
+See the https://github.com/ryot4/sidenote/releases[releases page].
+Download and extract the archive, and then put the binary into the directory listed in `$PATH`.
 
 === Build from source
 
@@ -18,7 +19,7 @@ Make sure https://golang.org/doc/install[Go distribution is installed], and then
 $ go get -u github.com/ryot4/sidenote
 ----
 
-This installs `sidenote` binary into `$GOPATH/bin`. Don't forget to add the directory to your `$PATH`.
+This installs the binary into `$GOPATH/bin`. Make sure `$GOPATH/bin` is listed in `$PATH`.
 
 == Quick start
 
