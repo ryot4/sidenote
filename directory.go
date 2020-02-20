@@ -26,7 +26,11 @@ func NewDirectory(path string) *Directory {
 func (dir *Directory) Init() error {
 	_, err := os.Stat(dir.path)
 	if err == nil {
-		return &os.PathError{"initialize", dir.path, os.ErrExist}
+		return &os.PathError{
+			Op:   "initialize",
+			Path: dir.path,
+			Err:  os.ErrExist,
+		}
 	} else if !os.IsNotExist(err) {
 		return err
 	}
