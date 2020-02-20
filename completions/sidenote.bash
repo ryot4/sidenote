@@ -23,18 +23,6 @@ _sidenote_path()
     fi
 }
 
-_sidenote_path_one()
-{
-    local i=1 nonopts=0
-    while [[ $i -lt ${COMP_CWORD} ]]; do
-        if [[ ${COMP_WORDS[i]} != -* ]]; then
-            nonopts=$((nonopts + 1))
-        fi
-        i=$((i + 1))
-    done
-    [[ ${nonopts} -le 1 ]] && _sidenote_path "$@"
-}
-
 _sidenote()
 {
     local -r cmds=(cat edit init ls path rm)
@@ -101,9 +89,20 @@ _sidenote()
             COMPREPLY=($(compgen -W '-f -h -x' -- "${cur}"))
             ;;
         *)
-            if [[ ${prev} != '-f' ]] && [[ ${prev} != '-x' ]]; then
-                _sidenote_path_one "${opts}"
-            fi
+            case "${prev}" in
+            -f|-x)
+                ;;
+            edit|-*)
+                _sidenote_path "${opts}"
+                ;;
+            *)
+                case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -f|-x)
+                    _sidenote_path "${opts}"
+                    ;;
+                esac
+                ;;
+            esac
             ;;
         esac
         ;;
@@ -113,9 +112,11 @@ _sidenote()
             COMPREPLY=($(compgen -W '-h -l' -- "${cur}"))
             ;;
         *)
-            if [[ ${prev} == '-l' ]]; then
+            case "${prev}" in
+            -l)
                 _filedir -d
-            fi
+                ;;
+            esac
             ;;
         esac
         ;;
@@ -125,7 +126,11 @@ _sidenote()
             COMPREPLY=($(compgen -W '-h -l -r -t' -- "${cur}"))
             ;;
         *)
-            _sidenote_path_one "${opts}"
+            case "${prev}" in
+            ls|-*)
+                _sidenote_path "${opts}"
+                ;;
+            esac
             ;;
         esac
         ;;
@@ -135,7 +140,11 @@ _sidenote()
             COMPREPLY=($(compgen -W '-a -c -h' -- "${cur}"))
             ;;
         *)
-            _sidenote_path_one "${opts}"
+            case "${prev}" in
+            path|-*)
+                _sidenote_path "${opts}"
+                ;;
+            esac
             ;;
         esac
         ;;
@@ -145,7 +154,11 @@ _sidenote()
             COMPREPLY=($(compgen -W '-h -r' -- "${cur}"))
             ;;
         *)
-            _sidenote_path_one "${opts}"
+            case "${prev}" in
+            rm|-*)
+                _sidenote_path "${opts}"
+                ;;
+            esac
             ;;
         esac
         ;;
