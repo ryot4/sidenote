@@ -52,6 +52,25 @@ func (dir *Directory) IsDir() (bool, error) {
 	return true, nil
 }
 
+func (dir *Directory) IsAbs() bool {
+	return filepath.IsAbs(dir.path)
+}
+
+func (dir *Directory) FollowSymlink() (bool, error) {
+	fi, err := os.Lstat(dir.path)
+	if err != nil {
+		return false, err
+	}
+	if fi.Mode()&os.ModeSymlink == 0 {
+		return false, nil
+	}
+	dir.path, err = os.Readlink(dir.path)
+	if err != nil {
+		return true, err
+	}
+	return true, nil
+}
+
 func (dir *Directory) JoinPath(path string) (string, error) {
 	separator := string(filepath.Separator)
 	for _, elem := range strings.Split(path, separator) {

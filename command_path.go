@@ -10,8 +10,9 @@ import (
 type PathCommand struct {
 	flag *flag.FlagSet
 
-	absolute bool
-	check    bool
+	absolute      bool
+	check         bool
+	followSymlink bool
 }
 
 func (c *PathCommand) Name() string {
@@ -25,6 +26,7 @@ func (c *PathCommand) setup(args []string, _options *Options) {
 		fmt.Fprintln(c.flag.Output(), "\noptions:")
 		c.flag.PrintDefaults()
 	}
+	c.flag.BoolVar(&c.followSymlink, "L", false, "Follow the symbolic link to notes (implies -a when the target path is absolute)")
 	c.flag.BoolVar(&c.absolute, "a", false, "Show absolute path")
 	c.flag.BoolVar(&c.check, "c", false, "Check existence of the path")
 	c.flag.Parse(args)
@@ -53,6 +55,16 @@ func (c *PathCommand) Run(args []string, options *Options) {
 }
 
 func (c *PathCommand) showPath(dir *Directory, path string) error {
+	if c.followSymlink {
+		link, err := dir.FollowSymlink()
+		if err != nil {
+			return err
+		}
+		if link && dir.IsAbs() {
+			c.absolute = true
+		}
+	}
+
 	realPath, err := dir.JoinPath(path)
 	if err != nil {
 		exitWithError(err)

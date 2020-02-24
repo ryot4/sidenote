@@ -137,7 +137,7 @@ _sidenote()
     path)
         case "${cur}" in
         -*)
-            COMPREPLY=($(compgen -W '-a -c -h' -- "${cur}"))
+            COMPREPLY=($(compgen -W '-a -c -h -L' -- "${cur}"))
             ;;
         *)
             case "${prev}" in
