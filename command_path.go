@@ -67,7 +67,7 @@ func (c *PathCommand) showPath(dir *Directory, path string) error {
 
 	realPath, err := dir.JoinPath(path)
 	if err != nil {
-		exitWithError(err)
+		return err
 	}
 
 	if c.check {

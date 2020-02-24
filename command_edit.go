@@ -80,7 +80,7 @@ func (c *EditCommand) Run(args []string, options *Options) {
 func (c *EditCommand) runEditor(dir *Directory, editor, path string) error {
 	realPath, err := dir.JoinPath(path)
 	if err != nil {
-		exitWithError(err)
+		return err
 	}
 
 	err = os.MkdirAll(filepath.Dir(realPath), os.ModePerm)
