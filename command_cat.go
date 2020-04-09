@@ -23,7 +23,7 @@ func (c *CatCommand) setup(args []string, _options *Options) {
 	c.flag = flag.NewFlagSet(c.Name(), flag.ExitOnError)
 	c.flag.Usage = func() {
 		output := c.flag.Output()
-		fmt.Fprintf(output, "Usage: %s <name>...\n", c.Name())
+		fmt.Fprintf(output, "Usage: %s %s <name>...\n", os.Args[0], c.Name())
 		fmt.Fprintf(output, "\n%s.\n", c.Description())
 	}
 	c.flag.Parse(args)
