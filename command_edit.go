@@ -27,10 +27,15 @@ func (c *EditCommand) Name() string {
 	return "edit"
 }
 
+func (c *EditCommand) Description() string {
+	return "Open notes with text editor"
+}
+
 func (c *EditCommand) setup(args []string, _options *Options) {
 	c.flag = flag.NewFlagSet(c.Name(), flag.ExitOnError)
 	c.flag.Usage = func() {
 		fmt.Fprintf(c.flag.Output(), "Usage: %s [-f format] [-x extension] [name]\n", c.Name())
+		fmt.Fprintf(c.flag.Output(), "\n%s.\n", c.Description())
 		fmt.Fprintln(c.flag.Output(), "\noptions:")
 		c.flag.PrintDefaults()
 	}

@@ -15,10 +15,15 @@ func (c *CatCommand) Name() string {
 	return "cat"
 }
 
+func (c *CatCommand) Description() string {
+	return "Print contents of notes"
+}
+
 func (c *CatCommand) setup(args []string, _options *Options) {
 	c.flag = flag.NewFlagSet(c.Name(), flag.ExitOnError)
 	c.flag.Usage = func() {
 		fmt.Fprintf(c.flag.Output(), "Usage: %s <name>...\n", c.Name())
+		fmt.Fprintf(c.flag.Output(), "\n%s.\n", c.Description())
 	}
 	c.flag.Parse(args)
 }

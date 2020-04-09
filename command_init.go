@@ -16,10 +16,15 @@ func (c *InitCommand) Name() string {
 	return "init"
 }
 
+func (c *InitCommand) Description() string {
+	return "Initialize a directory for notes"
+}
+
 func (c *InitCommand) setup(args []string, options *Options) {
 	c.flag = flag.NewFlagSet(c.Name(), flag.ExitOnError)
 	c.flag.Usage = func() {
 		fmt.Fprintf(c.flag.Output(), "Usage: %s [-l path]\n", c.Name())
+		fmt.Fprintf(c.flag.Output(), "\n%s.\n", c.Description())
 		fmt.Fprintln(c.flag.Output(), "\noptions:")
 		c.flag.PrintDefaults()
 	}

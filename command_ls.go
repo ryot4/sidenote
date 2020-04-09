@@ -21,10 +21,15 @@ func (c *LsCommand) Name() string {
 	return "ls"
 }
 
+func (c *LsCommand) Description() string {
+	return "List notes"
+}
+
 func (c *LsCommand) setup(args []string, options *Options) {
 	c.flag = flag.NewFlagSet(c.Name(), flag.ExitOnError)
 	c.flag.Usage = func() {
 		fmt.Fprintf(c.flag.Output(), "Usage: %s [-l] [-r] [-t] [name]\n", c.Name())
+		fmt.Fprintf(c.flag.Output(), "\n%s.\n", c.Description())
 		fmt.Fprintln(c.flag.Output(), "\noptions:")
 		c.flag.PrintDefaults()
 	}

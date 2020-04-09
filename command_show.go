@@ -16,10 +16,15 @@ func (c *ShowCommand) Name() string {
 	return "show"
 }
 
+func (c *ShowCommand) Description() string {
+	return "Open notes with pager"
+}
+
 func (c *ShowCommand) setup(args []string, _options *Options) {
 	c.flag = flag.NewFlagSet(c.Name(), flag.ExitOnError)
 	c.flag.Usage = func() {
 		fmt.Fprintf(c.flag.Output(), "Usage: %s <name>\n", c.Name())
+		fmt.Fprintf(c.flag.Output(), "\n%s.\n", c.Description())
 	}
 	c.flag.Parse(args)
 }

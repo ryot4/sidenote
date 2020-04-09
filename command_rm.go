@@ -17,10 +17,15 @@ func (c *RmCommand) Name() string {
 	return "rm"
 }
 
+func (c *RmCommand) Description() string {
+	return "Remove notes"
+}
+
 func (c *RmCommand) setup(args []string, options *Options) {
 	c.flag = flag.NewFlagSet(c.Name(), flag.ExitOnError)
 	c.flag.Usage = func() {
 		fmt.Fprintf(c.flag.Output(), "Usage: %s [-r] <name>\n", c.Name())
+		fmt.Fprintf(c.flag.Output(), "\n%s.\n", c.Description())
 		fmt.Fprintln(c.flag.Output(), "\noptions:")
 		c.flag.PrintDefaults()
 	}
