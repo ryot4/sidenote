@@ -55,12 +55,12 @@ $ sidenote path
 ../.notes                  # notes in the parent directory is used.
 ----
 
-=== Editing
+=== Editing notes
 
 After creating the directory, let's open a file with your favorite text editor (sidenote refers `$VISUAL` and `$EDITOR`):
 
 ----
-$ sidenote edit todo                 # This opens .notes/todo with the editor.
+$ sidenote edit todo.txt             # This opens .notes/todo.txt with the editor.
 $ sidenote edit issues/issue-123.md  # You can create subdirectories.
 ----
 
@@ -72,6 +72,15 @@ $ date +'%Y-%m-%d'
 $ sidenote edit -f '%Y-%m-%d.md'             # This opens 2020-02-09.md.
 $ export SIDENOTE_NAME_FORMAT='%Y-%m-%d.md'
 $ sidenote edit                              # Same as above, but no need to specify the format every time.
+----
+
+=== Displaying notes
+
+To display notes, use `cat` or `show` command:
+
+----
+$ sidenote cat todo.txt
+$ sidenote show todo.txt  # This opens todo.txt with $PAGER.
 ----
 
 === File operations
