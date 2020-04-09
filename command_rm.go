@@ -24,9 +24,10 @@ func (c *RmCommand) Description() string {
 func (c *RmCommand) setup(args []string, options *Options) {
 	c.flag = flag.NewFlagSet(c.Name(), flag.ExitOnError)
 	c.flag.Usage = func() {
-		fmt.Fprintf(c.flag.Output(), "Usage: %s [-r] <name>\n", c.Name())
-		fmt.Fprintf(c.flag.Output(), "\n%s.\n", c.Description())
-		fmt.Fprintln(c.flag.Output(), "\noptions:")
+		output := c.flag.Output()
+		fmt.Fprintf(output, "Usage: %s [-r] <name>\n", c.Name())
+		fmt.Fprintf(output, "\n%s.\n", c.Description())
+		fmt.Fprintln(output, "\noptions:")
 		c.flag.PrintDefaults()
 	}
 	c.flag.BoolVar(&c.recurse, "r", false, "Remove directories recursively")

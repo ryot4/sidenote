@@ -23,9 +23,10 @@ func (c *InitCommand) Description() string {
 func (c *InitCommand) setup(args []string, options *Options) {
 	c.flag = flag.NewFlagSet(c.Name(), flag.ExitOnError)
 	c.flag.Usage = func() {
-		fmt.Fprintf(c.flag.Output(), "Usage: %s [-l path]\n", c.Name())
-		fmt.Fprintf(c.flag.Output(), "\n%s.\n", c.Description())
-		fmt.Fprintln(c.flag.Output(), "\noptions:")
+		output := c.flag.Output()
+		fmt.Fprintf(output, "Usage: %s [-l path]\n", c.Name())
+		fmt.Fprintf(output, "\n%s.\n", c.Description())
+		fmt.Fprintln(output, "\noptions:")
 		c.flag.PrintDefaults()
 	}
 	c.flag.StringVar(&c.linkTarget, "l", "", "Link notes to the specified directory")

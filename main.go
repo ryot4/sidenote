@@ -51,16 +51,17 @@ func main() {
 }
 
 func usage() {
-	fmt.Fprintf(flag.CommandLine.Output(), "Usage: %s [-d path] [-version] <command> [command-arguments]\n", os.Args[0])
-	fmt.Fprintln(flag.CommandLine.Output(), "\noptions:")
+	output := flag.CommandLine.Output()
+	fmt.Fprintf(output, "Usage: %s [-d path] [-version] <command> [command-arguments]\n", os.Args[0])
+	fmt.Fprintln(output, "\noptions:")
 	flag.PrintDefaults()
-	fmt.Fprintf(flag.CommandLine.Output(), "\ncommands:\n")
-	w := tabwriter.NewWriter(flag.CommandLine.Output(), 0, 0, 4, ' ', 0)
+	fmt.Fprintf(output, "\ncommands:\n")
+	w := tabwriter.NewWriter(output, 0, 0, 4, ' ', 0)
 	for _, cmd := range subCommands {
 		fmt.Fprintf(w, "  %s\t%s\n", cmd.Name(), cmd.Description())
 	}
 	w.Flush()
-	fmt.Fprintf(flag.CommandLine.Output(), "\nRun %s <command> -h for usage of each command.\n", os.Args[0])
+	fmt.Fprintf(output, "\nRun %s <command> -h for usage of each command.\n", os.Args[0])
 }
 
 func run(args []string, options *Options) {
