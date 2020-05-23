@@ -52,14 +52,6 @@ func (c *EditCommand) setup(args []string, _options *Options) {
 func (c *EditCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
-	editor, ok := os.LookupEnv("VISUAL")
-	if !ok {
-		editor, ok = os.LookupEnv("EDITOR")
-		if !ok {
-			return errors.New("neither VISUAL nor EDITOR is set")
-		}
-	}
-
 	dir, err := checkDirectory(options.noteDir)
 	if err != nil {
 		return err
@@ -77,10 +69,10 @@ func (c *EditCommand) Run(args []string, options *Options) error {
 		filePath = Strftime(time.Now(), c.nameFormat)
 	}
 
-	return c.runEditor(dir, editor, filePath)
+	return c.runEditor(dir, filePath)
 }
 
-func (c *EditCommand) runEditor(dir *Directory, editor, path string) error {
+func (c *EditCommand) runEditor(dir *Directory, path string) error {
 	realPath, err := dir.JoinPath(path)
 	if err != nil {
 		return err
@@ -104,6 +96,14 @@ func (c *EditCommand) runEditor(dir *Directory, editor, path string) error {
 		return err
 	} else if fi.IsDir() {
 		return fmt.Errorf("directory exists: %s", realPath)
+	}
+
+	editor, ok := os.LookupEnv("VISUAL")
+	if !ok {
+		editor, ok = os.LookupEnv("EDITOR")
+		if !ok {
+			return errors.New("neither VISUAL nor EDITOR is set")
+		}
 	}
 
 	editorCmd := exec.Command(editor, realPath)

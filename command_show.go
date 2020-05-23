@@ -33,11 +33,6 @@ func (c *ShowCommand) setup(args []string, _options *Options) {
 func (c *ShowCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
-	pager, ok := os.LookupEnv("PAGER")
-	if !ok {
-		return errors.New("PAGER is not set")
-	}
-
 	dir, err := checkDirectory(options.noteDir)
 	if err != nil {
 		return err
@@ -49,13 +44,18 @@ func (c *ShowCommand) Run(args []string, options *Options) error {
 		return NewSyntaxError("too many arguments")
 	}
 
-	return c.runPager(dir, pager, c.flag.Arg(0))
+	return c.runPager(dir, c.flag.Arg(0))
 }
 
-func (c *ShowCommand) runPager(dir *Directory, pager, path string) error {
+func (c *ShowCommand) runPager(dir *Directory, path string) error {
 	realPath, err := dir.JoinPath(path)
 	if err != nil {
 		return err
+	}
+
+	pager, ok := os.LookupEnv("PAGER")
+	if !ok {
+		return errors.New("PAGER is not set")
 	}
 
 	pagerCmd := exec.Command(pager, realPath)
