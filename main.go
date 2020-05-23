@@ -16,23 +16,6 @@ type Options struct {
 	noteDir string
 }
 
-type Command interface {
-	Name() string
-	Description() string
-	Run(args []string, options *Options)
-}
-
-var subCommands = []Command{
-	&CatCommand{},
-	&EditCommand{},
-	&ImportCommand{},
-	&InitCommand{},
-	&LsCommand{},
-	&PathCommand{},
-	&RmCommand{},
-	&ShowCommand{},
-}
-
 func main() {
 	var options Options
 	var printVersion bool
@@ -70,12 +53,24 @@ func run(args []string, options *Options) {
 		cmdName := args[0]
 		for _, cmd := range subCommands {
 			if cmdName == cmd.Name() {
-				cmd.Run(args[1:], options)
+				err := cmd.Run(args[1:], options)
+				if err != nil {
+					exitWithError(err)
+				}
 				return
 			}
 		}
-		exitWithSyntaxError(fmt.Sprintf("unknown command %q", cmdName))
+		exitWithError(NewSyntaxError(fmt.Sprintf("unknown command %q", cmdName)))
 	} else {
-		exitWithSyntaxError("no command specified")
+		exitWithError(NewSyntaxError("no command specified"))
+	}
+}
+
+func exitWithError(err error) {
+	fmt.Fprintf(os.Stderr, "error: %s\n", err)
+	if _, ok := err.(*SyntaxError); ok {
+		os.Exit(2)
+	} else {
+		os.Exit(1)
 	}
 }

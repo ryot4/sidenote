@@ -6,16 +6,6 @@ import (
 	"path/filepath"
 )
 
-func exitWithSyntaxError(message string) {
-	fmt.Fprintf(os.Stderr, "error: %s\n", message)
-	os.Exit(2)
-}
-
-func exitWithError(err error) {
-	fmt.Fprintf(os.Stderr, "error: %s\n", err)
-	os.Exit(1)
-}
-
 func checkDirectory(path string) (dir *Directory, err error) {
 	dir, err = getDirectory(path)
 	if err != nil {

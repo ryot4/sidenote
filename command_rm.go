@@ -34,27 +34,24 @@ func (c *RmCommand) setup(args []string, options *Options) {
 	c.flag.Parse(args)
 }
 
-func (c *RmCommand) Run(args []string, options *Options) {
+func (c *RmCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
 	dir, err := checkDirectory(options.noteDir)
 	if err != nil {
-		exitWithError(err)
+		return err
 	}
 
 	var rmPath string
 	if c.flag.NArg() == 1 {
 		rmPath = c.flag.Arg(0)
 	} else if c.flag.NArg() > 1 {
-		exitWithSyntaxError("too many arguments")
+		return NewSyntaxError("too many arguments")
 	} else {
-		exitWithSyntaxError("too few arguments")
+		return NewSyntaxError("too few arguments")
 	}
 
-	err = c.remove(dir, rmPath)
-	if err != nil {
-		exitWithError(err)
-	}
+	return c.remove(dir, rmPath)
 }
 
 func (c *RmCommand) remove(dir *Directory, path string) error {

@@ -33,11 +33,11 @@ func (c *InitCommand) setup(args []string, options *Options) {
 	c.flag.Parse(args)
 }
 
-func (c *InitCommand) Run(args []string, options *Options) {
+func (c *InitCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
 	if c.flag.NArg() > 0 {
-		exitWithSyntaxError("too many arguments")
+		return NewSyntaxError("too many arguments")
 	}
 
 	var err error
@@ -46,9 +46,7 @@ func (c *InitCommand) Run(args []string, options *Options) {
 	} else {
 		err = c.initLink(options)
 	}
-	if err != nil {
-		exitWithError(err)
-	}
+	return err
 }
 
 func (c *InitCommand) initDirectory(options *Options) error {

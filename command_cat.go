@@ -29,16 +29,16 @@ func (c *CatCommand) setup(args []string, _options *Options) {
 	c.flag.Parse(args)
 }
 
-func (c *CatCommand) Run(args []string, options *Options) {
+func (c *CatCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
 	dir, err := checkDirectory(options.noteDir)
 	if err != nil {
-		exitWithError(err)
+		return err
 	}
 
 	if c.flag.NArg() == 0 {
-		exitWithSyntaxError("no file specified")
+		return NewSyntaxError("no file specified")
 	}
 
 	var lastErr error
@@ -49,9 +49,7 @@ func (c *CatCommand) Run(args []string, options *Options) {
 			lastErr = err
 		}
 	}
-	if lastErr != nil {
-		os.Exit(1)
-	}
+	return lastErr
 }
 
 func (c *CatCommand) catFile(dir *Directory, path string) error {

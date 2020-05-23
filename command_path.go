@@ -38,26 +38,23 @@ func (c *PathCommand) setup(args []string, _options *Options) {
 	c.flag.Parse(args)
 }
 
-func (c *PathCommand) Run(args []string, options *Options) {
+func (c *PathCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
 	dir, err := getDirectory(options.noteDir)
 	if err != nil {
-		exitWithError(err)
+		return err
 	}
 
 	if c.flag.NArg() > 1 {
-		exitWithSyntaxError("too many arguments")
+		return NewSyntaxError("too many arguments")
 	}
 	path := c.flag.Arg(0)
 	if path == "" {
 		path = "/"
 	}
 
-	err = c.showPath(dir, path)
-	if err != nil {
-		exitWithError(err)
-	}
+	return c.showPath(dir, path)
 }
 
 func (c *PathCommand) showPath(dir *Directory, path string) error {

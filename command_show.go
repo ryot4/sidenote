@@ -30,29 +30,26 @@ func (c *ShowCommand) setup(args []string, _options *Options) {
 	c.flag.Parse(args)
 }
 
-func (c *ShowCommand) Run(args []string, options *Options) {
+func (c *ShowCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
 	pager, ok := os.LookupEnv("PAGER")
 	if !ok {
-		exitWithError(errors.New("PAGER is not set"))
+		return errors.New("PAGER is not set")
 	}
 
 	dir, err := checkDirectory(options.noteDir)
 	if err != nil {
-		exitWithError(err)
+		return err
 	}
 
 	if c.flag.NArg() == 0 {
-		exitWithSyntaxError("no file specified")
+		return NewSyntaxError("no file specified")
 	} else if c.flag.NArg() > 1 {
-		exitWithSyntaxError("too many arguments")
+		return NewSyntaxError("too many arguments")
 	}
 
-	err = c.runPager(dir, pager, c.flag.Arg(0))
-	if err != nil {
-		exitWithError(err)
-	}
+	return c.runPager(dir, pager, c.flag.Arg(0))
 }
 
 func (c *ShowCommand) runPager(dir *Directory, pager, path string) error {

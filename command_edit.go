@@ -49,38 +49,35 @@ func (c *EditCommand) setup(args []string, _options *Options) {
 	c.flag.Parse(args)
 }
 
-func (c *EditCommand) Run(args []string, options *Options) {
+func (c *EditCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
 	editor, ok := os.LookupEnv("VISUAL")
 	if !ok {
 		editor, ok = os.LookupEnv("EDITOR")
 		if !ok {
-			exitWithError(errors.New("neither VISUAL nor EDITOR is set"))
+			return errors.New("neither VISUAL nor EDITOR is set")
 		}
 	}
 
 	dir, err := checkDirectory(options.noteDir)
 	if err != nil {
-		exitWithError(err)
+		return err
 	}
 
 	var filePath string
 	if c.flag.NArg() > 1 {
-		exitWithSyntaxError("too many arguments")
+		return NewSyntaxError("too many arguments")
 	} else if c.flag.NArg() == 1 {
 		filePath = c.flag.Arg(0)
 	} else {
 		if c.nameFormat == "" {
-			exitWithSyntaxError("no filename specified")
+			return NewSyntaxError("no filename specified")
 		}
 		filePath = Strftime(time.Now(), c.nameFormat)
 	}
 
-	err = c.runEditor(dir, editor, filePath)
-	if err != nil {
-		exitWithError(err)
-	}
+	return c.runEditor(dir, editor, filePath)
 }
 
 func (c *EditCommand) runEditor(dir *Directory, editor, path string) error {

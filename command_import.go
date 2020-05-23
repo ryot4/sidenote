@@ -37,29 +37,29 @@ func (c *ImportCommand) setup(args []string, options *Options) {
 	c.flag.Parse(args)
 }
 
-func (c *ImportCommand) Run(args []string, options *Options) {
+func (c *ImportCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
 	dir, err := checkDirectory(options.noteDir)
 	if err != nil {
-		exitWithError(err)
+		return err
 	}
 
 	var origPath, importedPath string
 	switch c.flag.NArg() {
 	case 0:
-		exitWithSyntaxError("no file specified")
+		return NewSyntaxError("no file specified")
 	case 1:
 		origPath = c.flag.Arg(0)
 		if origPath == "-" {
-			exitWithSyntaxError("no name specified")
+			return NewSyntaxError("no name specified")
 		}
 		importedPath = filepath.Base(origPath)
 	case 2:
 		origPath = c.flag.Arg(0)
 		importedPath = c.flag.Arg(1)
 	default:
-		exitWithSyntaxError("too many arguments")
+		return NewSyntaxError("too many arguments")
 	}
 
 	var r io.Reader
@@ -68,22 +68,22 @@ func (c *ImportCommand) Run(args []string, options *Options) {
 	} else {
 		file, err := os.Open(origPath)
 		if err != nil {
-			exitWithError(err)
+			return err
 		}
 		defer file.Close()
 
 		fi, err := file.Stat()
 		if err != nil {
-			exitWithError(err)
+			return err
 		} else if !fi.Mode().IsRegular() {
-			exitWithError(fmt.Errorf("%s is not a regular file", origPath))
+			return fmt.Errorf("%s is not a regular file", origPath)
 		}
 		r = file
 	}
 
 	err = c.importFile(dir, importedPath, r)
 	if err != nil {
-		exitWithError(err)
+		return err
 	}
 
 	if c.delete {
@@ -92,10 +92,11 @@ func (c *ImportCommand) Run(args []string, options *Options) {
 		} else {
 			err = os.Remove(origPath)
 			if err != nil {
-				exitWithError(err)
+				return err
 			}
 		}
 	}
+	return nil
 }
 
 func (c *ImportCommand) importFile(dir *Directory, path string, r io.Reader) error {

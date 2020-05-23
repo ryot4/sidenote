@@ -40,27 +40,24 @@ func (c *LsCommand) setup(args []string, options *Options) {
 	c.flag.Parse(args)
 }
 
-func (c *LsCommand) Run(args []string, options *Options) {
+func (c *LsCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
 	dir, err := checkDirectory(options.noteDir)
 	if err != nil {
-		exitWithError(err)
+		return err
 	}
 
 	var listPath string
 	if c.flag.NArg() > 1 {
-		exitWithSyntaxError("too many arguments")
+		return NewSyntaxError("too many arguments")
 	} else if c.flag.NArg() == 1 {
 		listPath = c.flag.Arg(0)
 	} else {
 		listPath = ""
 	}
 
-	err = c.list(dir, listPath)
-	if err != nil {
-		exitWithError(err)
-	}
+	return c.list(dir, listPath)
 }
 
 func (c *LsCommand) list(dir *Directory, path string) error {
