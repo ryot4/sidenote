@@ -25,6 +25,7 @@ type Command interface {
 var subCommands = []Command{
 	&CatCommand{},
 	&EditCommand{},
+	&ImportCommand{},
 	&InitCommand{},
 	&LsCommand{},
 	&PathCommand{},
