@@ -86,7 +86,7 @@ Instead of creating new files, you can also import existing files with `import` 
 $ sidenote import note.txt
 $ sidenote import -d note.txt                # This imports note.txt and removes the original file.
 $ sidenote import hello.txt hello-world.txt  # This imports hello.txt as hello-world.txt.
----
+----
 
 === Displaying notes
 
