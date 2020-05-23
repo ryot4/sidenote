@@ -21,6 +21,10 @@ $ go get -u github.com/ryot4/sidenote
 
 This installs the binary into `$GOPATH/bin`. Make sure `$GOPATH/bin` is listed in `$PATH`.
 
+=== Command-line completions
+
+See `completions` directory. (Currently only Bash is supported. Contributions are welcome)
+
 == Quick start
 
 === Initialization
@@ -172,7 +176,3 @@ $ sidenote ls
 useful-knowledge.adoc
 ...
 ----
-
-=== Command-line completions
-
-See `completions` directory. (Currently only Bash is supported. Contributions are welcome)
