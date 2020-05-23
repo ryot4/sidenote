@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestFilePath(t *testing.T) {
+func TestJoinPath(t *testing.T) {
 	noteDir := ".notes"
 	dir := NewDirectory(noteDir)
 
@@ -33,7 +33,7 @@ func TestFilePath(t *testing.T) {
 	}
 }
 
-func TestFilePathDotFileError(t *testing.T) {
+func TestJoinPathDotFileError(t *testing.T) {
 	dir := NewDirectory("/path/to/note")
 
 	tests := []string{
