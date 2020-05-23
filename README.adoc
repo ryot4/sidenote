@@ -107,7 +107,7 @@ $ cd $(sidenote path)   # You can operate files as usual after this.
 $ mv todo.txt done.txt
 ----
 
-== Searching
+=== Searching
 
 Searching can be done with a combination of `sidenote path` and existing searching commands such as `grep`.
 
@@ -116,7 +116,7 @@ $ grep -R pattern $(sidenote path)          # Search all files.
 $ grep -R pattern $(sidenote path 2020/02)  # Search files in 2020/02/.
 ----
 
-== And more
+=== And more
 
 For full list of options and environment varibles, see `sidenote -h` and `sidenote <command> -h`.
 
