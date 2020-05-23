@@ -78,6 +78,16 @@ $ export SIDENOTE_NAME_FORMAT='%Y-%m-%d.md'
 $ sidenote edit                              # Same as above, but no need to specify the format every time.
 ----
 
+=== Importing existing files
+
+Instead of creating new files, you can also import existing files with `import` command.
+
+----
+$ sidenote import note.txt
+$ sidenote import -d note.txt                # This imports note.txt and removes the original file.
+$ sidenote import hello.txt hello-world.txt  # This imports hello.txt as hello-world.txt.
+---
+
 === Displaying notes
 
 To display notes, use `cat` or `show` command:
