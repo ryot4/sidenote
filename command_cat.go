@@ -42,8 +42,8 @@ func (c *CatCommand) Run(args []string, options *Options) error {
 	}
 
 	var lastErr error
-	for _, filePath := range c.flag.Args() {
-		err = c.catFile(dir, filePath)
+	for _, name := range c.flag.Args() {
+		err = c.catFile(dir, name)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			lastErr = err
@@ -52,13 +52,13 @@ func (c *CatCommand) Run(args []string, options *Options) error {
 	return lastErr
 }
 
-func (c *CatCommand) catFile(dir *Directory, path string) error {
-	realPath, err := dir.JoinPath(path)
+func (c *CatCommand) catFile(dir *Directory, name string) error {
+	path, err := dir.JoinPath(name)
 	if err != nil {
 		return err
 	}
 
-	f, err := os.Open(realPath)
+	f, err := os.Open(path)
 	if err != nil {
 		return err
 	}
@@ -69,7 +69,7 @@ func (c *CatCommand) catFile(dir *Directory, path string) error {
 		return err
 	}
 	if fi.IsDir() {
-		return fmt.Errorf("%s is a directory", path)
+		return fmt.Errorf("%s is a directory", name)
 	}
 
 	_, err = io.Copy(os.Stdout, f)

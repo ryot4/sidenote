@@ -49,15 +49,15 @@ func (c *PathCommand) Run(args []string, options *Options) error {
 	if c.flag.NArg() > 1 {
 		return NewSyntaxError("too many arguments")
 	}
-	path := c.flag.Arg(0)
-	if path == "" {
-		path = "/"
+	name := c.flag.Arg(0)
+	if name == "" {
+		name = "/"
 	}
 
-	return c.showPath(dir, path)
+	return c.showPath(dir, name)
 }
 
-func (c *PathCommand) showPath(dir *Directory, path string) error {
+func (c *PathCommand) showPath(dir *Directory, name string) error {
 	if c.followSymlink {
 		link, err := dir.FollowSymlink()
 		if err != nil {
@@ -68,37 +68,37 @@ func (c *PathCommand) showPath(dir *Directory, path string) error {
 		}
 	}
 
-	realPath, err := dir.JoinPath(path)
+	path, err := dir.JoinPath(name)
 	if err != nil {
 		return err
 	}
 
 	if c.check {
-		_, err := os.Stat(realPath)
+		_, err := os.Stat(path)
 		if err != nil {
 			return err
 		}
 	}
 
 	if c.absolute {
-		absPath, err := filepath.Abs(realPath)
+		absPath, err := filepath.Abs(path)
 		if err != nil {
 			return err
 		}
 		fmt.Println(absPath)
 	} else {
-		if filepath.IsAbs(realPath) {
+		if filepath.IsAbs(path) {
 			wd, err := os.Getwd()
 			if err != nil {
 				return err
 			}
-			relPath, err := filepath.Rel(wd, realPath)
+			relPath, err := filepath.Rel(wd, path)
 			if err != nil {
 				return err
 			}
 			fmt.Println(relPath)
 		} else {
-			fmt.Println(realPath)
+			fmt.Println(path)
 		}
 	}
 	return nil

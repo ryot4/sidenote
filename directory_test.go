@@ -9,7 +9,7 @@ func TestJoinPath(t *testing.T) {
 	dir := NewDirectory(noteDir)
 
 	tests := []struct {
-		path   string
+		name   string
 		expect string
 	}{
 		{"foo", ".notes/foo"},
@@ -21,8 +21,8 @@ func TestJoinPath(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.path, func(t *testing.T) {
-			path, err := dir.JoinPath(tt.path)
+		t.Run(tt.name, func(t *testing.T) {
+			path, err := dir.JoinPath(tt.name)
 			if err != nil {
 				t.Error(err)
 			}

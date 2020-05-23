@@ -45,7 +45,7 @@ func (c *ImportCommand) Run(args []string, options *Options) error {
 		return err
 	}
 
-	var origPath, importedPath string
+	var origPath, name string
 	switch c.flag.NArg() {
 	case 0:
 		return NewSyntaxError("no file specified")
@@ -54,10 +54,10 @@ func (c *ImportCommand) Run(args []string, options *Options) error {
 		if origPath == "-" {
 			return NewSyntaxError("no name specified")
 		}
-		importedPath = filepath.Base(origPath)
+		name = filepath.Base(origPath)
 	case 2:
 		origPath = c.flag.Arg(0)
-		importedPath = c.flag.Arg(1)
+		name = c.flag.Arg(1)
 	default:
 		return NewSyntaxError("too many arguments")
 	}
@@ -81,7 +81,7 @@ func (c *ImportCommand) Run(args []string, options *Options) error {
 		r = file
 	}
 
-	err = c.importFile(dir, importedPath, r)
+	err = c.importFile(dir, name, r)
 	if err != nil {
 		return err
 	}
@@ -99,29 +99,29 @@ func (c *ImportCommand) Run(args []string, options *Options) error {
 	return nil
 }
 
-func (c *ImportCommand) importFile(dir *Directory, path string, r io.Reader) error {
-	realPath, err := dir.JoinPath(path)
+func (c *ImportCommand) importFile(dir *Directory, name string, r io.Reader) error {
+	path, err := dir.JoinPath(name)
 	if err != nil {
 		return err
 	}
 
-	err = os.MkdirAll(filepath.Dir(realPath), os.ModePerm)
+	err = os.MkdirAll(filepath.Dir(path), os.ModePerm)
 	if err != nil {
 		return err
 	}
 
-	fi, err := os.Stat(realPath)
+	fi, err := os.Stat(path)
 	if err == nil {
 		if fi.IsDir() {
-			return fmt.Errorf("directory exists: %s", realPath)
+			return fmt.Errorf("directory exists: %s", path)
 		} else if !c.force {
-			return fmt.Errorf("file exists; use -f to overwrite: %s", realPath)
+			return fmt.Errorf("file exists; use -f to overwrite: %s", path)
 		}
 	} else if !os.IsNotExist(err) {
 		return err
 	}
 
-	file, err := os.Create(realPath)
+	file, err := os.Create(path)
 	if err != nil {
 		return err
 	}

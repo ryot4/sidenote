@@ -38,21 +38,21 @@ func (c *ShowCommand) Run(args []string, options *Options) error {
 		return err
 	}
 
-	var path string
+	var name string
 	switch c.flag.NArg() {
 	case 0:
 		return NewSyntaxError("no file specified")
 	case 1:
-		path = c.flag.Arg(0)
+		name = c.flag.Arg(0)
 	default:
 		return NewSyntaxError("too many arguments")
 	}
 
-	return c.runPager(dir, path)
+	return c.runPager(dir, name)
 }
 
-func (c *ShowCommand) runPager(dir *Directory, path string) error {
-	realPath, err := dir.JoinPath(path)
+func (c *ShowCommand) runPager(dir *Directory, name string) error {
+	path, err := dir.JoinPath(name)
 	if err != nil {
 		return err
 	}
@@ -62,7 +62,7 @@ func (c *ShowCommand) runPager(dir *Directory, path string) error {
 		return errors.New("PAGER is not set")
 	}
 
-	pagerCmd := exec.Command(pager, realPath)
+	pagerCmd := exec.Command(pager, path)
 	pagerCmd.Stdin = os.Stdin
 	pagerCmd.Stdout = os.Stdout
 	pagerCmd.Stderr = os.Stderr

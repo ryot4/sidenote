@@ -48,40 +48,40 @@ func (c *LsCommand) Run(args []string, options *Options) error {
 		return err
 	}
 
-	var listPath string
+	var name string
 	switch c.flag.NArg() {
 	case 0:
-		listPath = ""
+		name = ""
 	case 1:
-		listPath = c.flag.Arg(0)
+		name = c.flag.Arg(0)
 	default:
 		return NewSyntaxError("too many arguments")
 	}
 
-	return c.list(dir, listPath)
+	return c.list(dir, name)
 }
 
-func (c *LsCommand) list(dir *Directory, path string) error {
-	realPath, err := dir.JoinPath(path)
+func (c *LsCommand) list(dir *Directory, name string) error {
+	path, err := dir.JoinPath(name)
 	if err != nil {
 		return err
 	}
-	fi, err := os.Stat(realPath)
+	fi, err := os.Stat(path)
 	if err != nil {
 		return err
 	}
 	if fi.IsDir() {
-		c.listDir(dir, path)
+		c.listDir(dir, name)
 	} else {
 		c.printFile(fi)
 	}
 	return nil
 }
 
-func (c *LsCommand) listDir(dir *Directory, path string) {
-	items, err := dir.Readdir(path)
+func (c *LsCommand) listDir(dir *Directory, name string) {
+	items, err := dir.Readdir(name)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "cannot read %s: %s\n", path, err)
+		fmt.Fprintf(os.Stderr, "cannot read %s: %s\n", name, err)
 		return
 	}
 
@@ -102,9 +102,9 @@ func (c *LsCommand) listDir(dir *Directory, path string) {
 	if c.recurse {
 		for _, fi := range items {
 			if fi.IsDir() {
-				itemPath := filepath.Join(path, fi.Name())
-				fmt.Printf("\n%s:\n", itemPath)
-				c.listDir(dir, itemPath)
+				itemName := filepath.Join(name, fi.Name())
+				fmt.Printf("\n%s:\n", itemName)
+				c.listDir(dir, itemName)
 			}
 		}
 	}

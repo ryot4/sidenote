@@ -42,30 +42,30 @@ func (c *RmCommand) Run(args []string, options *Options) error {
 		return err
 	}
 
-	var rmPath string
+	var name string
 	switch c.flag.NArg() {
 	case 0:
 		return NewSyntaxError("too few arguments")
 	case 1:
-		rmPath = c.flag.Arg(0)
+		name = c.flag.Arg(0)
 	default:
 		return NewSyntaxError("too many arguments")
 	}
 
-	return c.remove(dir, rmPath)
+	return c.remove(dir, name)
 }
 
-func (c *RmCommand) remove(dir *Directory, path string) error {
-	realPath, err := dir.JoinPath(path)
+func (c *RmCommand) remove(dir *Directory, name string) error {
+	path, err := dir.JoinPath(name)
 	if err != nil {
 		return err
 	}
-	fi, err := os.Stat(realPath)
+	fi, err := os.Stat(path)
 	if err != nil {
 		return err
 	}
 	if fi.IsDir() {
-		isEmpty, err := isEmptyDir(realPath)
+		isEmpty, err := isEmptyDir(path)
 		if err != nil {
 			return err
 		}
@@ -73,7 +73,7 @@ func (c *RmCommand) remove(dir *Directory, path string) error {
 			return fmt.Errorf("directory not empty: use -r to remove")
 		}
 	}
-	return os.RemoveAll(realPath)
+	return os.RemoveAll(path)
 }
 
 func isEmptyDir(path string) (bool, error) {

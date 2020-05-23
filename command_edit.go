@@ -57,46 +57,46 @@ func (c *EditCommand) Run(args []string, options *Options) error {
 		return err
 	}
 
-	var filePath string
+	var name string
 	switch c.flag.NArg() {
 	case 0:
 		if c.nameFormat == "" {
 			return NewSyntaxError("no filename specified")
 		}
-		filePath = Strftime(time.Now(), c.nameFormat)
+		name = Strftime(time.Now(), c.nameFormat)
 	case 1:
-		filePath = c.flag.Arg(0)
+		name = c.flag.Arg(0)
 	default:
 		return NewSyntaxError("too many arguments")
 	}
 
-	return c.runEditor(dir, filePath)
+	return c.runEditor(dir, name)
 }
 
-func (c *EditCommand) runEditor(dir *Directory, path string) error {
-	realPath, err := dir.JoinPath(path)
+func (c *EditCommand) runEditor(dir *Directory, name string) error {
+	path, err := dir.JoinPath(name)
 	if err != nil {
 		return err
 	}
 
-	err = os.MkdirAll(filepath.Dir(realPath), os.ModePerm)
+	err = os.MkdirAll(filepath.Dir(path), os.ModePerm)
 	if err != nil {
 		return err
 	}
 
-	fi, err := os.Stat(realPath)
+	fi, err := os.Stat(path)
 	if os.IsNotExist(err) {
-		if filepath.Ext(realPath) == "" && c.fileExt != "" {
+		if filepath.Ext(path) == "" && c.fileExt != "" {
 			if strings.HasPrefix(c.fileExt, ".") {
-				realPath += c.fileExt
+				path += c.fileExt
 			} else {
-				realPath += "." + c.fileExt
+				path += "." + c.fileExt
 			}
 		}
 	} else if err != nil {
 		return err
 	} else if fi.IsDir() {
-		return fmt.Errorf("directory exists: %s", realPath)
+		return fmt.Errorf("directory exists: %s", path)
 	}
 
 	editor, ok := os.LookupEnv("VISUAL")
@@ -107,7 +107,7 @@ func (c *EditCommand) runEditor(dir *Directory, path string) error {
 		}
 	}
 
-	editorCmd := exec.Command(editor, realPath)
+	editorCmd := exec.Command(editor, path)
 	editorCmd.Stdin = os.Stdin
 	editorCmd.Stdout = os.Stdout
 	editorCmd.Stderr = os.Stderr

@@ -71,23 +71,23 @@ func (dir *Directory) FollowSymlink() (bool, error) {
 	return true, nil
 }
 
-func (dir *Directory) JoinPath(path string) (string, error) {
+func (dir *Directory) JoinPath(name string) (string, error) {
 	separator := string(filepath.Separator)
-	for _, elem := range strings.Split(path, separator) {
+	for _, elem := range strings.Split(name, separator) {
 		if strings.HasPrefix(elem, ".") {
-			return "", &DotFileError{Path: path}
+			return "", &DotFileError{Path: name}
 		}
 	}
-	return filepath.Join(dir.path, path), nil
+	return filepath.Join(dir.path, name), nil
 }
 
-func (dir *Directory) Readdir(path string) ([]os.FileInfo, error) {
-	realPath, err := dir.JoinPath(path)
+func (dir *Directory) Readdir(name string) ([]os.FileInfo, error) {
+	path, err := dir.JoinPath(name)
 	if err != nil {
 		return nil, err
 	}
 
-	f, err := os.Open(realPath)
+	f, err := os.Open(path)
 	if err != nil {
 		return nil, err
 	}
