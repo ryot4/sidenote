@@ -136,6 +136,15 @@ For full list of options and environment varibles, see `sidenote -h` and `sideno
 
 == Tips
 
+=== Ignore notes in Git globally
+
+To ignore notes in Git globally, add `.notes` to the file specified by `core.excludesfile` (by default, this is `~/.config/git/ignore`) in Git config.
+
+----
+$ mkdir -p ~/.config/git
+$ echo .notes >> .config/git/ignore
+----
+
 === Store files in the directory other than .notes
 
 You can use `-d` option or `SIDENOTE_DIR` environment variable to specify the directory where files are stored.
