@@ -43,12 +43,13 @@ func (c *RmCommand) Run(args []string, options *Options) error {
 	}
 
 	var rmPath string
-	if c.flag.NArg() == 1 {
-		rmPath = c.flag.Arg(0)
-	} else if c.flag.NArg() > 1 {
-		return NewSyntaxError("too many arguments")
-	} else {
+	switch c.flag.NArg() {
+	case 0:
 		return NewSyntaxError("too few arguments")
+	case 1:
+		rmPath = c.flag.Arg(0)
+	default:
+		return NewSyntaxError("too many arguments")
 	}
 
 	return c.remove(dir, rmPath)

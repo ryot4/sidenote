@@ -58,15 +58,16 @@ func (c *EditCommand) Run(args []string, options *Options) error {
 	}
 
 	var filePath string
-	if c.flag.NArg() > 1 {
-		return NewSyntaxError("too many arguments")
-	} else if c.flag.NArg() == 1 {
-		filePath = c.flag.Arg(0)
-	} else {
+	switch c.flag.NArg() {
+	case 0:
 		if c.nameFormat == "" {
 			return NewSyntaxError("no filename specified")
 		}
 		filePath = Strftime(time.Now(), c.nameFormat)
+	case 1:
+		filePath = c.flag.Arg(0)
+	default:
+		return NewSyntaxError("too many arguments")
 	}
 
 	return c.runEditor(dir, filePath)

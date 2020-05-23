@@ -38,13 +38,17 @@ func (c *ShowCommand) Run(args []string, options *Options) error {
 		return err
 	}
 
-	if c.flag.NArg() == 0 {
+	var path string
+	switch c.flag.NArg() {
+	case 0:
 		return NewSyntaxError("no file specified")
-	} else if c.flag.NArg() > 1 {
+	case 1:
+		path = c.flag.Arg(0)
+	default:
 		return NewSyntaxError("too many arguments")
 	}
 
-	return c.runPager(dir, c.flag.Arg(0))
+	return c.runPager(dir, path)
 }
 
 func (c *ShowCommand) runPager(dir *Directory, path string) error {

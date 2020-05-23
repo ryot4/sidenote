@@ -49,12 +49,13 @@ func (c *LsCommand) Run(args []string, options *Options) error {
 	}
 
 	var listPath string
-	if c.flag.NArg() > 1 {
-		return NewSyntaxError("too many arguments")
-	} else if c.flag.NArg() == 1 {
-		listPath = c.flag.Arg(0)
-	} else {
+	switch c.flag.NArg() {
+	case 0:
 		listPath = ""
+	case 1:
+		listPath = c.flag.Arg(0)
+	default:
+		return NewSyntaxError("too many arguments")
 	}
 
 	return c.list(dir, listPath)
