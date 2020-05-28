@@ -17,7 +17,7 @@ func (c *ShowCommand) Name() string {
 }
 
 func (c *ShowCommand) Description() string {
-	return "Open notes with pager"
+	return "Open notes with $PAGER"
 }
 
 func (c *ShowCommand) setup(args []string, _options *Options) {

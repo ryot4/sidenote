@@ -17,7 +17,7 @@ func (c *InitCommand) Name() string {
 }
 
 func (c *InitCommand) Description() string {
-	return "Initialize a directory for notes"
+	return "Initialize the directory for notes"
 }
 
 func (c *InitCommand) setup(args []string, options *Options) {
