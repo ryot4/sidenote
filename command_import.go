@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 type ImportCommand struct {
@@ -52,12 +53,19 @@ func (c *ImportCommand) Run(args []string, options *Options) error {
 	case 1:
 		origPath = c.flag.Arg(0)
 		if origPath == "-" {
-			return NewSyntaxError("no name specified")
+			return NewSyntaxError("no name specified (required when importing from the standard input)")
 		}
 		name = filepath.Base(origPath)
 	case 2:
 		origPath = c.flag.Arg(0)
 		name = c.flag.Arg(1)
+		if strings.HasSuffix(name, string(filepath.Separator)) {
+			if origPath == "-" {
+				return NewSyntaxError("no name specified (required when importing from the standard input)")
+			} else {
+				name = filepath.Join(name, filepath.Base(origPath))
+			}
+		}
 	default:
 		return NewSyntaxError("too many arguments")
 	}
@@ -113,7 +121,7 @@ func (c *ImportCommand) importFile(dir *Directory, name string, r io.Reader) err
 	fi, err := os.Stat(path)
 	if err == nil {
 		if fi.IsDir() {
-			return fmt.Errorf("directory exists: %s", path)
+			return fmt.Errorf("directory exists (use %s/ to import into the directory): %s", name, path)
 		} else if !c.force {
 			return fmt.Errorf("file exists; use -f to overwrite: %s", path)
 		}
