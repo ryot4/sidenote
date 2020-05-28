@@ -35,6 +35,7 @@ By default, files are stored in `.notes`, and this directory can be created with
 
 ----
 $ sidenote init
+initialized .notes
 $ ls -dl .notes
 drwxr-xr-x 2 ryot4 ryot4 4096 Feb  9 19:03 .notes
 ----
@@ -44,6 +45,7 @@ The target directory is created if it does not exist.
 
 ----
 $ sidenote init -l ~/Documents/notes
+initialized .notes (-> /home/ryot4/Documents/notes)
 $ ls -l .notes
 lrwxrwxrwx 1 ryot4 ryot4 31 Feb  9 19:03 .notes -> /home/ryot4/Documents/notes
 ----
@@ -84,8 +86,11 @@ Instead of creating new files, you can also import existing files with `import` 
 
 ----
 $ sidenote import note.txt
-$ sidenote import -d note.txt                # This imports note.txt and removes the original file.
-$ sidenote import hello.txt hello-world.txt  # This imports hello.txt as hello-world.txt.
+imported note.txt
+$ sidenote import -d todo.txt                # This removes the original file after import.
+imported todo.txt
+$ sidenote import hello.txt hello-world.txt  # You can specify the name of the imported file.
+imported hello-world.txt
 ----
 
 === Displaying notes
@@ -107,6 +112,7 @@ todo.txt
 $ sidenote ls -l
 Feb  9 21:37 todo.txt
 $ sidenote rm todo.txt
+removed todo.txt
 ----
 
 Of course you can use standard command line utilities as well.
