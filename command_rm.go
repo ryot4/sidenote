@@ -70,7 +70,7 @@ func (c *RmCommand) remove(dir *Directory, name string) error {
 			return err
 		}
 		if !isEmpty && !c.recurse {
-			return fmt.Errorf("%s: directory not empty (use -r to remove)", name)
+			return fmt.Errorf("directory %s is not empty (use -r to remove recursively)", name)
 		}
 	}
 	return os.RemoveAll(path)

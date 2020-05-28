@@ -81,7 +81,7 @@ func (c *LsCommand) list(dir *Directory, name string) error {
 func (c *LsCommand) listDir(dir *Directory, name string) {
 	items, err := dir.Readdir(name)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "cannot read %s: %s\n", name, err)
+		fmt.Fprintf(os.Stderr, "cannot read %s (%s)\n", name, err)
 		return
 	}
 

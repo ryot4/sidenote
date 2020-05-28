@@ -121,9 +121,9 @@ func (c *ImportCommand) importFile(dir *Directory, name string, r io.Reader) err
 	fi, err := os.Stat(path)
 	if err == nil {
 		if fi.IsDir() {
-			return fmt.Errorf("directory exists (use %s/ to import into the directory): %s", name, name)
+			return fmt.Errorf("directory %s already exists (use %s/ to import into the directory)", name, name)
 		} else if !c.force {
-			return fmt.Errorf("file exists; use -f to overwrite: %s", name)
+			return fmt.Errorf("%s already exists (use -f to overwrite)", name)
 		}
 	} else if !os.IsNotExist(err) {
 		return err
