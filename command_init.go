@@ -40,38 +40,29 @@ func (c *InitCommand) Run(args []string, options *Options) error {
 		return NewSyntaxError("too many arguments")
 	}
 
-	var err error
+	noteDir := NoteDirName
+	if options.noteDir != "" {
+		noteDir = options.noteDir
+	}
+
 	if c.linkTarget == "" {
-		err = c.initDirectory(options)
+		err := NewDirectory(noteDir).Init()
+		if err != nil {
+			return err
+		}
+		fmt.Printf("initialized %s\n", noteDir)
 	} else {
-		err = c.initLink(options)
-	}
-	return err
-}
+		// Create the symlink first; if this fails, do not initialize the target directory.
+		err := os.Symlink(c.linkTarget, noteDir)
+		if err != nil {
+			return err
+		}
 
-func (c *InitCommand) initDirectory(options *Options) error {
-	noteDir := NoteDirName
-	if options.noteDir != "" {
-		noteDir = options.noteDir
-	}
-	return NewDirectory(noteDir).Init()
-}
-
-func (c *InitCommand) initLink(options *Options) error {
-	noteDir := NoteDirName
-	if options.noteDir != "" {
-		noteDir = options.noteDir
-	}
-
-	// Create the symlink first; if this fails, do not initialize the target directory.
-	err := os.Symlink(c.linkTarget, noteDir)
-	if err != nil {
-		return err
-	}
-
-	err = NewDirectory(c.linkTarget).Init()
-	if err != nil && !os.IsExist(err) {
-		return err
+		err = NewDirectory(c.linkTarget).Init()
+		if err != nil && !os.IsExist(err) {
+			return err
+		}
+		fmt.Printf("initialized %s (-> %s)\n", noteDir, c.linkTarget)
 	}
 	return nil
 }

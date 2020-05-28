@@ -93,6 +93,7 @@ func (c *ImportCommand) Run(args []string, options *Options) error {
 	if err != nil {
 		return err
 	}
+	fmt.Printf("imported %s\n", name)
 
 	if c.delete {
 		if origPath == "-" {

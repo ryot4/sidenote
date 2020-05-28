@@ -52,7 +52,11 @@ func (c *RmCommand) Run(args []string, options *Options) error {
 		return NewSyntaxError("too many arguments")
 	}
 
-	return c.remove(dir, name)
+	err = c.remove(dir, name)
+	if err == nil {
+		fmt.Printf("removed %s\n", name)
+	}
+	return err
 }
 
 func (c *RmCommand) remove(dir *Directory, name string) error {
