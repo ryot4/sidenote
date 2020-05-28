@@ -96,7 +96,7 @@ func (c *EditCommand) runEditor(dir *Directory, name string) error {
 	} else if err != nil {
 		return err
 	} else if fi.IsDir() {
-		return fmt.Errorf("directory exists: %s", path)
+		return fmt.Errorf("directory exists: %s", name)
 	}
 
 	editor, ok := os.LookupEnv("VISUAL")
