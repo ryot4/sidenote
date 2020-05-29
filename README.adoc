@@ -1,8 +1,6 @@
 = sidenote
 
-sidenote is a command line utility for managing plain text notes.
-
-It aims to be simple and work well with existing text editors and Unix command line utilities.
+sidenote is a command line utility for managing plain text notes per working directory.
 
 == Installation
 
@@ -29,9 +27,8 @@ See `completions` directory. (Currently only Bash is supported. Contributions ar
 
 === Initialization
 
-sidenote organizes notes per working directory.
-
-By default, files are stored in `.notes`, and this directory can be created with `sidenote init`.
+To prevent the working directory from being cluttered with text files, sidenote uses a dedicated directory (`.notes`) for notes.
+First of all, you need to prepare it with `init` command.
 
 ----
 $ sidenote init
@@ -40,7 +37,7 @@ $ ls -dl .notes
 drwxr-xr-x 2 ryot4 ryot4 4096 Feb  9 19:03 .notes
 ----
 
-If you want to store files outside the current working directory, you can create a symbolic link with `init -l`.
+If you want to store files outside the current working directory, you can initialize `.notes` as a symbolic link with `init -l`.
 The target directory is created if it does not exist.
 
 ----
@@ -51,22 +48,22 @@ lrwxrwxrwx 1 ryot4 ryot4 31 Feb  9 19:03 .notes -> /home/ryot4/Documents/notes
 ----
 
 When `.notes` does not exist in the current working directory, sidenote searchs the directory hierarchy upward.
-Therefore you only need to initialize notes at the top-level working directory.
+Therefore you only need to run `init` at the top-level working directory.
 
 ----
 $ sidenote path            # Print the relative path to the .notes directory.
 .notes
 $ mkdir subdir; cd subdir
 $ sidenote path
-../.notes                  # notes in the parent directory is used.
+../.notes                  # Notes in the parent directory is used.
 ----
 
 === Editing notes
 
-After creating the directory, let's open a file with your favorite text editor (sidenote refers `$VISUAL` and `$EDITOR`):
+You can use your favorite text editor to edit notes. (sidenote refers `$VISUAL` and `$EDITOR`)
 
 ----
-$ sidenote edit todo.txt             # This opens .notes/todo.txt with the editor.
+$ sidenote edit todo.txt             # This opens .notes/todo.txt with $EDITOR.
 $ sidenote edit issues/issue-123.md  # You can create subdirectories.
 ----
 
@@ -138,7 +135,7 @@ $ grep -R pattern $(sidenote path 2020/02)  # Search files in 2020/02/.
 
 === And more
 
-For full list of options and environment varibles, see `sidenote -h` and `sidenote <command> -h`.
+For the full list of commands, options and environment varibles, see `sidenote -h` and `sidenote <command> -h`.
 
 == Tips
 
@@ -148,7 +145,7 @@ To ignore notes in Git globally, add `.notes` to the file specified by `core.exc
 
 ----
 $ mkdir -p ~/.config/git
-$ echo .notes >> .config/git/ignore
+$ echo .notes >> ~/.config/git/ignore
 ----
 
 === Store files in the directory other than .notes
@@ -156,16 +153,16 @@ $ echo .notes >> .config/git/ignore
 You can use `-d` option or `SIDENOTE_DIR` environment variable to specify the directory where files are stored.
 
 ----
-$ sidenote -d .mynotes init         # Use .mynotes for notes.
+$ sidenote -d .mynotes init           # Use .mynotes for notes.
 $ sidenote -d .mynotes edit todo.txt
 $ export SIDENOTE_DIR=.mynotes
-$ sidenote edit todo.txt            # Same as above.
+$ sidenote edit todo.txt              # Same as above.
 ----
 
 You can also use absolute paths:
 
 ----
-$ sidenote -d ~/Documents/notes ls  # List files in ~/Documents/notes.
+$ sidenote -d ~/Documents/notes ls  # List notes in ~/Documents/notes.
 ----
 
 === Dotfiles are ignored
