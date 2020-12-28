@@ -92,15 +92,8 @@ _sidenote()
             case "${prev}" in
             -f|-x)
                 ;;
-            edit|-*)
+            edit|*)
                 _sidenote_path "${opts}"
-                ;;
-            *)
-                case "${COMP_WORDS[COMP_CWORD-2]}" in
-                -f|-x)
-                    _sidenote_path "${opts}"
-                    ;;
-                esac
                 ;;
             esac
             ;;
