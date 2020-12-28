@@ -47,7 +47,10 @@ func (c *ServeCommand) Run(args []string, options *Options) error {
 	if err != nil {
 		return err
 	}
+	return c.runServer(dir)
+}
 
+func (c *ServeCommand) runServer(dir *Directory) error {
 	srv := NewServer(c.listenAddress, dir.path, c.contentType)
 
 	idleConnsClosed := make(chan struct{})
