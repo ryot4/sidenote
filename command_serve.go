@@ -65,7 +65,8 @@ func (c *ServeCommand) Run(args []string, options *Options) error {
 
 	log.Println("Listening on", c.listenAddress)
 	if err := srv.ListenAndServe(); err != http.ErrServerClosed {
-		log.Fatal(err.Error())
+		log.Print(err.Error())
+		return err
 	}
 
 	<-idleConnsClosed
