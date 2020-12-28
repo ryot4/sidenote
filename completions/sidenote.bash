@@ -184,7 +184,7 @@ _sidenote()
     serve)
         case "${cur}" in
         -*)
-            COMPREPLY=($(compgen -W '-h -l' -- "${cur}"))
+            COMPREPLY=($(compgen -W '-h -l -t' -- "${cur}"))
             ;;
         esac
         ;;

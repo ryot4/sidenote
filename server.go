@@ -51,12 +51,16 @@ func (w *statusResponseWriter) WriteHeader(statusCode int) {
 	w.ResponseWriter.WriteHeader(statusCode)
 }
 
-type requestLoggingHandler struct {
+type notesHandler struct {
 	http.Handler
+	contentType string
 }
 
-func (handler *requestLoggingHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (handler *notesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	sw := &statusResponseWriter{ResponseWriter: w}
+	if handler.contentType != "" {
+		sw.Header().Set("Content-Type", handler.contentType)
+	}
 	handler.Handler.ServeHTTP(sw, r)
 	log.Printf("%s \"%s %s %s\" %d \"%s\"",
 		r.RemoteAddr,
@@ -67,11 +71,12 @@ func (handler *requestLoggingHandler) ServeHTTP(w http.ResponseWriter, r *http.R
 		r.UserAgent())
 }
 
-func NewServer(listenAddress, documentRoot string) *http.Server {
-	handler := &requestLoggingHandler{
-		http.FileServer(
+func NewServer(listenAddress, documentRoot string, contentType string) *http.Server {
+	handler := &notesHandler{
+		Handler: http.FileServer(
 			dotFileHidingFs{http.Dir(documentRoot)},
 		),
+		contentType: contentType,
 	}
 	mux := http.NewServeMux()
 	mux.Handle("/", handler)
