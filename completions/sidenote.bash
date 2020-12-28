@@ -186,6 +186,14 @@ _sidenote()
         -*)
             COMPREPLY=($(compgen -W '-h -l -t' -- "${cur}"))
             ;;
+        *)
+            case "${prev}" in
+            -l|-t)
+                ;;
+            serve|*)
+                _sidenote_path "${opts}"
+                ;;
+            esac
         esac
         ;;
     show)
