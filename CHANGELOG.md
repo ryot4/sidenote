@@ -1,6 +1,6 @@
 # ChangeLog
 
-## Unreleased
+## Version 0.1.6 - 2020-12-30
 
 Breaking changes:
 
