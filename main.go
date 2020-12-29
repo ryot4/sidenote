@@ -17,7 +17,7 @@ type Options struct {
 }
 
 func (options *Options) CheckDirectory() (dir *Directory, err error) {
-	dir, err = options.GetDirectory()
+	dir, err = options.FindDirectory()
 	if err != nil {
 		return
 	}
@@ -30,7 +30,7 @@ func (options *Options) CheckDirectory() (dir *Directory, err error) {
 	return
 }
 
-func (options *Options) GetDirectory() (dir *Directory, err error) {
+func (options *Options) FindDirectory() (dir *Directory, err error) {
 	if options.noteDir == "" {
 		dir, err = FindDirectory()
 		if err != nil {
