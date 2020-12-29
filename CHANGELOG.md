@@ -17,6 +17,7 @@ Improvements and fixes:
 
 Other changes:
 
+ * Update to Go 1.15
  * Convert documents from AsciiDoc to Markdown
  * Add CHANGELOG (this file)
 

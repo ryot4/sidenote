@@ -1,3 +1,3 @@
 module github.com/ryot4/sidenote
 
-go 1.13
+go 1.15
