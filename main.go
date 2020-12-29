@@ -7,10 +7,7 @@ import (
 	"text/tabwriter"
 )
 
-const (
-	NoteDirName = ".notes"
-	NoteDirEnv  = "SIDENOTE_DIR"
-)
+const NoteDirEnv = "SIDENOTE_DIR"
 
 type Options struct {
 	noteDir string
@@ -19,9 +16,8 @@ type Options struct {
 func (options *Options) NoteDirName() string {
 	if options.noteDir != "" {
 		return options.noteDir
-	} else {
-		return NoteDirName
 	}
+	return ".notes"
 }
 
 func (options *Options) CheckDirectory() (dir *Directory, err error) {
