@@ -48,7 +48,7 @@ jobs:
       run: |
         ARCHIVE=sidenote_${{ steps.get_release_version.outputs.version }}_${{ env.GOOS }}_${{ env.GOARCH }}.tar.gz
         SHA256SUM=${ARCHIVE%%.tar.gz}.sha256sum
-        tar -czf ${ARCHIVE} completions LICENSE README.md sidenote
+        tar -czf ${ARCHIVE} completions CHANGELOG.md LICENSE README.md sidenote
         sha256sum ${ARCHIVE} > ${SHA256SUM}
         echo ::set-output name=archive::${ARCHIVE}
         echo ::set-output name=sha256sum::${SHA256SUM}
