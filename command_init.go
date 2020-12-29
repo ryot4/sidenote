@@ -40,10 +40,7 @@ func (c *InitCommand) Run(args []string, options *Options) error {
 		return NewSyntaxError("too many arguments")
 	}
 
-	noteDir := NoteDirName
-	if options.noteDir != "" {
-		noteDir = options.noteDir
-	}
+	noteDir := options.NoteDirName()
 
 	if c.linkTarget == "" {
 		err := NewDirectory(noteDir).Init()

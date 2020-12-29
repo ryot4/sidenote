@@ -16,6 +16,14 @@ type Options struct {
 	noteDir string
 }
 
+func (options *Options) NoteDirName() string {
+	if options.noteDir != "" {
+		return options.noteDir
+	} else {
+		return NoteDirName
+	}
+}
+
 func (options *Options) CheckDirectory() (dir *Directory, err error) {
 	dir, err = options.FindDirectory()
 	if err != nil {
