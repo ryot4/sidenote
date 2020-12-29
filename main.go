@@ -48,6 +48,18 @@ func usage() {
 	fmt.Fprintf(output, "\nRun %s <command> -h for usage of each command.\n", os.Args[0])
 }
 
+var subCommands = []Command{
+	&CatCommand{},
+	&EditCommand{},
+	&ImportCommand{},
+	&InitCommand{},
+	&LsCommand{},
+	&PathCommand{},
+	&RmCommand{},
+	&ServeCommand{},
+	&ShowCommand{},
+}
+
 func run(args []string, options *Options) {
 	if len(args) > 0 {
 		cmdName := args[0]

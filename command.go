@@ -17,15 +17,3 @@ func NewSyntaxError(message string) error {
 func (e *SyntaxError) Error() string {
 	return e.message
 }
-
-var subCommands = []Command{
-	&CatCommand{},
-	&EditCommand{},
-	&ImportCommand{},
-	&InitCommand{},
-	&LsCommand{},
-	&PathCommand{},
-	&RmCommand{},
-	&ServeCommand{},
-	&ShowCommand{},
-}
