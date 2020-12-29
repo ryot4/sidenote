@@ -11,6 +11,10 @@ New features:
 
  * Add serve command
 
+Improvements and fixes:
+
+ * Fix notes discovery to handle -d option with relative paths properly
+
 Other changes:
 
  * Convert documents from AsciiDoc to Markdown

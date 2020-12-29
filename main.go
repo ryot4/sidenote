@@ -39,15 +39,7 @@ func (options *Options) CheckDirectory() (dir *Directory, err error) {
 }
 
 func (options *Options) FindDirectory() (dir *Directory, err error) {
-	if options.noteDir == "" {
-		dir, err = FindDirectory()
-		if err != nil {
-			return
-		}
-	} else {
-		dir = NewDirectory(options.noteDir)
-	}
-	return
+	return FindDirectory(options.NoteDirName())
 }
 
 func main() {

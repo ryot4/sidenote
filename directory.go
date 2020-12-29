@@ -23,15 +23,21 @@ func NewDirectory(path string) *Directory {
 	return &Directory{path: filepath.Clean(path)}
 }
 
-// FindDirectory searches the directory for notes upward from the current directory.
-func FindDirectory() (*Directory, error) {
+// FindDirectory finds the directory for notes.
+func FindDirectory(name string) (*Directory, error) {
+	if filepath.IsAbs(name) {
+		return NewDirectory(name), nil
+	}
+
 	wd, err := os.Getwd()
 	if err != nil {
 		return nil, err
 	}
+
+	// Search upward from the current directory.
 	separator := string(filepath.Separator)
 	for cur := wd; cur != "." && cur != separator; cur = filepath.Dir(cur) {
-		dir := NewDirectory(filepath.Join(cur, NoteDirName))
+		dir := NewDirectory(filepath.Join(cur, name))
 		isDir, err := dir.IsDir()
 		if err != nil {
 			if os.IsNotExist(err) {
@@ -43,8 +49,7 @@ func FindDirectory() (*Directory, error) {
 			return dir, nil
 		}
 	}
-	// If not found, return the default one.
-	return NewDirectory(NoteDirName), nil
+	return NewDirectory(name), nil
 }
 
 func (dir *Directory) Init() error {
