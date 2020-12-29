@@ -33,7 +33,7 @@ func (c *ShowCommand) setup(args []string, _options *Options) {
 func (c *ShowCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
-	dir, err := checkDirectory(options.noteDir)
+	dir, err := options.CheckDirectory()
 	if err != nil {
 		return err
 	}

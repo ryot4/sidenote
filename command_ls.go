@@ -43,7 +43,7 @@ func (c *LsCommand) setup(args []string, options *Options) {
 func (c *LsCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
-	dir, err := checkDirectory(options.noteDir)
+	dir, err := options.CheckDirectory()
 	if err != nil {
 		return err
 	}

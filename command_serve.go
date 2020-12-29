@@ -44,7 +44,7 @@ func (c *ServeCommand) setup(args []string, options *Options) {
 func (c *ServeCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
-	dir, err := checkDirectory(options.noteDir)
+	dir, err := options.CheckDirectory()
 	if err != nil {
 		return err
 	}

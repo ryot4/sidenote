@@ -16,6 +16,32 @@ type Options struct {
 	noteDir string
 }
 
+func (options *Options) CheckDirectory() (dir *Directory, err error) {
+	dir, err = options.GetDirectory()
+	if err != nil {
+		return
+	}
+	isDir, err := dir.IsDir()
+	if err != nil {
+		return nil, err
+	} else if !isDir {
+		return nil, fmt.Errorf("%s exists but is not a directory", options.noteDir)
+	}
+	return
+}
+
+func (options *Options) GetDirectory() (dir *Directory, err error) {
+	if options.noteDir == "" {
+		dir, err = FindDirectory()
+		if err != nil {
+			return
+		}
+	} else {
+		dir = NewDirectory(options.noteDir)
+	}
+	return
+}
+
 func main() {
 	var options Options
 	var printVersion bool
