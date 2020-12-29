@@ -7,15 +7,15 @@ import (
 	"text/tabwriter"
 )
 
-const NoteDirEnv = "SIDENOTE_DIR"
+const NotesDirEnv = "SIDENOTE_DIR"
 
 type Options struct {
-	noteDir string
+	notesDir string
 }
 
-func (options *Options) NoteDirName() string {
-	if options.noteDir != "" {
-		return options.noteDir
+func (options *Options) NotesDirName() string {
+	if options.notesDir != "" {
+		return options.notesDir
 	}
 	return ".notes"
 }
@@ -29,13 +29,13 @@ func (options *Options) CheckDirectory() (dir *Directory, err error) {
 	if err != nil {
 		return nil, err
 	} else if !isDir {
-		return nil, fmt.Errorf("%s exists but is not a directory", options.noteDir)
+		return nil, fmt.Errorf("%s exists but is not a directory", options.notesDir)
 	}
 	return
 }
 
 func (options *Options) FindDirectory() (dir *Directory, err error) {
-	return FindDirectory(options.NoteDirName())
+	return FindDirectory(options.NotesDirName())
 }
 
 func main() {
@@ -43,13 +43,13 @@ func main() {
 	var printVersion bool
 
 	flag.Usage = usage
-	flag.StringVar(&options.noteDir, "d", "",
-		fmt.Sprintf("Specify the directory for notes (env: %s)", NoteDirEnv))
+	flag.StringVar(&options.notesDir, "d", "",
+		fmt.Sprintf("Specify the directory for notes (env: %s)", NotesDirEnv))
 	flag.BoolVar(&printVersion, "version", false, "Print the version and exit")
 	flag.Parse()
 
-	if options.noteDir == "" {
-		options.noteDir = os.Getenv(NoteDirEnv)
+	if options.notesDir == "" {
+		options.notesDir = os.Getenv(NotesDirEnv)
 	}
 
 	if printVersion {

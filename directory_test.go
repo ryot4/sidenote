@@ -5,8 +5,8 @@ import (
 )
 
 func TestJoinPath(t *testing.T) {
-	noteDir := ".notes"
-	dir := NewDirectory(noteDir)
+	notesDir := ".notes"
+	dir := NewDirectory(notesDir)
 
 	tests := []struct {
 		name   string

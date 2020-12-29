@@ -40,17 +40,17 @@ func (c *InitCommand) Run(args []string, options *Options) error {
 		return NewSyntaxError("too many arguments")
 	}
 
-	noteDir := options.NoteDirName()
+	notesDir := options.NotesDirName()
 
 	if c.linkTarget == "" {
-		err := NewDirectory(noteDir).Init()
+		err := NewDirectory(notesDir).Init()
 		if err != nil {
 			return err
 		}
-		fmt.Printf("initialized %s\n", noteDir)
+		fmt.Printf("initialized %s\n", notesDir)
 	} else {
 		// Create the symlink first; if this fails, do not initialize the target directory.
-		err := os.Symlink(c.linkTarget, noteDir)
+		err := os.Symlink(c.linkTarget, notesDir)
 		if err != nil {
 			return err
 		}
@@ -59,7 +59,7 @@ func (c *InitCommand) Run(args []string, options *Options) error {
 		if err != nil && !os.IsExist(err) {
 			return err
 		}
-		fmt.Printf("initialized %s (-> %s)\n", noteDir, c.linkTarget)
+		fmt.Printf("initialized %s (-> %s)\n", notesDir, c.linkTarget)
 	}
 	return nil
 }
