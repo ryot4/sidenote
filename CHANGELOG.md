@@ -14,6 +14,7 @@ New features:
 Other changes:
 
  * Convert documents from AsciiDoc to Markdown
+ * Add CHANGELOG (this file)
 
 ## Version 0.1.5 - 2020-05-30
 
