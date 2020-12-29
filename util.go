@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"path/filepath"
 )
 
 func checkDirectory(path string) (dir *Directory, err error) {
@@ -22,7 +20,7 @@ func checkDirectory(path string) (dir *Directory, err error) {
 
 func getDirectory(path string) (dir *Directory, err error) {
 	if path == "" {
-		dir, err = findDirectory()
+		dir, err = FindDirectory()
 		if err != nil {
 			return
 		}
@@ -30,28 +28,4 @@ func getDirectory(path string) (dir *Directory, err error) {
 		dir = NewDirectory(path)
 	}
 	return
-}
-
-// findDirectory searches the directory for notes upward from the current directory.
-func findDirectory() (*Directory, error) {
-	wd, err := os.Getwd()
-	if err != nil {
-		return nil, err
-	}
-	separator := string(filepath.Separator)
-	for cur := wd; cur != "." && cur != separator; cur = filepath.Dir(cur) {
-		dir := NewDirectory(filepath.Join(cur, NoteDirName))
-		isDir, err := dir.IsDir()
-		if err != nil {
-			if os.IsNotExist(err) {
-				continue
-			}
-			fmt.Fprintln(os.Stderr, err)
-		}
-		if isDir {
-			return dir, nil
-		}
-	}
-	// If not found, return the default one.
-	return NewDirectory(NoteDirName), nil
 }
