@@ -117,13 +117,19 @@ For the full list of subcommands, options and environment varibles, see `sidenot
 
 ## Tips
 
-### Ignore notes in Git globally
+### Dotfiles are ignored
 
-To ignore notes in Git globally, add `.notes` to the file specified by `core.excludesfile`
-(by default, this is `~/.config/git/ignore`) in Git config.
+You cannot use filenames beginning with a dot (`.`).
 
-    $ mkdir -p ~/.config/git
-    $ echo .notes >> ~/.config/git/ignore
+    $ sidenote edit .test
+    error: path .test contains dotfile
+    $ sidenote edit dir/.test
+    error: path dir/.test contains dotfile
+
+If you create dotfiles inside the notes directory, they are ignored by `ls` subcommand.
+
+    $ git --git-dir=$(sidenote path)/.git init -q  # Put notes under version control.
+    $ sidenote ls                                  # This does not list .notes/.git.
 
 ### Store files in the directory other than .notes
 
@@ -139,18 +145,6 @@ You can also use absolute paths:
 
     $ sidenote -d ~/Documents/notes ls  # List notes in ~/Documents/notes.
 
-### Dotfiles are ignored
-
-You cannot use filenames beginning with a dot (`.`), and such files are ignored by `ls` subcommand.
-
-    $ sidenote edit .test
-    error: path .test contains dotfile
-    $ sidenote edit dir/.test
-    error: path dir/.test contains dotfile
-
-    $ git --git-dir=$(sidenote path)/.git init -q  # Initialize the Git repository to put notes under version control.
-    $ sidenote ls                                  # This does not list .notes/.git.
-
 ### Share the same notes directory from multiple working directories
 
 With `init -l`, you can refer the same directory from multiple working directories:
@@ -159,8 +153,18 @@ With `init -l`, you can refer the same directory from multiple working directori
     $ sidenote init -l ~/Documents/notes/coding
     $ sidenote edit useful-knowledge.adoc
 
+In another shell session:
+
     $ cd /path/to/another-project
     $ sidenote init -l ~/Documents/notes/coding  # Use the same directory.
     $ sidenote ls
     useful-knowledge.adoc
     ...
+
+### Ignore notes in Git globally
+
+To ignore notes in Git globally, add `.notes` to the file specified by `core.excludesfile`
+(by default, this is `~/.config/git/ignore`) in Git config.
+
+    $ mkdir -p ~/.config/git
+    $ echo .notes >> ~/.config/git/ignore
