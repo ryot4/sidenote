@@ -36,7 +36,7 @@ func (c *ServeCommand) setup(args []string, options *Options) {
 		fmt.Fprintln(output, "\noptions:")
 		c.flag.PrintDefaults()
 	}
-	c.flag.StringVar(&c.listenAddress, "l", "0.0.0.0:8000", "Address to listen on")
+	c.flag.StringVar(&c.listenAddress, "l", "0.0.0.0:8000", "Specify the address to listen on")
 	c.flag.StringVar(&c.contentType, "t", "", "Specify Content-Type of notes")
 	c.flag.Parse(args)
 }
