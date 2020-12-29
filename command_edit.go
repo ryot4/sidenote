@@ -21,6 +21,7 @@ type EditCommand struct {
 
 	nameFormat string
 	fileExt    string
+	mkdir      bool
 }
 
 func (c *EditCommand) Name() string {
@@ -35,7 +36,7 @@ func (c *EditCommand) setup(args []string, _options *Options) {
 	c.flag = flag.NewFlagSet(c.Name(), flag.ExitOnError)
 	c.flag.Usage = func() {
 		output := c.flag.Output()
-		fmt.Fprintf(output, "Usage: %s %s [-f format] [-x extension] [name]\n", os.Args[0], c.Name())
+		fmt.Fprintf(output, "Usage: %s %s [-f format] [-p] [-x extension] [name]\n", os.Args[0], c.Name())
 		fmt.Fprintf(output, "\n%s.\n", c.Description())
 		fmt.Fprintln(output, "\noptions:")
 		c.flag.PrintDefaults()
@@ -43,6 +44,7 @@ func (c *EditCommand) setup(args []string, _options *Options) {
 	c.flag.StringVar(&c.nameFormat, "f", os.Getenv(NameFormatEnv),
 		fmt.Sprintf("Generate filename using the given strftime format string (env: %s)",
 			NameFormatEnv))
+	c.flag.BoolVar(&c.mkdir, "p", false, "Create the parent directory if not exists")
 	c.flag.StringVar(&c.fileExt, "x", os.Getenv(FileExtEnv),
 		fmt.Sprintf("Specify the default file extension for new files (env: %s)",
 			FileExtEnv))
@@ -79,9 +81,11 @@ func (c *EditCommand) runEditor(dir *Directory, name string) error {
 		return err
 	}
 
-	err = os.MkdirAll(filepath.Dir(path), os.ModePerm)
-	if err != nil {
-		return err
+	if c.mkdir {
+		err = os.MkdirAll(filepath.Dir(path), os.ModePerm)
+		if err != nil {
+			return err
+		}
 	}
 
 	fi, err := os.Stat(path)

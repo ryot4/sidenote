@@ -63,8 +63,8 @@ $ sidenote path
 You can use your favorite text editor to edit notes. (sidenote refers `$VISUAL` and `$EDITOR`)
 
 ----
-$ sidenote edit todo.txt             # This opens .notes/todo.txt with $EDITOR.
-$ sidenote edit issues/issue-123.md  # You can create subdirectories.
+$ sidenote edit todo.txt                # This opens .notes/todo.txt with $EDITOR.
+$ sidenote edit -p issues/issue-123.md  # You can create subdirectories. (-p creates the directory if not exists)
 ----
 
 Filenames can be generated based on the current date. (subset of `strftime(3)` format is available)
