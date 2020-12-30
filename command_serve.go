@@ -89,7 +89,6 @@ func (c *ServeCommand) runServer(dir *Directory, subdir string) error {
 
 	log.Printf("listening on %s (root directory: %s)\n", c.listenAddress, root)
 	if err := srv.ListenAndServe(); err != http.ErrServerClosed {
-		log.Print(err.Error())
 		return err
 	}
 
