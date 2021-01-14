@@ -19,7 +19,7 @@ This installs the binary into `$GOPATH/bin`. Make sure `$GOPATH/bin` is listed i
 
 ### Command-line completions
 
-See `completions` directory. (Currently only Bash is supported. Contributions are welcome)
+See [`completions`](https://github.com/ryot4/sidenote/tree/master/completions) directory.
 
 ## Quick start
 
@@ -42,13 +42,13 @@ as a symbolic link with `init -l`. The target directory is created if it does no
     lrwxrwxrwx 1 ryot4 ryot4 31 Feb  9 19:03 .notes -> /home/ryot4/Documents/notes
 
 When `.notes` does not exist in the current working directory, sidenote searchs the directory
-hierarchy upward. Therefore you only need to run `init` at the top-level working directory.
+hierarchy upward. Therefore you only need to run `init` at the top directory.
 
     $ sidenote path            # Print the relative path to the .notes directory.
     .notes
     $ mkdir subdir; cd subdir
     $ sidenote path
-    ../.notes                  # Notes in the parent directory is used.
+    ../.notes                  # Notes in the parent directory are referenced.
 
 ### Editing notes
 
@@ -126,7 +126,7 @@ You cannot use filenames beginning with a dot (`.`).
     $ sidenote edit dir/.test
     error: path dir/.test contains dotfile
 
-If you create dotfiles inside the notes directory, they are ignored by `ls` subcommand.
+If you create dotfiles inside the notes directory, they are ignored.
 
     $ git --git-dir=$(sidenote path)/.git init -q  # Put notes under version control.
     $ sidenote ls                                  # This does not list .notes/.git.
