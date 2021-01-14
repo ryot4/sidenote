@@ -41,14 +41,21 @@ func (c *EditCommand) setup(args []string, _options *Options) {
 		fmt.Fprintln(output, "\noptions:")
 		c.flag.PrintDefaults()
 	}
-	c.flag.StringVar(&c.nameFormat, "f", os.Getenv(NameFormatEnv),
+	c.flag.StringVar(&c.nameFormat, "f", "",
 		fmt.Sprintf("Generate filename using the given strftime format string (env: %s)",
 			NameFormatEnv))
 	c.flag.BoolVar(&c.mkdir, "p", false, "Create the parent directory if not exists")
-	c.flag.StringVar(&c.fileExt, "x", os.Getenv(FileExtEnv),
+	c.flag.StringVar(&c.fileExt, "x", "",
 		fmt.Sprintf("Specify the default file extension for new files (env: %s)",
 			FileExtEnv))
 	c.flag.Parse(args)
+
+	if c.nameFormat == "" {
+		c.nameFormat = os.Getenv(NameFormatEnv)
+	}
+	if c.fileExt == "" {
+		c.fileExt = os.Getenv(FileExtEnv)
+	}
 }
 
 func (c *EditCommand) Run(args []string, options *Options) error {
