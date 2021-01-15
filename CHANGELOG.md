@@ -1,5 +1,11 @@
 # ChangeLog
 
+## Unreleased
+
+Improvements and fixes:
+
+ * import: Preserve file modes when importing existing files
+
 ## v0.1.6 - 2020-12-30
 
 Breaking changes:

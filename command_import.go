@@ -70,9 +70,11 @@ func (c *ImportCommand) Run(args []string, options *Options) error {
 		return NewSyntaxError("too many arguments")
 	}
 
-	var r io.Reader
 	if origPath == "-" {
-		r = os.Stdin
+		_, err = c.importFile(dir, name, os.Stdin)
+		if err != nil {
+			return err
+		}
 	} else {
 		file, err := os.Open(origPath)
 		if err != nil {
@@ -86,12 +88,16 @@ func (c *ImportCommand) Run(args []string, options *Options) error {
 		} else if !fi.Mode().IsRegular() {
 			return fmt.Errorf("%s is not a regular file", origPath)
 		}
-		r = file
-	}
 
-	err = c.importFile(dir, name, r)
-	if err != nil {
-		return err
+		path, err := c.importFile(dir, name, file)
+		if err != nil {
+			return err
+		}
+
+		err = os.Chmod(path, fi.Mode())
+		if err != nil {
+			return err
+		}
 	}
 	fmt.Printf("imported %s\n", name)
 
@@ -108,34 +114,34 @@ func (c *ImportCommand) Run(args []string, options *Options) error {
 	return nil
 }
 
-func (c *ImportCommand) importFile(dir *Directory, name string, r io.Reader) error {
+func (c *ImportCommand) importFile(dir *Directory, name string, r io.Reader) (string, error) {
 	path, err := dir.JoinPath(name)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	err = os.MkdirAll(filepath.Dir(path), os.ModePerm)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	fi, err := os.Stat(path)
 	if err == nil {
 		if fi.IsDir() {
-			return fmt.Errorf("directory %s already exists (use %s/ to import into the directory)", name, name)
+			return "", fmt.Errorf("directory %s already exists (use %s/ to import into the directory)", name, name)
 		} else if !c.force {
-			return fmt.Errorf("%s already exists (use -f to overwrite)", name)
+			return "", fmt.Errorf("%s already exists (use -f to overwrite)", name)
 		}
 	} else if !os.IsNotExist(err) {
-		return err
+		return "", err
 	}
 
 	file, err := os.Create(path)
 	if err != nil {
-		return err
+		return "", err
 	}
 	defer file.Close()
 
 	_, err = io.Copy(file, r)
-	return err
+	return path, err
 }
