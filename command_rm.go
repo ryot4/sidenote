@@ -45,11 +45,11 @@ func (c *RmCommand) Run(args []string, options *Options) error {
 	var name string
 	switch c.flag.NArg() {
 	case 0:
-		return NewSyntaxError("too few arguments")
+		return ErrNoFileName
 	case 1:
 		name = c.flag.Arg(0)
 	default:
-		return NewSyntaxError("too many arguments")
+		return ErrTooManyArgs
 	}
 
 	err = c.remove(dir, name)

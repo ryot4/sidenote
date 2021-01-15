@@ -55,7 +55,7 @@ func (c *LsCommand) Run(args []string, options *Options) error {
 	case 1:
 		name = c.flag.Arg(0)
 	default:
-		return NewSyntaxError("too many arguments")
+		return ErrTooManyArgs
 	}
 
 	return c.list(dir, name)

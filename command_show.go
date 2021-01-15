@@ -41,11 +41,11 @@ func (c *ShowCommand) Run(args []string, options *Options) error {
 	var name string
 	switch c.flag.NArg() {
 	case 0:
-		return NewSyntaxError("no file specified")
+		return ErrNoFileName
 	case 1:
 		name = c.flag.Arg(0)
 	default:
-		return NewSyntaxError("too many arguments")
+		return ErrTooManyArgs
 	}
 
 	return c.runPager(dir, name)

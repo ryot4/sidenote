@@ -17,3 +17,9 @@ func NewSyntaxError(message string) error {
 func (e *SyntaxError) Error() string {
 	return e.message
 }
+
+var (
+	ErrTooManyArgs   = NewSyntaxError("too many arguments")
+	ErrNoFileName    = NewSyntaxError("no file specified")
+	ErrNoDstFileName = NewSyntaxError("no destination file specified")
+)

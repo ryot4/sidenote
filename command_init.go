@@ -37,7 +37,7 @@ func (c *InitCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
 	if c.flag.NArg() > 0 {
-		return NewSyntaxError("too many arguments")
+		return ErrTooManyArgs
 	}
 
 	notesDir := options.NotesDirName()

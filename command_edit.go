@@ -70,13 +70,13 @@ func (c *EditCommand) Run(args []string, options *Options) error {
 	switch c.flag.NArg() {
 	case 0:
 		if c.nameFormat == "" {
-			return NewSyntaxError("no filename specified")
+			return ErrNoFileName
 		}
 		name = Strftime(time.Now(), c.nameFormat)
 	case 1:
 		name = c.flag.Arg(0)
 	default:
-		return NewSyntaxError("too many arguments")
+		return ErrTooManyArgs
 	}
 
 	return c.runEditor(dir, name)

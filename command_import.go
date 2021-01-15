@@ -49,11 +49,11 @@ func (c *ImportCommand) Run(args []string, options *Options) error {
 	var origPath, name string
 	switch c.flag.NArg() {
 	case 0:
-		return NewSyntaxError("no file specified")
+		return ErrNoFileName
 	case 1:
 		origPath = c.flag.Arg(0)
 		if origPath == "-" {
-			return NewSyntaxError("no name specified (required when importing from the standard input)")
+			return ErrNoDstFileName
 		}
 		name = filepath.Base(origPath)
 	case 2:
@@ -61,13 +61,13 @@ func (c *ImportCommand) Run(args []string, options *Options) error {
 		name = c.flag.Arg(1)
 		if strings.HasSuffix(name, string(filepath.Separator)) {
 			if origPath == "-" {
-				return NewSyntaxError("no name specified (required when importing from the standard input)")
+				return ErrNoDstFileName
 			} else {
 				name = filepath.Join(name, filepath.Base(origPath))
 			}
 		}
 	default:
-		return NewSyntaxError("too many arguments")
+		return ErrTooManyArgs
 	}
 
 	if origPath == "-" {

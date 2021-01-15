@@ -38,7 +38,7 @@ func (c *CatCommand) Run(args []string, options *Options) error {
 	}
 
 	if c.flag.NArg() == 0 {
-		return NewSyntaxError("no file specified")
+		return ErrNoFileName
 	}
 
 	var lastErr error

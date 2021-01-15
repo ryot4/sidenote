@@ -47,7 +47,7 @@ func (c *PathCommand) Run(args []string, options *Options) error {
 	}
 
 	if c.flag.NArg() > 1 {
-		return NewSyntaxError("too many arguments")
+		return ErrTooManyArgs
 	}
 	name := c.flag.Arg(0)
 	if name == "" {

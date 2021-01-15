@@ -50,7 +50,7 @@ func (c *ServeCommand) Run(args []string, options *Options) error {
 	}
 
 	if c.flag.NArg() > 1 {
-		return NewSyntaxError("too many arguments")
+		return ErrTooManyArgs
 	}
 	subdir := c.flag.Arg(0)
 	if subdir == "" {
