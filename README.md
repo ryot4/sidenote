@@ -41,7 +41,7 @@ as a symbolic link with `init -l`. The target directory is created if it does no
     $ ls -l .notes
     lrwxrwxrwx 1 ryot4 ryot4 31 Feb  9 19:03 .notes -> /home/ryot4/Documents/notes
 
-When `.notes` does not exist in the current working directory, sidenote searchs the directory
+When `.notes` does not exist in the current working directory, sidenote searches the directory
 hierarchy upward. Therefore you only need to run `init` at the top directory.
 
     $ sidenote path            # Print the relative path to the .notes directory.
@@ -96,17 +96,15 @@ You can list and remove notes with `ls` and `rm` subcommands, respectively.
 
 Of course you can use standard command line utilities as well.
 
-    $ find .notes -name todo.txt            # Find notes named todo.txt.
-    $ find $(sidenote path) -name todo.txt  # Same as above, but this is convenient when you are not in the top-level directory.
-
     $ cd $(sidenote path)   # You can operate files as usual after this.
     $ mv todo.txt done.txt
 
 ### Searching
 
 Searching can be done with a combination of `path` subcommand and existing searching commands
-such as `grep`.
+such as `find` and `grep`.
 
+    $ find $(sidenote path) -name todo.txt      # Find notes named todo.txt.
     $ grep -R pattern $(sidenote path)          # Search from all files.
     $ grep -R pattern $(sidenote path 2020/02)  # Search from files in 2020/02/.
 
