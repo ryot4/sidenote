@@ -28,7 +28,7 @@ _sidenote_path()
 
 _sidenote()
 {
-    local -r cmds=(cat edit import init ls path rm serve show)
+    local -r cmds=(cat edit exec import init ls path rm serve show)
     local cur prev
     _get_comp_words_by_ref cur prev
 
@@ -92,6 +92,25 @@ _sidenote()
                 ;;
             *)
                 _sidenote_path "${notes}"
+                ;;
+            esac
+            ;;
+        esac
+        ;;
+    exec)
+        case "${cur}" in
+        -*)
+            COMPREPLY=($(compgen -W '-cd -h' -- "${cur}"))
+            ;;
+        *)
+            case "${prev}" in
+            -cd)
+                # XXX: We should complete only directories here.
+                _sidenote_path "${opts}"
+                ;;
+            *)
+                # XXX: compgen -c includes shell functions and builtins.
+                COMPREPLY=($(compgen -c -- "${cur}"))
                 ;;
             esac
             ;;

@@ -6,6 +6,10 @@ Breaking changes:
 
  * edit: Remove -x option
 
+New features:
+
+ * Add exec command
+
 Improvements and fixes:
 
  * import: Preserve file modes when importing existing files

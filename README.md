@@ -99,7 +99,7 @@ Of course you can use standard command line utilities as well.
     $ cd $(sidenote path)   # You can operate files as usual after this.
     $ mv todo.txt done.txt
 
-### Searching
+### Searching by combination with other commands
 
 Searching can be done with a combination of `path` subcommand and existing searching commands
 such as `find` and `grep`.
@@ -107,6 +107,16 @@ such as `find` and `grep`.
     $ find $(sidenote path) -name todo.txt      # Find notes named todo.txt.
     $ grep -R pattern $(sidenote path)          # Search from all files.
     $ grep -R pattern $(sidenote path 2020/02)  # Search from files in 2020/02/.
+
+In addition, you can use `exec` subcommand to execute arbitrary commands inside the notes directory.
+The above examples can also be done as follows using `exec`:
+
+    $ sidenote exec find . -name todo.txt
+    $ sidenote exec grep -R pattern
+    $ sidenote exec -cd 2020/02 grep -R pattern  # You can specify subdirectories with -cd option.
+
+Note that `exec` executes commands without shell; if you want to use shell aliases or functions,
+use `path` instead.
 
 ### And more
 
