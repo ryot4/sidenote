@@ -6,6 +6,10 @@ Improvements and fixes:
 
  * edit: Fix nil pointer dereference on editing new files
 
+Other changes:
+
+ * Create the parent directory before archiving binary releases
+
 ## v0.1.7 - 2021-01-18
 
 Breaking changes:
