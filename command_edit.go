@@ -85,8 +85,10 @@ func (c *EditCommand) runEditor(dir *Directory, name string) error {
 	}
 
 	fi, err := os.Stat(path)
-	if err != nil && !os.IsNotExist(err) {
-		return err
+	if err != nil {
+		if !os.IsNotExist(err) {
+			return err
+		}
 	} else if fi.IsDir() {
 		return fmt.Errorf("%s is a directory", name)
 	}
