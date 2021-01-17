@@ -164,11 +164,7 @@ _sidenote()
             COMPREPLY=($(compgen -W '-h -r' -- "${cur}"))
             ;;
         *)
-            case "${prev}" in
-            rm|-*)
-                _sidenote_path "${notes}"
-                ;;
-            esac
+            _sidenote_path "${notes}"
             ;;
         esac
         ;;

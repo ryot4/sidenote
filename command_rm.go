@@ -25,7 +25,7 @@ func (c *RmCommand) setup(args []string, options *Options) {
 	c.flag = flag.NewFlagSet(c.Name(), flag.ExitOnError)
 	c.flag.Usage = func() {
 		output := c.flag.Output()
-		fmt.Fprintf(output, "Usage: %s %s [-r] <name>\n", os.Args[0], c.Name())
+		fmt.Fprintf(output, "Usage: %s %s [-r] <name>...\n", os.Args[0], c.Name())
 		fmt.Fprintf(output, "\n%s.\n", c.Description())
 		fmt.Fprintln(output, "\noptions:")
 		c.flag.PrintDefaults()
@@ -42,21 +42,18 @@ func (c *RmCommand) Run(args []string, options *Options) error {
 		return err
 	}
 
-	var name string
-	switch c.flag.NArg() {
-	case 0:
+	if c.flag.NArg() == 0 {
 		return ErrNoFileName
-	case 1:
-		name = c.flag.Arg(0)
-	default:
-		return ErrTooManyArgs
 	}
 
-	err = c.remove(dir, name)
-	if err == nil {
+	for _, name := range c.flag.Args() {
+		err = c.remove(dir, name)
+		if err != nil {
+			return err
+		}
 		fmt.Printf("removed %s\n", name)
 	}
-	return err
+	return nil
 }
 
 func (c *RmCommand) remove(dir *Directory, name string) error {
