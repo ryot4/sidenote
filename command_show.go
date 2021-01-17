@@ -24,7 +24,7 @@ func (c *ShowCommand) setup(args []string, _options *Options) {
 	c.flag = flag.NewFlagSet(c.Name(), flag.ExitOnError)
 	c.flag.Usage = func() {
 		output := c.flag.Output()
-		fmt.Fprintf(output, "Usage: %s %s <name>\n", os.Args[0], c.Name())
+		fmt.Fprintf(output, "Usage: %s %s <name>...\n", os.Args[0], c.Name())
 		fmt.Fprintf(output, "\n%s.\n", c.Description())
 	}
 	c.flag.Parse(args)
@@ -38,31 +38,29 @@ func (c *ShowCommand) Run(args []string, options *Options) error {
 		return err
 	}
 
-	var name string
-	switch c.flag.NArg() {
-	case 0:
+	if c.flag.NArg() == 0 {
 		return ErrNoFileName
-	case 1:
-		name = c.flag.Arg(0)
-	default:
-		return ErrTooManyArgs
 	}
 
-	return c.runPager(dir, name)
+	return c.runPager(dir, c.flag.Args())
 }
 
-func (c *ShowCommand) runPager(dir *Directory, name string) error {
-	path, err := dir.JoinPath(name)
-	if err != nil {
-		return err
-	}
-
+func (c *ShowCommand) runPager(dir *Directory, names []string) error {
 	pager, ok := os.LookupEnv("PAGER")
 	if !ok {
 		return errors.New("PAGER is not set")
 	}
 
-	pagerCmd := exec.Command(pager, path)
+	var args []string
+	for _, name := range names {
+		path, err := dir.JoinPath(name)
+		if err != nil {
+			return err
+		}
+		args = append(args, path)
+	}
+
+	pagerCmd := exec.Command(pager, args...)
 	pagerCmd.Stdin = os.Stdin
 	pagerCmd.Stdout = os.Stdout
 	pagerCmd.Stderr = os.Stderr

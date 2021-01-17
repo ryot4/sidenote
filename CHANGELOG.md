@@ -10,6 +10,7 @@ Improvements and fixes:
 
  * import: Preserve file modes when importing existing files
  * rm: Add support for removing multiple notes
+ * show: Add support for showing multiple notes
 
 ## v0.1.6 - 2020-12-30
 
