@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+Breaking changes:
+
+ * edit: Remove -x option
+
 Improvements and fixes:
 
  * import: Preserve file modes when importing existing files

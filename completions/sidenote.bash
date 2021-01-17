@@ -84,11 +84,11 @@ _sidenote()
     edit)
         case "${cur}" in
         -*)
-            COMPREPLY=($(compgen -W '-f -h -p -x' -- "${cur}"))
+            COMPREPLY=($(compgen -W '-f -h -p' -- "${cur}"))
             ;;
         *)
             case "${prev}" in
-            -f|-x)
+            -f)
                 ;;
             *)
                 _sidenote_path "${notes}"
