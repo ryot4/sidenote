@@ -62,9 +62,8 @@ func (c *ImportCommand) Run(args []string, options *Options) error {
 		if strings.HasSuffix(name, string(filepath.Separator)) {
 			if origPath == "-" {
 				return ErrNoDstFileName
-			} else {
-				name = filepath.Join(name, filepath.Base(origPath))
 			}
+			name = filepath.Join(name, filepath.Base(origPath))
 		}
 	default:
 		return ErrTooManyArgs
