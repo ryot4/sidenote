@@ -198,6 +198,7 @@ _sidenote()
             -l|-t)
                 ;;
             *)
+                # XXX: We should complete only directories here.
                 _sidenote_path "${notes}"
                 ;;
             esac
