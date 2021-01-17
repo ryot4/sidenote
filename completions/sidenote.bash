@@ -112,6 +112,7 @@ _sidenote()
                 ;;
             *)
                 _sidenote_path "${notes}"
+                ;;
             esac
             ;;
         esac
@@ -181,6 +182,7 @@ _sidenote()
                 _sidenote_path "${notes}"
                 ;;
             esac
+            ;;
         esac
         ;;
     show)
