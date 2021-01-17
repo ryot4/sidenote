@@ -1,8 +1,11 @@
 _sidenote_path()
 {
-    local -r opts="$1"
-    local cur dir base
+    local opts cur dir base
     _get_comp_words_by_ref cur
+
+    if [[ -n "$1" ]]; then
+        opts="-d $1"
+    fi
 
     sidenote ${opts} path -c > /dev/null 2>&1 || return
 
@@ -29,14 +32,13 @@ _sidenote()
     local cur prev
     _get_comp_words_by_ref cur prev
 
-    local i=1 word cmd opts notes
-    while [[ $i -lt ${COMP_CWORD} ]]; do
+    local i=1 word cmd notes
+    while [[ $i -lt ${COMP_CWORD} ]] && [[ -z ${cmd} ]]; do
         word="${COMP_WORDS[i]}"
         case "${word}" in
         -d)
             notes="${COMP_WORDS[i+1]}"
             __expand_tilde_by_ref notes
-            opts="${opts} -d ${notes}"
             ;;
         *)
             for c in "${cmds[@]}"; do
@@ -45,15 +47,14 @@ _sidenote()
                     break
                 fi
             done
-            [[ -n ${cmd} ]] && break
             ;;
         esac
         i=$((i + 1))
     done
 
     COMPREPLY=()
-
-    if [[ -z ${cmd} ]]; then
+    case "${cmd}" in
+    '')
         case "${cur}" in
         -*)
             COMPREPLY=($(compgen -W '-d -h -version' -- "${cur}"))
@@ -69,17 +70,14 @@ _sidenote()
             esac
             ;;
         esac
-        return
-    fi
-
-    case "${cmd}" in
+        ;;
     cat)
         case "${cur}" in
         -*)
             COMPREPLY=($(compgen -W '-h' -- "${cur}"))
             ;;
         *)
-            _sidenote_path "${opts}"
+            _sidenote_path "${notes}"
             ;;
         esac
         ;;
@@ -92,8 +90,8 @@ _sidenote()
             case "${prev}" in
             -f|-x)
                 ;;
-            edit|*)
-                _sidenote_path "${opts}"
+            *)
+                _sidenote_path "${notes}"
                 ;;
             esac
             ;;
@@ -107,13 +105,13 @@ _sidenote()
         *)
             case "${prev}" in
             -)
-                _sidenote_path "${opts}"
+                _sidenote_path "${notes}"
                 ;;
             import|-*)
                 _filedir
                 ;;
             *)
-                _sidenote_path "${opts}"
+                _sidenote_path "${notes}"
             esac
             ;;
         esac
@@ -140,7 +138,7 @@ _sidenote()
         *)
             case "${prev}" in
             ls|-*)
-                _sidenote_path "${opts}"
+                _sidenote_path "${notes}"
                 ;;
             esac
             ;;
@@ -154,7 +152,7 @@ _sidenote()
         *)
             case "${prev}" in
             path|-*)
-                _sidenote_path "${opts}"
+                _sidenote_path "${notes}"
                 ;;
             esac
             ;;
@@ -168,7 +166,7 @@ _sidenote()
         *)
             case "${prev}" in
             rm|-*)
-                _sidenote_path "${opts}"
+                _sidenote_path "${notes}"
                 ;;
             esac
             ;;
@@ -183,8 +181,8 @@ _sidenote()
             case "${prev}" in
             -l|-t)
                 ;;
-            serve|*)
-                _sidenote_path "${opts}"
+            *)
+                _sidenote_path "${notes}"
                 ;;
             esac
         esac
@@ -197,11 +195,12 @@ _sidenote()
         *)
             case "${prev}" in
             show)
-                _sidenote_path "${opts}"
+                _sidenote_path "${notes}"
                 ;;
             esac
         esac
         ;;
     esac
 }
+
 complete -F _sidenote sidenote
