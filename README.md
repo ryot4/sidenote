@@ -17,9 +17,14 @@ Make sure [Go distribution is installed](https://golang.org/doc/install), and th
 
 This installs the binary into `$GOPATH/bin`. Make sure `$GOPATH/bin` is listed in `$PATH`.
 
-### Command-line completions
+### Command line completions (Bash only for now)
 
-See [`completions`](https://github.com/ryot4/sidenote/tree/master/completions) directory.
+`sidenote completion` prints the shell script for command line completion.
+You can enable completion by sourcing the script in your shell.
+
+For Bash, make sure `bash-completion` is installed and add the following line to your `~/.bashrc` file.
+
+    source <(sidenote completion bash)
 
 ## Quick start
 

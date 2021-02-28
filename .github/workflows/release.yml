@@ -49,7 +49,7 @@ jobs:
         ARCHIVE=${DIR}.tar.gz
         SHA256SUM=${DIR}.sha256sum
         mkdir ${DIR}
-        cp -a completions CHANGELOG.md LICENSE README.md sidenote ${DIR}
+        cp -a CHANGELOG.md LICENSE README.md sidenote ${DIR}
         tar -czf ${ARCHIVE} ${DIR}
         sha256sum ${ARCHIVE} > ${SHA256SUM}
         echo ::set-output name=archive::${ARCHIVE}

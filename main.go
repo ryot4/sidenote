@@ -76,6 +76,7 @@ func usage() {
 
 var subCommands = []Command{
 	&CatCommand{},
+	&CompletionCommand{},
 	&EditCommand{},
 	&ExecCommand{},
 	&ImportCommand{},

@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+Breaking changes:
+
+ * Shell completion scripts are now embedded in the binary and can be loaded with `sidenote completion` command.
+   See the README file about how to enable command line completion.
+
 Other changes:
 
  * Update to Go 1.16
