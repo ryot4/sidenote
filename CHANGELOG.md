@@ -1,5 +1,11 @@
 # ChangeLog
 
+## Unreleased
+
+Other changes:
+
+ * Update to Go 1.16
+
 ## v0.1.8 - 2021-01-18
 
 Improvements and fixes:

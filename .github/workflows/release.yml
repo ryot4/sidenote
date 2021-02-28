@@ -4,7 +4,6 @@ on:
     tags:
       - 'v*.*.*'
 env:
-  GO111MODULE: on
   GOARCH: amd64
   GOOS: linux
 jobs:
@@ -15,7 +14,7 @@ jobs:
     - name: Setup Go
       uses: actions/setup-go@v1
       with:
-        go-version: 1.15
+        go-version: 1.16
 
     - name: Checkout the repository
       uses: actions/checkout@v2
