@@ -1,6 +1,6 @@
 # ChangeLog
 
-## Unreleased
+## v0.1.9 - 2021-02-28
 
 Breaking changes:
 
