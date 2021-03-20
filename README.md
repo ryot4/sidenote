@@ -11,7 +11,7 @@ Download and extract the archive, and then put the binary into the directory lis
 
 ### Build from source
 
-Make sure [Go distribution is installed](https://golang.org/doc/install), and then run `go get`.
+Make sure [Go distribution is installed](https://golang.org/doc/install), and then run `go install`.
 
     $ go install github.com/ryot4/sidenote
 
