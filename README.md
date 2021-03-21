@@ -13,7 +13,7 @@ Download and extract the archive, and then put the binary into the directory lis
 
 Make sure [Go distribution is installed](https://golang.org/doc/install), and then run `go install`.
 
-    $ go install github.com/ryot4/sidenote
+    $ go install github.com/ryot4/sidenote@latest
 
 This installs the binary into `$GOPATH/bin`. Make sure `$GOPATH/bin` is listed in `$PATH`.
 
