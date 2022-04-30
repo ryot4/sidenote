@@ -57,7 +57,7 @@ type notesHandler struct {
 }
 
 func (handler *notesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	sw := &statusResponseWriter{ResponseWriter: w}
+	sw := &statusResponseWriter{ResponseWriter: w, statusCode: http.StatusOK}
 	if handler.contentType != "" {
 		sw.Header().Set("Content-Type", handler.contentType)
 	}
