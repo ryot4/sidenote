@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+Breaking changes:
+
+ * Replace `-version` option with `version` subcommand
+
 Improvements and fixes:
 
  * serve: Fix status code logging when accessing directories

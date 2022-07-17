@@ -28,7 +28,7 @@ _sidenote_path()
 
 _sidenote()
 {
-    local -r cmds=(cat completion edit exec import init ls path rm serve show)
+    local -r cmds=(cat completion edit exec import init ls path rm serve show version)
     local cur prev
     _get_comp_words_by_ref cur prev
 
@@ -57,7 +57,7 @@ _sidenote()
     '')
         case "${cur}" in
         -*)
-            COMPREPLY=($(compgen -W '-d -h -version' -- "${cur}"))
+            COMPREPLY=($(compgen -W '-d -h' -- "${cur}"))
             ;;
         *)
             case "${prev}" in
@@ -224,6 +224,9 @@ _sidenote()
             _sidenote_path "${notes}"
             ;;
         esac
+        ;;
+    version)
+        COMPREPLY=($(compgen -W '-h' -- "${cur}"))
         ;;
     esac
 }
