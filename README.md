@@ -141,8 +141,8 @@ You cannot use filenames beginning with a dot (`.`).
 
 If you create dotfiles inside the notes directory, they are ignored.
 
-    $ git --git-dir=$(sidenote path)/.git init -q  # Put notes under version control.
-    $ sidenote ls                                  # This does not list .notes/.git.
+    $ sidenote exec git init -q  # Put notes under version control.
+    $ sidenote ls                # This does not list .notes/.git.
 
 ### Store files in the directory other than .notes
 
