@@ -10,6 +10,10 @@ Improvements and fixes:
 
  * serve: Fix status code logging when accessing directories
 
+Other changes:
+
+ * Update to Go 1.18
+
 ## v0.1.9 - 2021-02-28
 
 Breaking changes:
