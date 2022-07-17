@@ -6,6 +6,8 @@ import (
 	"os"
 )
 
+const version = "0.1.9"
+
 type VersionCommand struct {
 	flag *flag.FlagSet
 }
