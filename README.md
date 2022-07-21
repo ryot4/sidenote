@@ -1,6 +1,9 @@
 # sidenote
 
-`sidenote` is a command line utility for managing plain text notes per working directory.
+`sidenote` is a command line tool for managing plain text notes.
+
+With `sidenote`, you can associate notes with a workspace (a directory and its subdirectories),
+and access them from anywhere in the workspace in the same way, just like files in the current directory.
 
 ## Installation
 
@@ -28,10 +31,10 @@ For Bash, make sure `bash-completion` is installed and add the following line to
 
 ## Quick start
 
-### Initialization
+### .notes directory
 
-To prevent the working directory from being cluttered with text files, `sidenote` uses a dedicated
-directory (`.notes`) for notes. First of all, you need to prepare it with `init` subcommand.
+To prevent the working directory from being cluttered with text files, `sidenote` stores notes in a dedicated
+directory named `.notes` (by default). First of all, you need to prepare it with `init` subcommand.
 
     $ sidenote init
     initialized .notes
@@ -47,13 +50,16 @@ as a symbolic link with `init -l`. The target directory is created if it does no
     lrwxrwxrwx 1 ryot4 ryot4 31 Feb  9 19:03 .notes -> /home/ryot4/Documents/notes
 
 When `.notes` does not exist in the current working directory, `sidenote` searches the directory
-hierarchy upward. Therefore you only need to run `init` at the top directory.
+hierarchy upward. Therefore you only need to run `init` once at the top of each workspace.
 
     $ sidenote path            # Print the relative path to the .notes directory.
     .notes
     $ mkdir subdir; cd subdir
     $ sidenote path
-    ../.notes                  # Notes in the parent directory are referenced.
+    ../.notes                  # Notes in the parent directory are referred.
+
+Note that `.notes` is just a directory; It does not contain any special information other than notes.
+You can always operate files in `.notes` with standard command line utilities as usual.
 
 ### Editing notes
 
@@ -61,6 +67,13 @@ You can use your favorite text editor to edit notes. (`sidenote` refers `$VISUAL
 
     $ sidenote edit todo.txt                # This opens .notes/todo.txt with $EDITOR.
     $ sidenote edit -p issues/issue-123.md  # You can create subdirectories. (-p creates the directory if not exists)
+
+Notes can be referred from anywhere in the workspace in the same way. You only need to specify
+the path of the file in the `.notes` directory, and `sidenote` resolves the actual path to the file.
+
+    $ sidenote edit TODO
+    $ cd path/to/some/subdirectory
+    $ sidenote edit TODO            # This opens the same TODO file as above.
 
 Filenames can be generated based on the current date. (subset of `strftime(3)` format is available)
 
@@ -158,9 +171,9 @@ You can also use absolute paths:
 
     $ sidenote -d ~/Documents/notes ls  # List notes in ~/Documents/notes.
 
-### Share the same notes directory from multiple working directories
+### Share the same notes directory from multiple workspaces
 
-With `init -l`, you can refer the same directory from multiple working directories:
+With `init -l`, you can refer the same directory from multiple workspaces:
 
     $ cd /path/to/project
     $ sidenote init -l ~/Documents/notes/coding
