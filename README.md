@@ -1,6 +1,6 @@
 # sidenote
 
-sidenote is a command line utility for managing plain text notes per working directory.
+`sidenote` is a command line utility for managing plain text notes per working directory.
 
 ## Installation
 
@@ -30,7 +30,7 @@ For Bash, make sure `bash-completion` is installed and add the following line to
 
 ### Initialization
 
-To prevent the working directory from being cluttered with text files, sidenote uses a dedicated
+To prevent the working directory from being cluttered with text files, `sidenote` uses a dedicated
 directory (`.notes`) for notes. First of all, you need to prepare it with `init` subcommand.
 
     $ sidenote init
@@ -46,7 +46,7 @@ as a symbolic link with `init -l`. The target directory is created if it does no
     $ ls -l .notes
     lrwxrwxrwx 1 ryot4 ryot4 31 Feb  9 19:03 .notes -> /home/ryot4/Documents/notes
 
-When `.notes` does not exist in the current working directory, sidenote searches the directory
+When `.notes` does not exist in the current working directory, `sidenote` searches the directory
 hierarchy upward. Therefore you only need to run `init` at the top directory.
 
     $ sidenote path            # Print the relative path to the .notes directory.
@@ -57,7 +57,7 @@ hierarchy upward. Therefore you only need to run `init` at the top directory.
 
 ### Editing notes
 
-You can use your favorite text editor to edit notes. (sidenote refers `$VISUAL` and `$EDITOR`)
+You can use your favorite text editor to edit notes. (`sidenote` refers `$VISUAL` and `$EDITOR`)
 
     $ sidenote edit todo.txt                # This opens .notes/todo.txt with $EDITOR.
     $ sidenote edit -p issues/issue-123.md  # You can create subdirectories. (-p creates the directory if not exists)
