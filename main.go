@@ -40,14 +40,21 @@ func (options *Options) FindDirectory() (dir *Directory, err error) {
 
 func main() {
 	var options Options
+	var printVersion bool
 
 	flag.Usage = usage
 	flag.StringVar(&options.notesDir, "d", "",
 		fmt.Sprintf("Specify the directory for notes (env: %s)", NotesDirEnv))
+	flag.BoolVar(&printVersion, "version", false, "Print the version and exit")
 	flag.Parse()
 
 	if options.notesDir == "" {
 		options.notesDir = os.Getenv(NotesDirEnv)
+	}
+
+	if printVersion {
+		fmt.Println(version)
+		os.Exit(0)
 	}
 
 	run(flag.Args(), &options)
@@ -55,7 +62,7 @@ func main() {
 
 func usage() {
 	output := flag.CommandLine.Output()
-	fmt.Fprintf(output, "Usage: %s [-d path] <command> [command-arguments]\n", os.Args[0])
+	fmt.Fprintf(output, "Usage: %s [-d path] [-version] <command> [command-arguments]\n", os.Args[0])
 	fmt.Fprintln(output, "\noptions:")
 	flag.PrintDefaults()
 	fmt.Fprintf(output, "\ncommands:\n")
@@ -79,7 +86,6 @@ var subCommands = []Command{
 	&RmCommand{},
 	&ServeCommand{},
 	&ShowCommand{},
-	&VersionCommand{},
 }
 
 func run(args []string, options *Options) {
