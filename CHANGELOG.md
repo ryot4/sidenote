@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+Breaking changes:
+
+ * Rename -version option to -V
+
 Improvements and fixes:
 
  * serve: Fix status code logging when accessing directories

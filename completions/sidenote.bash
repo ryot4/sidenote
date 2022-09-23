@@ -57,7 +57,7 @@ _sidenote()
     '')
         case "${cur}" in
         -*)
-            COMPREPLY=($(compgen -W '-d -h -version' -- "${cur}"))
+            COMPREPLY=($(compgen -W '-d -h -V' -- "${cur}"))
             ;;
         *)
             case "${prev}" in

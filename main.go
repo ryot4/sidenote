@@ -45,7 +45,7 @@ func main() {
 	flag.Usage = usage
 	flag.StringVar(&options.notesDir, "d", "",
 		fmt.Sprintf("Specify the directory for notes (env: %s)", NotesDirEnv))
-	flag.BoolVar(&printVersion, "version", false, "Print the version and exit")
+	flag.BoolVar(&printVersion, "V", false, "Print the version and exit")
 	flag.Parse()
 
 	if options.notesDir == "" {
@@ -62,7 +62,7 @@ func main() {
 
 func usage() {
 	output := flag.CommandLine.Output()
-	fmt.Fprintf(output, "Usage: %s [-d path] [-version] <command> [command-arguments]\n", os.Args[0])
+	fmt.Fprintf(output, "Usage: %s [-d path] [-V] <command> [command-arguments]\n", os.Args[0])
 	fmt.Fprintln(output, "\noptions:")
 	flag.PrintDefaults()
 	fmt.Fprintf(output, "\ncommands:\n")
