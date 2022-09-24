@@ -1,6 +1,6 @@
 # ChangeLog
 
-## Unreleased
+## v0.1.10 - 2022-09-24
 
 Breaking changes:
 
