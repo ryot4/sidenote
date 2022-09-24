@@ -12,7 +12,7 @@ Improvements and fixes:
 
 Other changes:
 
- * Update to Go 1.18
+ * Update to Go 1.19
 
 ## v0.1.9 - 2021-02-28
 
