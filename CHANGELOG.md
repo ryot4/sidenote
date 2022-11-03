@@ -16,7 +16,7 @@ Improvements and fixes:
 
  * serve: Fix status code logging when accessing directories
 
-Other changes:
+Miscellaneous changes:
 
  * Update to Go 1.19
 
@@ -27,7 +27,7 @@ Breaking changes:
  * Shell completion scripts are now embedded in the binary and can be loaded with `sidenote completion` command.
    See the README file about how to enable command line completion.
 
-Other changes:
+Miscellaneous changes:
 
  * Update to Go 1.16
 
@@ -37,7 +37,7 @@ Improvements and fixes:
 
  * edit: Fix nil pointer dereference on editing new files
 
-Other changes:
+Miscellaneous changes:
 
  * Create the parent directory before archiving binary releases
 
@@ -72,7 +72,7 @@ Improvements and fixes:
 
  * Fix notes discovery to handle -d option with relative paths properly
 
-Other changes:
+Miscellaneous changes:
 
  * Update to Go 1.15
  * Convert documents from AsciiDoc to Markdown
