@@ -1,5 +1,11 @@
 # ChangeLog
 
+## Unreleased
+
+Miscellaneous changes:
+
+ * Update to Go 1.19.3
+
 ## v0.1.10 - 2022-09-24
 
 Breaking changes:
