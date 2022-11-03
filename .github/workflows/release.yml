@@ -39,8 +39,8 @@ jobs:
       id: get_release_version
       run: |
         VERSION=$(basename ${{ github.ref }})
-        echo ::set-output name=version::${VERSION}
-        echo ::set-output name=prerelease::$(case ${VERSION} in *-*) echo true ;; *) echo false; esac)
+        echo version=${VERSION} >> $GITHUB_OUTPUT
+        echo prerelease=$(case ${VERSION} in *-*) echo true ;; *) echo false; esac) >> $GITHUB_OUTPUT
 
     - name: Archive files
       id: archive
@@ -52,8 +52,8 @@ jobs:
         cp -a CHANGELOG.md LICENSE README.md sidenote ${DIR}
         tar -czf ${ARCHIVE} ${DIR}
         sha256sum ${ARCHIVE} > ${SHA256SUM}
-        echo ::set-output name=archive::${ARCHIVE}
-        echo ::set-output name=sha256sum::${SHA256SUM}
+        echo archive=${ARCHIVE} >> $GITHUB_OUTPUT
+        echo sha256sum=${SHA256SUM} >> $GITHUB_OUTPUT
 
     - name: Create a release
       id: create_release
