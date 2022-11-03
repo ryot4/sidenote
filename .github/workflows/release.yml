@@ -17,7 +17,7 @@ jobs:
         go-version: 1.19
 
     - name: Checkout the repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Include the license of Go in LICENSE for binary distribution
       run: |
