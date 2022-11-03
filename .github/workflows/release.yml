@@ -57,31 +57,10 @@ jobs:
 
     - name: Create a release
       id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: softprops/action-gh-release@v1
       with:
-        tag_name: ${{ github.ref }}
-        release_name: ${{ github.ref }}
-        draft: false
+        name: ${{ steps.get_release_version.outputs.version }}
         prerelease: ${{ steps.get_release_version.outputs.prerelease }}
-
-    - name: Upload the archive
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ steps.archive.outputs.archive }}
-        asset_name: ${{ steps.archive.outputs.archive }}
-        asset_content_type: application/gzip
-
-    - name: Upload the sha256sum
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ steps.archive.outputs.sha256sum }}
-        asset_name: ${{ steps.archive.outputs.sha256sum }}
-        asset_content_type: text/plain
+        files: |
+          ${{ steps.archive.outputs.archive }}
+          ${{ steps.archive.outputs.sha256sum }}
