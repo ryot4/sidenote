@@ -19,7 +19,7 @@ func (c *ExecCommand) Name() string {
 }
 
 func (c *ExecCommand) Description() string {
-	return "Execute commands inside notes directory"
+	return "Execute a command inside notes directory"
 }
 
 func (c *ExecCommand) setup(args []string, _options *Options) {

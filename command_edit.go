@@ -24,7 +24,7 @@ func (c *EditCommand) Name() string {
 }
 
 func (c *EditCommand) Description() string {
-	return "Open notes with the editor ($VISUAL or $EDITOR)"
+	return "Open a note with the editor ($VISUAL or $EDITOR)"
 }
 
 func (c *EditCommand) setup(args []string, _options *Options) {
