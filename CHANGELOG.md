@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+Improvements and fixes:
+
+ * ls: Fix to print file timestamps when -t is specified with a regular file
+
 Miscellaneous changes:
 
  * Update to Go 1.19.9

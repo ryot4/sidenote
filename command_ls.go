@@ -38,6 +38,10 @@ func (c *LsCommand) setup(args []string, options *Options) {
 	c.flag.BoolVar(&c.recurse, "r", false, "List directories recursively")
 	c.flag.BoolVar(&c.sortByMtime, "t", false, "Sort entries by modification time (implies -l)")
 	c.flag.Parse(args)
+
+	if c.sortByMtime {
+		c.longFormat = true
+	}
 }
 
 func (c *LsCommand) Run(args []string, options *Options) error {
@@ -86,7 +90,6 @@ func (c *LsCommand) listDir(dir *Directory, name string) {
 	}
 
 	if c.sortByMtime {
-		c.longFormat = true
 		sort.Slice(items, func(i, j int) bool {
 			return items[i].ModTime().After(items[j].ModTime())
 		})
