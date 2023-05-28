@@ -23,35 +23,6 @@ func NewDirectory(path string) *Directory {
 	return &Directory{path: filepath.Clean(path)}
 }
 
-// FindDirectory finds the directory for notes.
-func FindDirectory(name string) (*Directory, error) {
-	if filepath.IsAbs(name) {
-		return NewDirectory(name), nil
-	}
-
-	wd, err := os.Getwd()
-	if err != nil {
-		return nil, err
-	}
-
-	// Search upward from the current directory.
-	separator := string(filepath.Separator)
-	for cur := wd; cur != "." && cur != separator; cur = filepath.Dir(cur) {
-		dir := NewDirectory(filepath.Join(cur, name))
-		isDir, err := dir.IsDir()
-		if err != nil {
-			if os.IsNotExist(err) {
-				continue
-			}
-			fmt.Fprintln(os.Stderr, err)
-		}
-		if isDir {
-			return dir, nil
-		}
-	}
-	return NewDirectory(name), nil
-}
-
 func (dir *Directory) Init() error {
 	_, err := os.Stat(dir.path)
 	if err == nil {
@@ -69,35 +40,6 @@ func (dir *Directory) Init() error {
 		return err
 	}
 	return nil
-}
-
-func (dir *Directory) IsDir() (bool, error) {
-	fi, err := os.Stat(dir.path)
-	if err != nil {
-		return false, err
-	} else if !fi.IsDir() {
-		return false, nil
-	}
-	return true, nil
-}
-
-func (dir *Directory) IsAbs() bool {
-	return filepath.IsAbs(dir.path)
-}
-
-func (dir *Directory) FollowSymlink() (bool, error) {
-	fi, err := os.Lstat(dir.path)
-	if err != nil {
-		return false, err
-	}
-	if fi.Mode()&os.ModeSymlink == 0 {
-		return false, nil
-	}
-	dir.path, err = os.Readlink(dir.path)
-	if err != nil {
-		return true, err
-	}
-	return true, nil
 }
 
 func (dir *Directory) JoinPath(name string) (string, error) {

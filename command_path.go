@@ -41,9 +41,25 @@ func (c *PathCommand) setup(args []string, _options *Options) {
 func (c *PathCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
-	dir, err := options.FindDirectory()
+	d, err := options.FindDirectory()
 	if err != nil {
 		return err
+	}
+
+	if c.followSymlink {
+		isLink, err := isSymlink(d)
+		if err != nil {
+			return err
+		}
+		if isLink {
+			d, err = os.Readlink(d)
+			if err != nil {
+				return err
+			}
+			if filepath.IsAbs(d) {
+				c.absolute = true
+			}
+		}
 	}
 
 	if c.flag.NArg() > 1 {
@@ -54,20 +70,18 @@ func (c *PathCommand) Run(args []string, options *Options) error {
 		name = "/"
 	}
 
-	return c.showPath(dir, name)
+	return c.showPath(NewDirectory(d), name)
+}
+
+func isSymlink(path string) (bool, error) {
+	fi, err := os.Lstat(path)
+	if err != nil {
+		return false, err
+	}
+	return fi.Mode()&os.ModeSymlink != 0, nil
 }
 
 func (c *PathCommand) showPath(dir *Directory, name string) error {
-	if c.followSymlink {
-		link, err := dir.FollowSymlink()
-		if err != nil {
-			return err
-		}
-		if link && dir.IsAbs() {
-			c.absolute = true
-		}
-	}
-
 	path, err := dir.JoinPath(name)
 	if err != nil {
 		return err

@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"path/filepath"
 	"text/tabwriter"
 )
 
@@ -20,22 +21,53 @@ func (options *Options) NotesDirName() string {
 	return ".notes"
 }
 
-func (options *Options) CheckDirectory() (dir *Directory, err error) {
-	dir, err = options.FindDirectory()
-	if err != nil {
-		return
-	}
-	isDir, err := dir.IsDir()
+func (options *Options) CheckDirectory() (*Directory, error) {
+	d, err := options.FindDirectory()
 	if err != nil {
 		return nil, err
-	} else if !isDir {
-		return nil, fmt.Errorf("%s exists but is not a directory", options.notesDir)
 	}
-	return
+
+	fi, err := os.Stat(d)
+	if err != nil {
+		return nil, err
+	}
+	if fi.IsDir() {
+		return NewDirectory(d), nil
+	} else {
+		return nil, fmt.Errorf("%s exists but is not a directory", d)
+	}
 }
 
-func (options *Options) FindDirectory() (dir *Directory, err error) {
-	return FindDirectory(options.NotesDirName())
+func (options *Options) FindDirectory() (string, error) {
+	return findUpward(options.NotesDirName())
+}
+
+func findUpward(name string) (string, error) {
+	if filepath.IsAbs(name) {
+		return name, nil
+	}
+
+	// Find name upward from the current directory.
+	wd, err := os.Getwd()
+	if err != nil {
+		return name, err
+	}
+
+	separator := string(filepath.Separator)
+	for cur := wd; cur != "." && cur != separator; cur = filepath.Dir(cur) {
+		d := filepath.Join(cur, name)
+		_, err := os.Stat(d)
+		if err != nil {
+			if !os.IsNotExist(err) {
+				fmt.Fprintln(os.Stderr, err)
+			}
+			continue
+		}
+		return d, nil
+	}
+
+	// Not found. name is assumed to be in the current directory.
+	return name, nil
 }
 
 func main() {
