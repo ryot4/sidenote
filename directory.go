@@ -34,12 +34,7 @@ func (dir *Directory) Init() error {
 	} else if !os.IsNotExist(err) {
 		return err
 	}
-
-	err = os.MkdirAll(dir.path, os.ModePerm)
-	if err != nil {
-		return err
-	}
-	return nil
+	return os.MkdirAll(dir.path, os.ModePerm)
 }
 
 func (dir *Directory) JoinPath(name string) (string, error) {
