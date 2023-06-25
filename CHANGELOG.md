@@ -1,6 +1,6 @@
 # ChangeLog
 
-## Unreleased
+## v0.1.11 - 2023-06-25
 
 Improvements and fixes:
 
