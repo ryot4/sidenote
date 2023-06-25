@@ -8,7 +8,7 @@ Improvements and fixes:
 
 Miscellaneous changes:
 
- * Update to Go 1.19.9
+ * Update to Go 1.19.10
 
 ## v0.1.10 - 2022-09-24
 
