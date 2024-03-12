@@ -1,5 +1,11 @@
 # ChangeLog
 
+## Unreleased
+
+Miscellaneous changes:
+
+ * Update to Go 1.22.1
+
 ## v0.1.11 - 2023-06-25
 
 Improvements and fixes:
