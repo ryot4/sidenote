@@ -4,7 +4,7 @@
 
 Miscellaneous changes:
 
- * Update to Go 1.22.1
+ * Update to Go 1.24.5
 
 ## v0.1.11 - 2023-06-25
 
