@@ -61,15 +61,14 @@ func (c *ServeCommand) Run(args []string, options *Options) error {
 }
 
 func (c *ServeCommand) runServer(dir *Directory, subdir string) error {
-	root, err := dir.JoinPath(subdir)
+	rootPath, err := dir.JoinPath(subdir)
 	if err != nil {
 		return err
 	}
 
-	if fi, err := os.Stat(root); err != nil {
+	root, err := os.OpenRoot(rootPath)
+	if err != nil {
 		return err
-	} else if !fi.IsDir() {
-		return fmt.Errorf("%s is not a directory", subdir)
 	}
 
 	srv := NewServer(c.listenAddress, root, c.contentType)
@@ -87,7 +86,7 @@ func (c *ServeCommand) runServer(dir *Directory, subdir string) error {
 		close(idleConnsClosed)
 	}()
 
-	log.Printf("listening on %s (root directory: %s)\n", c.listenAddress, root)
+	log.Printf("listening on %s (root directory: %s)\n", c.listenAddress, rootPath)
 	if err := srv.ListenAndServe(); err != http.ErrServerClosed {
 		return err
 	}

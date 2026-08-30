@@ -4,41 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 )
-
-type dotFileHidingFs struct {
-	http.FileSystem
-}
-
-func (fs dotFileHidingFs) Open(name string) (http.File, error) {
-	for part := range strings.SplitSeq(name, "/") {
-		if strings.HasPrefix(part, ".") {
-			return nil, os.ErrNotExist
-		}
-	}
-
-	file, err := fs.FileSystem.Open(name)
-	if err != nil {
-		return nil, err
-	}
-
-	return dotFileHidingFile{file}, nil
-}
-
-type dotFileHidingFile struct {
-	http.File
-}
-
-func (dir dotFileHidingFile) Readdir(count int) (filtered []os.FileInfo, err error) {
-	files, err := dir.File.Readdir(count)
-	for _, f := range files {
-		if !strings.HasPrefix(f.Name(), ".") {
-			filtered = append(filtered, f)
-		}
-	}
-	return
-}
 
 type statusResponseWriter struct {
 	http.ResponseWriter
@@ -71,10 +37,10 @@ func (handler *notesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		r.UserAgent())
 }
 
-func NewServer(listenAddress, documentRoot string, contentType string) *http.Server {
+func NewServer(listenAddress string, root *os.Root, contentType string) *http.Server {
 	handler := &notesHandler{
-		Handler: http.FileServer(
-			dotFileHidingFs{http.Dir(documentRoot)},
+		Handler: http.FileServerFS(
+			dotFileHidingFs{root.FS()},
 		),
 		contentType: contentType,
 	}
