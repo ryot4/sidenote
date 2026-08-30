@@ -12,7 +12,7 @@ type dotFileHidingFs struct {
 }
 
 func (fs dotFileHidingFs) Open(name string) (http.File, error) {
-	for _, part := range strings.Split(name, "/") {
+	for part := range strings.SplitSeq(name, "/") {
 		if strings.HasPrefix(part, ".") {
 			return nil, os.ErrNotExist
 		}

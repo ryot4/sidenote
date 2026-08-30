@@ -39,7 +39,7 @@ func (dir *Directory) Init() error {
 
 func (dir *Directory) JoinPath(name string) (string, error) {
 	separator := string(filepath.Separator)
-	for _, elem := range strings.Split(name, separator) {
+	for elem := range strings.SplitSeq(name, separator) {
 		if strings.HasPrefix(elem, ".") {
 			return "", &DotFileError{Path: name}
 		}
