@@ -15,40 +15,40 @@ func (e *DotFileError) Error() string {
 	return fmt.Sprintf("path %s contains dotfile", e.Path)
 }
 
-type Directory struct {
+type Storage struct {
 	path string
 }
 
-func NewDirectory(path string) *Directory {
-	return &Directory{path: filepath.Clean(path)}
+func NewStorage(path string) *Storage {
+	return &Storage{path: filepath.Clean(path)}
 }
 
-func (dir *Directory) Init() error {
-	_, err := os.Stat(dir.path)
+func (s *Storage) Init() error {
+	_, err := os.Stat(s.path)
 	if err == nil {
 		return &os.PathError{
 			Op:   "initialize",
-			Path: dir.path,
+			Path: s.path,
 			Err:  os.ErrExist,
 		}
 	} else if !os.IsNotExist(err) {
 		return err
 	}
-	return os.MkdirAll(dir.path, os.ModePerm)
+	return os.MkdirAll(s.path, os.ModePerm)
 }
 
-func (dir *Directory) JoinPath(name string) (string, error) {
+func (s *Storage) JoinPath(name string) (string, error) {
 	separator := string(filepath.Separator)
 	for elem := range strings.SplitSeq(name, separator) {
 		if strings.HasPrefix(elem, ".") {
 			return "", &DotFileError{Path: name}
 		}
 	}
-	return filepath.Join(dir.path, name), nil
+	return filepath.Join(s.path, name), nil
 }
 
-func (dir *Directory) Readdir(name string) ([]os.FileInfo, error) {
-	path, err := dir.JoinPath(name)
+func (s *Storage) Readdir(name string) ([]os.FileInfo, error) {
+	path, err := s.JoinPath(name)
 	if err != nil {
 		return nil, err
 	}

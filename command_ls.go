@@ -47,7 +47,7 @@ func (c *LsCommand) setup(args []string, options *Options) {
 func (c *LsCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
-	dir, err := options.CheckDirectory()
+	storage, err := options.CheckStorage()
 	if err != nil {
 		return err
 	}
@@ -62,11 +62,11 @@ func (c *LsCommand) Run(args []string, options *Options) error {
 		return ErrTooManyArgs
 	}
 
-	return c.list(dir, name)
+	return c.list(storage, name)
 }
 
-func (c *LsCommand) list(dir *Directory, name string) error {
-	path, err := dir.JoinPath(name)
+func (c *LsCommand) list(storage *Storage, name string) error {
+	path, err := storage.JoinPath(name)
 	if err != nil {
 		return err
 	}
@@ -75,15 +75,15 @@ func (c *LsCommand) list(dir *Directory, name string) error {
 		return err
 	}
 	if fi.IsDir() {
-		c.listDir(dir, name)
+		c.listDir(storage, name)
 	} else {
 		c.printFile(fi)
 	}
 	return nil
 }
 
-func (c *LsCommand) listDir(dir *Directory, name string) {
-	items, err := dir.Readdir(name)
+func (c *LsCommand) listDir(storage *Storage, name string) {
+	items, err := storage.Readdir(name)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "cannot read %s (%s)\n", name, err)
 		return
@@ -108,7 +108,7 @@ func (c *LsCommand) listDir(dir *Directory, name string) {
 			if fi.IsDir() {
 				itemName := filepath.Join(name, fi.Name())
 				fmt.Printf("\n%s:\n", itemName)
-				c.listDir(dir, itemName)
+				c.listDir(storage, itemName)
 			}
 		}
 	}

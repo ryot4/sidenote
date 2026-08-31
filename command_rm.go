@@ -37,7 +37,7 @@ func (c *RmCommand) setup(args []string, options *Options) {
 func (c *RmCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
-	dir, err := options.CheckDirectory()
+	storage, err := options.CheckStorage()
 	if err != nil {
 		return err
 	}
@@ -47,7 +47,7 @@ func (c *RmCommand) Run(args []string, options *Options) error {
 	}
 
 	for _, name := range c.flag.Args() {
-		err = c.remove(dir, name)
+		err = c.remove(storage, name)
 		if err != nil {
 			return err
 		}
@@ -56,8 +56,8 @@ func (c *RmCommand) Run(args []string, options *Options) error {
 	return nil
 }
 
-func (c *RmCommand) remove(dir *Directory, name string) error {
-	path, err := dir.JoinPath(name)
+func (c *RmCommand) remove(storage *Storage, name string) error {
+	path, err := storage.JoinPath(name)
 	if err != nil {
 		return err
 	}

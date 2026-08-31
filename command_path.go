@@ -41,7 +41,7 @@ func (c *PathCommand) setup(args []string, _options *Options) {
 func (c *PathCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
-	d, err := options.FindDirectory()
+	d, err := options.FindStorageDir()
 	if err != nil {
 		return err
 	}
@@ -70,7 +70,7 @@ func (c *PathCommand) Run(args []string, options *Options) error {
 		name = "/"
 	}
 
-	return c.showPath(NewDirectory(d), name)
+	return c.showPath(NewStorage(d), name)
 }
 
 func isSymlink(path string) (bool, error) {
@@ -81,8 +81,8 @@ func isSymlink(path string) (bool, error) {
 	return fi.Mode()&os.ModeSymlink != 0, nil
 }
 
-func (c *PathCommand) showPath(dir *Directory, name string) error {
-	path, err := dir.JoinPath(name)
+func (c *PathCommand) showPath(storage *Storage, name string) error {
+	path, err := storage.JoinPath(name)
 	if err != nil {
 		return err
 	}

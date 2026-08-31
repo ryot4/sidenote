@@ -44,7 +44,7 @@ func (c *ServeCommand) setup(args []string, options *Options) {
 func (c *ServeCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
-	dir, err := options.CheckDirectory()
+	storage, err := options.CheckStorage()
 	if err != nil {
 		return err
 	}
@@ -57,11 +57,11 @@ func (c *ServeCommand) Run(args []string, options *Options) error {
 		subdir = "/"
 	}
 
-	return c.runServer(dir, subdir)
+	return c.runServer(storage, subdir)
 }
 
-func (c *ServeCommand) runServer(dir *Directory, subdir string) error {
-	rootPath, err := dir.JoinPath(subdir)
+func (c *ServeCommand) runServer(storage *Storage, subdir string) error {
+	rootPath, err := storage.JoinPath(subdir)
 	if err != nil {
 		return err
 	}

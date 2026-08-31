@@ -32,7 +32,7 @@ func (c *CatCommand) setup(args []string, _options *Options) {
 func (c *CatCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
-	dir, err := options.CheckDirectory()
+	storage, err := options.CheckStorage()
 	if err != nil {
 		return err
 	}
@@ -43,7 +43,7 @@ func (c *CatCommand) Run(args []string, options *Options) error {
 
 	var lastErr error
 	for _, name := range c.flag.Args() {
-		err = c.catFile(dir, name)
+		err = c.catFile(storage, name)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			lastErr = err
@@ -52,8 +52,8 @@ func (c *CatCommand) Run(args []string, options *Options) error {
 	return lastErr
 }
 
-func (c *CatCommand) catFile(dir *Directory, name string) error {
-	path, err := dir.JoinPath(name)
+func (c *CatCommand) catFile(storage *Storage, name string) error {
+	path, err := storage.JoinPath(name)
 	if err != nil {
 		return err
 	}

@@ -38,7 +38,7 @@ func (c *ExecCommand) setup(args []string, _options *Options) {
 func (c *ExecCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
-	dir, err := options.CheckDirectory()
+	storage, err := options.CheckStorage()
 	if err != nil {
 		return err
 	}
@@ -46,11 +46,11 @@ func (c *ExecCommand) Run(args []string, options *Options) error {
 	if c.flag.NArg() == 0 {
 		return NewSyntaxError("no command specified")
 	}
-	return c.execCommand(dir, c.flag.Args())
+	return c.execCommand(storage, c.flag.Args())
 }
 
-func (c *ExecCommand) execCommand(dir *Directory, command []string) error {
-	path, err := dir.JoinPath(c.chdir)
+func (c *ExecCommand) execCommand(storage *Storage, command []string) error {
+	path, err := storage.JoinPath(c.chdir)
 	if err != nil {
 		return err
 	}

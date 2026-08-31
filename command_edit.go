@@ -50,7 +50,7 @@ func (c *EditCommand) setup(args []string, _options *Options) {
 func (c *EditCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
-	dir, err := options.CheckDirectory()
+	storage, err := options.CheckStorage()
 	if err != nil {
 		return err
 	}
@@ -68,11 +68,11 @@ func (c *EditCommand) Run(args []string, options *Options) error {
 		return ErrTooManyArgs
 	}
 
-	return c.runEditor(dir, name)
+	return c.runEditor(storage, name)
 }
 
-func (c *EditCommand) runEditor(dir *Directory, name string) error {
-	path, err := dir.JoinPath(name)
+func (c *EditCommand) runEditor(storage *Storage, name string) error {
+	path, err := storage.JoinPath(name)
 	if err != nil {
 		return err
 	}

@@ -33,7 +33,7 @@ func (c *ShowCommand) setup(args []string, _options *Options) {
 func (c *ShowCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
-	dir, err := options.CheckDirectory()
+	storage, err := options.CheckStorage()
 	if err != nil {
 		return err
 	}
@@ -42,10 +42,10 @@ func (c *ShowCommand) Run(args []string, options *Options) error {
 		return ErrNoFileName
 	}
 
-	return c.runPager(dir, c.flag.Args())
+	return c.runPager(storage, c.flag.Args())
 }
 
-func (c *ShowCommand) runPager(dir *Directory, names []string) error {
+func (c *ShowCommand) runPager(storage *Storage, names []string) error {
 	pager, ok := os.LookupEnv("PAGER")
 	if !ok {
 		return errors.New("PAGER is not set")
@@ -53,7 +53,7 @@ func (c *ShowCommand) runPager(dir *Directory, names []string) error {
 
 	var args []string
 	for _, name := range names {
-		path, err := dir.JoinPath(name)
+		path, err := storage.JoinPath(name)
 		if err != nil {
 			return err
 		}

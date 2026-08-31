@@ -6,7 +6,7 @@ import (
 
 func TestJoinPath(t *testing.T) {
 	notesDir := ".notes"
-	dir := NewDirectory(notesDir)
+	dir := NewStorage(notesDir)
 
 	tests := []struct {
 		name   string
@@ -34,7 +34,7 @@ func TestJoinPath(t *testing.T) {
 }
 
 func TestJoinPathDotFileError(t *testing.T) {
-	dir := NewDirectory("/path/to/note")
+	dir := NewStorage("/path/to/note")
 
 	tests := []string{
 		".foo",

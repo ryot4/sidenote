@@ -42,7 +42,7 @@ func (c *ImportCommand) setup(args []string, options *Options) {
 func (c *ImportCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
-	dir, err := options.CheckDirectory()
+	storage, err := options.CheckStorage()
 	if err != nil {
 		return err
 	}
@@ -71,7 +71,7 @@ func (c *ImportCommand) Run(args []string, options *Options) error {
 	}
 
 	if origPath == "-" {
-		_, err = c.importFile(dir, name, os.Stdin)
+		_, err = c.importFile(storage, name, os.Stdin)
 		if err != nil {
 			return err
 		}
@@ -89,7 +89,7 @@ func (c *ImportCommand) Run(args []string, options *Options) error {
 			return fmt.Errorf("%s is not a regular file", origPath)
 		}
 
-		path, err := c.importFile(dir, name, file)
+		path, err := c.importFile(storage, name, file)
 		if err != nil {
 			return err
 		}
@@ -119,8 +119,8 @@ func (c *ImportCommand) Run(args []string, options *Options) error {
 	return nil
 }
 
-func (c *ImportCommand) importFile(dir *Directory, name string, r io.Reader) (string, error) {
-	path, err := dir.JoinPath(name)
+func (c *ImportCommand) importFile(storage *Storage, name string, r io.Reader) (string, error) {
+	path, err := storage.JoinPath(name)
 	if err != nil {
 		return "", err
 	}

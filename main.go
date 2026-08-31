@@ -21,15 +21,15 @@ func (options *Options) NotesDirName() string {
 	return ".notes"
 }
 
-func (options *Options) CheckDirectory() (*Directory, error) {
-	d, err := options.FindDirectory()
+func (options *Options) CheckStorage() (*Storage, error) {
+	d, err := options.FindStorageDir()
 	if err != nil {
 		return nil, err
 	}
-	return NewDirectory(d), nil
+	return NewStorage(d), nil
 }
 
-func (options *Options) FindDirectory() (string, error) {
+func (options *Options) FindStorageDir() (string, error) {
 	return findUpward(options.NotesDirName())
 }
 

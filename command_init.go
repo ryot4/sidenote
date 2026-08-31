@@ -43,7 +43,7 @@ func (c *InitCommand) Run(args []string, options *Options) error {
 	notesDir := options.NotesDirName()
 
 	if c.linkTarget == "" {
-		err := NewDirectory(notesDir).Init()
+		err := NewStorage(notesDir).Init()
 		if err != nil {
 			return err
 		}
@@ -55,7 +55,7 @@ func (c *InitCommand) Run(args []string, options *Options) error {
 			return err
 		}
 
-		err = NewDirectory(c.linkTarget).Init()
+		err = NewStorage(c.linkTarget).Init()
 		if err != nil && !os.IsExist(err) {
 			return err
 		}
