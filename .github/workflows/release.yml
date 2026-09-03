@@ -31,9 +31,7 @@ jobs:
         curl -s -L https://golang.org/LICENSE?m=text >> LICENSE
 
     - name: Build the binary
-      run: go build -ldflags '-s -w' -trimpath
-      env:
-        CGO_ENABLED: 0
+      run: make release
 
     - name: Get the release version
       id: get_release_version
