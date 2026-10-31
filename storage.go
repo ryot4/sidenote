@@ -15,6 +15,38 @@ func (e *DotFileError) Error() string {
 	return fmt.Sprintf("path %s contains dotfile", e.Path)
 }
 
+func FindStorageDir(name string) (string, error) {
+	if filepath.IsAbs(name) {
+		return name, nil
+	}
+
+	// Find name upward from the current directory.
+	wd, err := os.Getwd()
+	if err != nil {
+		return name, err
+	}
+
+	separator := string(filepath.Separator)
+	for cur := wd; cur != "." && cur != separator; cur = filepath.Dir(cur) {
+		d := filepath.Join(cur, name)
+		fi, err := os.Stat(d)
+		if err != nil {
+			if !os.IsNotExist(err) {
+				fmt.Fprintln(os.Stderr, err)
+			}
+			continue
+		}
+		if fi.IsDir() {
+			return d, nil
+		} else {
+			return "", fmt.Errorf("%s exists but is not a directory", d)
+		}
+	}
+
+	// Not found. name is assumed to be in the current directory.
+	return name, nil
+}
+
 type Storage struct {
 	path string
 }

@@ -44,10 +44,11 @@ func (c *ServeCommand) setup(args []string, options *Options) {
 func (c *ServeCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
-	storage, err := options.CheckStorage()
+	d, err := FindStorageDir(options.NotesDirName())
 	if err != nil {
 		return err
 	}
+	storage := NewStorage(d)
 
 	if c.flag.NArg() > 1 {
 		return ErrTooManyArgs

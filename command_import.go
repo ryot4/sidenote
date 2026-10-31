@@ -42,10 +42,11 @@ func (c *ImportCommand) setup(args []string, options *Options) {
 func (c *ImportCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
-	storage, err := options.CheckStorage()
+	d, err := FindStorageDir(options.NotesDirName())
 	if err != nil {
 		return err
 	}
+	storage := NewStorage(d)
 
 	var origPath, name string
 	switch c.flag.NArg() {
