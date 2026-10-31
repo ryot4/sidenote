@@ -42,12 +42,6 @@ func (c *ImportCommand) setup(args []string, options *Options) {
 func (c *ImportCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
-	d, err := FindStorageDir(options.NotesDirName())
-	if err != nil {
-		return err
-	}
-	storage := NewStorage(d)
-
 	var origPath, name string
 	switch c.flag.NArg() {
 	case 0:
@@ -70,6 +64,12 @@ func (c *ImportCommand) Run(args []string, options *Options) error {
 	default:
 		return ErrTooManyArgs
 	}
+
+	d, err := FindStorageDir(options.NotesDirName())
+	if err != nil {
+		return err
+	}
+	storage := NewStorage(d)
 
 	if origPath == "-" {
 		_, err = c.importFile(storage, name, os.Stdin)

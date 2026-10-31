@@ -50,12 +50,6 @@ func (c *EditCommand) setup(args []string, _options *Options) {
 func (c *EditCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
-	d, err := FindStorageDir(options.NotesDirName())
-	if err != nil {
-		return err
-	}
-	storage := NewStorage(d)
-
 	var name string
 	switch c.flag.NArg() {
 	case 0:
@@ -69,7 +63,11 @@ func (c *EditCommand) Run(args []string, options *Options) error {
 		return ErrTooManyArgs
 	}
 
-	return c.runEditor(storage, name)
+	d, err := FindStorageDir(options.NotesDirName())
+	if err != nil {
+		return err
+	}
+	return c.runEditor(NewStorage(d), name)
 }
 
 func (c *EditCommand) runEditor(storage *Storage, name string) error {

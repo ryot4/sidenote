@@ -32,15 +32,15 @@ func (c *CatCommand) setup(args []string, _options *Options) {
 func (c *CatCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
+	if c.flag.NArg() == 0 {
+		return ErrNoFileName
+	}
+
 	d, err := FindStorageDir(options.NotesDirName())
 	if err != nil {
 		return err
 	}
 	storage := NewStorage(d)
-
-	if c.flag.NArg() == 0 {
-		return ErrNoFileName
-	}
 
 	var lastErr error
 	for _, name := range c.flag.Args() {

@@ -33,17 +33,15 @@ func (c *ShowCommand) setup(args []string, _options *Options) {
 func (c *ShowCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
-	d, err := FindStorageDir(options.NotesDirName())
-	if err != nil {
-		return err
-	}
-	storage := NewStorage(d)
-
 	if c.flag.NArg() == 0 {
 		return ErrNoFileName
 	}
 
-	return c.runPager(storage, c.flag.Args())
+	d, err := FindStorageDir(options.NotesDirName())
+	if err != nil {
+		return err
+	}
+	return c.runPager(NewStorage(d), c.flag.Args())
 }
 
 func (c *ShowCommand) runPager(storage *Storage, names []string) error {

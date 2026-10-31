@@ -44,12 +44,6 @@ func (c *ServeCommand) setup(args []string, options *Options) {
 func (c *ServeCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
-	d, err := FindStorageDir(options.NotesDirName())
-	if err != nil {
-		return err
-	}
-	storage := NewStorage(d)
-
 	if c.flag.NArg() > 1 {
 		return ErrTooManyArgs
 	}
@@ -58,7 +52,11 @@ func (c *ServeCommand) Run(args []string, options *Options) error {
 		subdir = "/"
 	}
 
-	return c.runServer(storage, subdir)
+	d, err := FindStorageDir(options.NotesDirName())
+	if err != nil {
+		return err
+	}
+	return c.runServer(NewStorage(d), subdir)
 }
 
 func (c *ServeCommand) runServer(storage *Storage, subdir string) error {

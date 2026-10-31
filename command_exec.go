@@ -38,16 +38,15 @@ func (c *ExecCommand) setup(args []string, _options *Options) {
 func (c *ExecCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
+	if c.flag.NArg() == 0 {
+		return NewSyntaxError("no command specified")
+	}
+
 	d, err := FindStorageDir(options.NotesDirName())
 	if err != nil {
 		return err
 	}
-	storage := NewStorage(d)
-
-	if c.flag.NArg() == 0 {
-		return NewSyntaxError("no command specified")
-	}
-	return c.execCommand(storage, c.flag.Args())
+	return c.execCommand(NewStorage(d), c.flag.Args())
 }
 
 func (c *ExecCommand) execCommand(storage *Storage, command []string) error {

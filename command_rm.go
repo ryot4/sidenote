@@ -37,15 +37,15 @@ func (c *RmCommand) setup(args []string, options *Options) {
 func (c *RmCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
+	if c.flag.NArg() == 0 {
+		return ErrNoFileName
+	}
+
 	d, err := FindStorageDir(options.NotesDirName())
 	if err != nil {
 		return err
 	}
 	storage := NewStorage(d)
-
-	if c.flag.NArg() == 0 {
-		return ErrNoFileName
-	}
 
 	for _, name := range c.flag.Args() {
 		err = c.remove(storage, name)

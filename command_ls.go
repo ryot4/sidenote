@@ -47,12 +47,6 @@ func (c *LsCommand) setup(args []string, options *Options) {
 func (c *LsCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
-	d, err := FindStorageDir(options.NotesDirName())
-	if err != nil {
-		return err
-	}
-	storage := NewStorage(d)
-
 	var name string
 	switch c.flag.NArg() {
 	case 0:
@@ -63,7 +57,11 @@ func (c *LsCommand) Run(args []string, options *Options) error {
 		return ErrTooManyArgs
 	}
 
-	return c.list(storage, name)
+	d, err := FindStorageDir(options.NotesDirName())
+	if err != nil {
+		return err
+	}
+	return c.list(NewStorage(d), name)
 }
 
 func (c *LsCommand) list(storage *Storage, name string) error {

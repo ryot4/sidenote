@@ -41,6 +41,14 @@ func (c *PathCommand) setup(args []string, _options *Options) {
 func (c *PathCommand) Run(args []string, options *Options) error {
 	c.setup(args, options)
 
+	if c.flag.NArg() > 1 {
+		return ErrTooManyArgs
+	}
+	name := c.flag.Arg(0)
+	if name == "" {
+		name = "/"
+	}
+
 	d, err := FindStorageDir(options.NotesDirName())
 	if err != nil {
 		return err
@@ -60,14 +68,6 @@ func (c *PathCommand) Run(args []string, options *Options) error {
 				c.absolute = true
 			}
 		}
-	}
-
-	if c.flag.NArg() > 1 {
-		return ErrTooManyArgs
-	}
-	name := c.flag.Arg(0)
-	if name == "" {
-		name = "/"
 	}
 
 	return c.showPath(NewStorage(d), name)
