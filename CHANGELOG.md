@@ -1,10 +1,11 @@
 # ChangeLog
 
-## Unreleased
+## v0.1.12 - 2026-10-31
 
 Miscellaneous changes:
 
  * serve: Refactor the server to io/fs based implementation
+ * Add devcontainer config
  * Update to Go 1.26.10
  * Update GitHub Actions
 
