@@ -6,6 +6,7 @@ Miscellaneous changes:
 
  * serve: Refactor the server to io/fs based implementation
  * Update to Go 1.26.10
+ * Update GitHub Actions
 
 ## v0.1.11 - 2023-06-25
 
