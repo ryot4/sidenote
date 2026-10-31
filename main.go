@@ -26,16 +26,7 @@ func (options *Options) CheckDirectory() (*Directory, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	fi, err := os.Stat(d)
-	if err != nil {
-		return nil, err
-	}
-	if fi.IsDir() {
-		return NewDirectory(d), nil
-	} else {
-		return nil, fmt.Errorf("%s exists but is not a directory", d)
-	}
+	return NewDirectory(d), nil
 }
 
 func (options *Options) FindDirectory() (string, error) {
@@ -56,14 +47,18 @@ func findUpward(name string) (string, error) {
 	separator := string(filepath.Separator)
 	for cur := wd; cur != "." && cur != separator; cur = filepath.Dir(cur) {
 		d := filepath.Join(cur, name)
-		_, err := os.Stat(d)
+		fi, err := os.Stat(d)
 		if err != nil {
 			if !os.IsNotExist(err) {
 				fmt.Fprintln(os.Stderr, err)
 			}
 			continue
 		}
-		return d, nil
+		if fi.IsDir() {
+			return d, nil
+		} else {
+			return "", fmt.Errorf("%s exists but is not a directory", d)
+		}
 	}
 
 	// Not found. name is assumed to be in the current directory.

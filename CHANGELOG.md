@@ -5,6 +5,7 @@
 Improvements and fixes:
 
  * import: Preserve mtime when importing files
+ * path: Raise an error as other commands do when .notes is not a directory
 
 ## v0.1.12 - 2026-10-31
 
