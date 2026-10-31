@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 type ImportCommand struct {
@@ -94,6 +95,11 @@ func (c *ImportCommand) Run(args []string, options *Options) error {
 		}
 
 		err = os.Chmod(path, fi.Mode())
+		if err != nil {
+			return err
+		}
+
+		err = os.Chtimes(path, time.Time{}, fi.ModTime())
 		if err != nil {
 			return err
 		}

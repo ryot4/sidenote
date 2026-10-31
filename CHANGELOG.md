@@ -1,5 +1,11 @@
 # ChangeLog
 
+## Unreleased
+
+Improvements and fixes:
+
+ * import: Preserve mtime when importing files
+
 ## v0.1.12 - 2026-10-31
 
 Miscellaneous changes:
