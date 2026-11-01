@@ -28,7 +28,7 @@ jobs:
         distributed under the following license:
 
         EOS
-        curl -s -L https://golang.org/LICENSE?m=text >> LICENSE
+        curl -s -L https://raw.githubusercontent.com/golang/go/refs/tags/go1.26.10/LICENSE >> LICENSE
 
     - name: Build the binary
       run: make release
