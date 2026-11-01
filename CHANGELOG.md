@@ -1,6 +1,6 @@
 # ChangeLog
 
-## Unreleased
+## v0.1.13 - 2026-11-01
 
 Breaking changes:
 
