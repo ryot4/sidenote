@@ -35,7 +35,7 @@ func (c *LsCommand) setup(args []string, options *Options) {
 		c.flag.PrintDefaults()
 	}
 	c.flag.BoolVar(&c.longFormat, "l", false, "Print modification time of entries")
-	c.flag.BoolVar(&c.recurse, "r", false, "List directories recursively")
+	c.flag.BoolVar(&c.recurse, "R", false, "List directories recursively")
 	c.flag.BoolVar(&c.sortByMtime, "t", false, "Sort entries by modification time (implies -l)")
 	c.flag.Parse(args)
 

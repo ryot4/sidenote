@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+Breaking changes:
+
+ * ls: Replace -r option with -R to match ls command
+
 Improvements and fixes:
 
  * import: Preserve mtime when importing files

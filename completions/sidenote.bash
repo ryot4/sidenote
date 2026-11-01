@@ -163,7 +163,7 @@ _sidenote()
     ls)
         case "${cur}" in
         -*)
-            COMPREPLY=($(compgen -W '-h -l -r -t' -- "${cur}"))
+            COMPREPLY=($(compgen -W '-h -l -R -t' -- "${cur}"))
             ;;
         *)
             case "${prev}" in
